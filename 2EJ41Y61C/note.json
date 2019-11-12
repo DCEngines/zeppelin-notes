@@ -1,0 +1,1128 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md\n# This is a sample zeppelin notebook analyzing the Credit Card data using fluirdb-python-sdk.\nHere we are using kafka streaming source. We are producing records using faker library and are sending records to kafka topics through given kafka-rest server. This data is then joined together and analyzed to get the information. Follow inline steps:\n\n#### 1. Insert the records to kafka topics through kafka-rest",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:37:15.650",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003eThis is a sample zeppelin notebook analyzing the Credit Card data using fluirdb-python-sdk.\u003c/h1\u003e\n\u003cp\u003eHere we are using kafka streaming source. We are producing records using faker library and are sending records to kafka topics through given kafka-rest server. This data is then joined together and analyzed to get the information. Follow inline steps:\u003c/p\u003e\n\u003ch4\u003e1. Insert the records to kafka topics through kafka-rest\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835650_-2001102644",
+      "id": "20190704-070558_313892475",
+      "dateCreated": "2019-07-12 05:37:15.650",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\nfrom faker import Faker\nimport requests\nimport json\n\n\nfake \u003d Faker()\nseed \u003d 111\nheaders \u003d {\u0027Content-Type\u0027: \"application/vnd.kafka.json.v1+json\"}\nrest_host \u003d \u0027http://172.21.75.181:8082/topics/\u0027\n\nurl \u003d rest_host.__add__(\"creditcard\")\nfake.seed(seed)\nrecords \u003d []\nfor e in range(125):\n    creditcard_details \u003d {\u0027value\u0027: {\u0027info_id\u0027: e+1, \u0027username\u0027: fake.name().encode(\u0027utf-8\u0027), \u0027userprofession\u0027: fake.job().encode(\u0027utf-8\u0027), \u0027expiryDate\u0027: fake.credit_card_expire(start\u003d\u0027now\u0027, end\u003d\u0027+10y\u0027, date_format\u003d\u0027%m/%y\u0027).encode(\u0027utf-8\u0027), \u0027securityCode\u0027: fake.credit_card_security_code(card_type\u003dNone).encode(\u0027utf-8\u0027), \u0027provider\u0027: fake.credit_card_provider(card_type\u003dNone).encode(\u0027utf-8\u0027), \u0027cardNo\u0027: fake.credit_card_number(card_type\u003dNone).encode(\u0027utf-8\u0027)}}\n    records.append(creditcard_details)\ndata \u003d json.dumps({\"records\": records})\nresp \u003d requests.post(url, data\u003ddata, headers\u003dheaders)\nprint(resp.text)\n\nurl \u003d rest_host.__add__(\"bankdetails\")\nfake.seed(seed)\nrecords \u003d []\nfor e in range(125):\n    bank_details \u003d {\u0027value\u0027: {\u0027ubid\u0027: e+1, \u0027username\u0027: fake.name().encode(\u0027utf-8\u0027), \u0027users_bank_country\u0027: fake.bank_country().encode(\u0027utf-8\u0027), \u0027bank_bban\u0027: fake.bban().encode(\u0027utf-8\u0027), \u0027bank_iban\u0027: fake.iban().encode(\u0027utf-8\u0027)}}\n    records.append(bank_details)\ndata \u003d json.dumps({\"records\": records})\nresp \u003d requests.post(url, data\u003ddata, headers\u003dheaders)\nprint(resp.text)\n\nurl \u003d rest_host.__add__(\"personalinfo\")\nfake.seed(seed)\nrecords \u003d []\nfor e in range(125):\n    personal_info \u003d {\u0027value\u0027:{\u0027uid\u0027: e+1, \u0027username\u0027: fake.name().encode(\u0027utf-8\u0027), \u0027dob\u0027: fake.date(pattern\u003d\"%Y-%m-%d\"), \u0027contactNumber\u0027: fake.msisdn().encode(\u0027utf-8\u0027), \u0027address\u0027: fake.address().encode(\u0027utf-8\u0027), \u0027email\u0027: fake.email().encode(\u0027utf-8\u0027)}}\n    records.append(personal_info)\ndata \u003d json.dumps({\"records\": records})\nresp \u003d requests.post(url, data\u003ddata, headers\u003dheaders)\nprint(resp.text)",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-07 06:59:26.443",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835651_106362253",
+      "id": "20190704-055451_1854827295",
+      "dateCreated": "2019-07-12 05:37:15.651",
+      "dateStarted": "2019-08-07 06:59:26.545",
+      "dateFinished": "2019-08-07 06:59:48.619",
+      "status": "FINISHED",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### 2. Create sources using these topics\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:37:15.652",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e2. Create sources using these topics\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835652_933927072",
+      "id": "20190704-060512_2119930054",
+      "dateCreated": "2019-07-12 05:37:15.652",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\nimport openapi_client\nfrom openapi_client.rest import ApiException\nimport time\n\n#Initialization\nconfiguration \u003d openapi_client.configuration.Configuration()\nconfiguration.host \u003d \"http://server:8090\"\napi_instance \u003d openapi_client.ApiClient(configuration)\nsource_api \u003d openapi_client.SourceApi(api_instance)\npipeline_api \u003d openapi_client.PipelineApi(api_instance)\nnormal_run_api \u003d openapi_client.PipelineNormalRunApi(api_instance)\nexported_table_api \u003d openapi_client.ExportedTablesApi(api_instance)\nupload_api \u003d openapi_client.UploadApi(api_instance)\n\nsourceType \u003d \"KAFKA\"\n#1. infer schema using fluirdb api for creditcard topic\nmetadata \u003d {\"fluir.kafka.topic\": \"creditcard\", \"displayType\": \"KAFKA\"}\nbody \u003d openapi_client.Body(metadata\u003dmetadata, source_type\u003dsourceType)\nresp \u003d source_api.infer_schema(body)\nschema \u003d resp.result\nprint(resp)\n\n# now use thss schema to create creditcard source\ncreditcard_source \u003d openapi_client.Source()\ncreditcard_source.source_name \u003d \"creditcard\"\ncreditcard_source.metadata \u003d metadata\ncreditcard_source.data_schema \u003d schema\ncreditcard_source.source_type \u003d sourceType\nresp \u003d source_api.create_source(\"creditcard\", creditcard_source)\n\n\n#2. Now, infer schema using fluirdb api for creditcard topic\nmetadata \u003d {\"fluir.kafka.topic\": \"bankdetails\", \"displayType\": \"KAFKA\"}\nbody \u003d openapi_client.Body(metadata\u003dmetadata, source_type\u003dsourceType)\nresp \u003d source_api.infer_schema(body)\nschema \u003d resp.result\nprint(resp)\n\n# add source \u0027bankdetails\u0027\nbankdetails_source \u003d openapi_client.Source()\nbankdetails_source.source_name \u003d \"bankdetails\"\nbankdetails_source.metadata \u003d {\"fluir.kafka.topic\": \"bankdetails\", \"displayType\": \"KAFKA\"}\nbankdetails_source.data_schema \u003d schema\nbankdetails_source.source_type \u003d sourceType\nresp \u003d source_api.create_source(\"bankdetails\", bankdetails_source)\nprint(resp)\n\n#3. Now, infer schema using fluirdb api for personalinfo topic\nmetadata \u003d {\"fluir.kafka.topic\": \"personalinfo\", \"displayType\": \"KAFKA\"}\nbody \u003d openapi_client.Body(metadata\u003dmetadata, source_type\u003dsourceType)\nresp \u003d source_api.infer_schema(body)\nschema \u003d resp.result\nprint(resp)\n\n# add source \u0027personalinfo\u0027\npersonalinfo_source \u003d openapi_client.Source()\npersonalinfo_source.source_name \u003d \"personalinfo\"\npersonalinfo_source.data_schema \u003d schema\npersonalinfo_source.metadata \u003d metadata\npersonalinfo_source.source_type \u003d sourceType\nresp \u003d source_api.create_source(\"personalinfo\", personalinfo_source)\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-31 13:27:48.397",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \u0027{\"type\":\"struct\",\"fields\":[{\"name\":\"cardNo\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"expiryDate\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"info_id\",\"type\":\"long\",\"nullable\":true,\"metadata\":{}},{\"name\":\"provider\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"securityCode\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"username\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"userprofession\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}}]}\u0027}\n{\u0027result\u0027: \u0027{\"type\":\"struct\",\"fields\":[{\"name\":\"bank_address\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"bank_bban\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"bank_iban\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"bank_uri\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"ubid\",\"type\":\"long\",\"nullable\":true,\"metadata\":{}},{\"name\":\"username\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"users_bank_country\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}}]}\u0027}\n{\u0027result\u0027: \u0027bankdetails\u0027}\n{\u0027result\u0027: \u0027{\"type\":\"struct\",\"fields\":[{\"name\":\"address\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"company_email\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"contactNumber\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"dob\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"other_info\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"personal_email\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"time\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"uid\",\"type\":\"long\",\"nullable\":true,\"metadata\":{}},{\"name\":\"username\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}}]}\u0027}\n{\u0027result\u0027: \u0027personalinfo\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835652_-139559377",
+      "id": "20190704-055612_1764492493",
+      "dateCreated": "2019-07-12 05:37:15.652",
+      "dateStarted": "2019-07-31 13:27:48.520",
+      "dateFinished": "2019-07-31 13:27:50.427",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nYou can see the source added with above code in the \u0027sources\u0027 section of the fluirdb UI:\n\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/aj5k0vwb979myr1/cc1.png\" width\u003d\"1500\"\u003e\n\n\n\nDetails of the each individual sources can be checked as well:\n\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/8ci3vpxe6zz4692/cc2.png\" width\u003d\"1500\"\u003e\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-07 08:28:51.085",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eYou can see the source added with above code in the \u0026lsquo;sources\u0026rsquo; section of the fluirdb UI:\u003c/p\u003e\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/aj5k0vwb979myr1/cc1.png\" width\u003d\"1500\"\u003e\n\u003cp\u003eDetails of the each individual sources can be checked as well:\u003c/p\u003e\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/8ci3vpxe6zz4692/cc2.png\" width\u003d\"1500\"\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564385511243_1442899404",
+      "id": "20190729-073151_1082460714",
+      "dateCreated": "2019-07-29 07:31:51.243",
+      "dateStarted": "2019-08-07 07:25:58.574",
+      "dateFinished": "2019-08-07 07:25:58.585",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### 3. Create pipelies using sources created above and sink the data",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:37:15.653",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e3. Create pipelies using sources created above and sink the data\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835652_1916935045",
+      "id": "20190704-071159_26656816",
+      "dateCreated": "2019-07-12 05:37:15.652",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n# create pipelines\n# create pipeline \u0027CustomerBankDetails\u0027 and sink the raw data and export the sink\npipelineBody \u003d openapi_client.PipelineMetadata()\npipelineBody.auto_schema_refresh \u003d \"true\"\npipelineBody.description \u003d \"customer bank details\"\nresp \u003d pipeline_api.create_pipeline(\"CustomerBankDetails\", pipelineBody)\nprint(resp)\nsource_node \u003d openapi_client.SourceNode(source\u003d\"bankdetails\", configuration\u003dconfiguration)\nresp \u003d pipeline_api.add_source_node(\"CustomerBankDetails\", \"bankdetails\", source_node)\nprint(resp)\nsink_node \u003d openapi_client.SinkNode()\nsink_node.prev_node_name \u003d \"bankdetails\"\nsink_node.metadata \u003d {\"fluir.sink.terminal\": \"false\"}\nsink_node.sink_type \u003d \"PARQUET\"\nresp \u003d pipeline_api.add_sink_node(\"CustomerBankDetails\", \"bankdetails_sink\", sink_node)\nprint(resp)\n\n# create pipeline \u0027customerPersonalInfo\u0027 and sink the raw data and export the sink\npipelineBody \u003d openapi_client.PipelineMetadata()\npipelineBody.auto_schema_refresh \u003d \"true\"\npipelineBody.description \u003d \"customer personal details\"\nresp \u003d pipeline_api.create_pipeline(\"customerPersonalInfo\", pipelineBody)\nprint(resp)\nsource_node \u003d openapi_client.SourceNode(source\u003d\"personalinfo\", configuration\u003dconfiguration)\nresp \u003d pipeline_api.add_source_node(\"customerPersonalInfo\", \"personalinfo\", source_node)\nprint(resp)\nsink_node \u003d openapi_client.SinkNode()\nsink_node.prev_node_name \u003d \"personalinfo\"\nsink_node.metadata \u003d {\"fluir.sink.terminal\": \"false\"}\nsink_node.sink_type \u003d \"PARQUET\"\nresp \u003d pipeline_api.add_sink_node(\"customerPersonalInfo\", \"personalinfo_sink\", sink_node)\nprint(resp)\n\n#Create pipeline CreditCardInfo\npipelineBody \u003d openapi_client.PipelineMetadata()\npipelineBody.auto_schema_refresh \u003d \"true\"\npipelineBody.description \u003d \"customer credit card details\"\nresp \u003d pipeline_api.create_pipeline(\"CreditCardInfo\", pipelineBody)\nprint(resp)\nsource_node \u003d openapi_client.SourceNode(source\u003d\"creditcard\", configuration\u003dconfiguration)\nresp \u003d pipeline_api.add_source_node(\"CreditCardInfo\", \"creditcard\", source_node)\nprint(resp)\nsink_node \u003d openapi_client.SinkNode()\nsink_node.prev_node_name \u003d \"creditcard\"\nsink_node.metadata \u003d {\"fluir.sink.terminal\": \"false\"}\nsink_node.sink_type \u003d \"PARQUET\"\nresp \u003d pipeline_api.add_sink_node(\"CreditCardInfo\", \"creditcard_sink\", sink_node)\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-31 13:31:00.613",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \u0027Pipeline CustomerBankDetails created successfully.\u0027,\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Source Node\u0027. PipelineName: \u0027CustomerBankDetails\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Sink Node\u0027. PipelineName: \u0027CustomerBankDetails\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \u0027Pipeline customerPersonalInfo created successfully.\u0027,\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Source Node\u0027. PipelineName: \u0027customerPersonalInfo\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Sink Node\u0027. PipelineName: \u0027customerPersonalInfo\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \u0027Pipeline CreditCardInfo created successfully.\u0027,\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Source Node\u0027. PipelineName: \u0027CreditCardInfo\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Sink Node\u0027. PipelineName: \u0027CreditCardInfo\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835653_1825503111",
+      "id": "20190704-060554_1038056122",
+      "dateCreated": "2019-07-12 05:37:15.653",
+      "dateStarted": "2019-07-31 13:31:00.679",
+      "dateFinished": "2019-07-31 13:31:03.453",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/xavqqs99eea9m9p/cc3.png\" width\u003d\"1500\"\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-07 07:28:19.718",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/xavqqs99eea9m9p/cc3.png\" width\u003d\"1500\"\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564385875395_5164278",
+      "id": "20190729-073755_1565504226",
+      "dateCreated": "2019-07-29 07:37:55.395",
+      "dateStarted": "2019-08-07 07:28:19.719",
+      "dateFinished": "2019-08-07 07:28:19.725",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### 4. Export the sink nodes from above pipelines and start the pipeline execution\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:37:15.653",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e4. Export the sink nodes from above pipelines and start the pipeline execution\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835653_1440744765",
+      "id": "20190704-060802_1717177018",
+      "dateCreated": "2019-07-12 05:37:15.653",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n# run pipelines\nresp \u003d pipeline_api.export_table(\"CustomerBankDetails\", \"bankdetails_sink\", \"bankdetails_sink\")\nprint(resp)\nresp \u003d normal_run_api.start_pipeline(\"CustomerBankDetails\")\nprint(resp)\nwhile exported_table_api.analyze_exported_table_data(\"select count(*) as cnt from bankdetails_sink\").lstrip(\"{u\\\u0027cnt\\\u0027: \").rstrip(\u0027}\u0027) \u003c 125:\n    time.sleep(5)\nresp \u003d pipeline_api.export_table(\"customerPersonalInfo\", \"personalinfo_sink\", \"personalinfo_sink\")\nprint(resp)\nresp \u003d normal_run_api.start_pipeline(\"customerPersonalInfo\")\nprint(resp)\nwhile exported_table_api.analyze_exported_table_data(\"select count(*) as cnt from personalinfo_sink\").lstrip(\"{u\\\u0027cnt\\\u0027: \").rstrip(\u0027}\u0027) \u003c 125:\n    time.sleep(5)\nresp \u003d pipeline_api.export_table(\"CreditCardInfo\", \"creditcard_sink\", \"creditcard_sink\")\nprint(resp)\nresp \u003d normal_run_api.start_pipeline(\"CreditCardInfo\")\nprint(resp)\nwhile exported_table_api.analyze_exported_table_data(\"select count(*) as cnt from creditcard_sink\").lstrip(\"{u\\\u0027cnt\\\u0027: \").rstrip(\u0027}\u0027) \u003c 125:\n    time.sleep(5)\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-31 13:31:41.058",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \"Exported table \u0027bankdetails_sink\u0027 successfully.\",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027 Start Pipeline\u0027. PipelineName: \u0027CustomerBankDetails\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Exported table \u0027personalinfo_sink\u0027 successfully.\",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027 Start Pipeline\u0027. PipelineName: \u0027customerPersonalInfo\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Exported table \u0027creditcard_sink\u0027 successfully.\",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027 Start Pipeline\u0027. PipelineName: \u0027CreditCardInfo\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835653_1679612617",
+      "id": "20190704-060906_1576234667",
+      "dateCreated": "2019-07-12 05:37:15.653",
+      "dateStarted": "2019-07-31 13:31:41.128",
+      "dateFinished": "2019-07-31 13:32:09.070",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### 5. Create pipelines using tables exported above to join the tables and get the required information",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:37:15.654",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e5. Create pipelines using tables exported above to join the tables and get the required information\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835653_95488051",
+      "id": "20190704-071544_930966096",
+      "dateCreated": "2019-07-12 05:37:15.653",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n# create pipeline \u0027CollectInfo\u0027  and add transform nodes performing joining operations between tables above to get the required details.\npipelineBody \u003d openapi_client.PipelineMetadata()\npipelineBody.auto_schema_refresh \u003d \"true\"\npipelineBody.description \u003d \"credit card pipeline\"\nresp \u003d pipeline_api.create_pipeline(\"CollectInfo\", pipelineBody)\nprint(resp)\n\n# add tranform node to get the Credit card and banks which gave out those credit cards\nquery \u003d \"select creditcard_sink.*,bankdetails_sink.bank_bban, bankdetails_sink.bank_iban from creditcard_sink, \" \\\n    \"bankdetails_sink where creditcard_sink.username\u003dbankdetails_sink.username\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"CollectInfo\", \"CreditCardUsersWithBankDetails\", processor_node)\nprint(resp)\n\nsink_node \u003d openapi_client.SinkNode()\nsink_node.prev_node_name \u003d \"CreditCardUsersWithBankDetails\"\nsink_node.metadata \u003d {\"fluir.sink.terminal\": False}\nsink_node.sink_type \u003d \"PARQUET\"\nresp \u003d pipeline_api.add_sink_node(\"CollectInfo\", \"CreditCardUsersWithBankDetails_sink\", sink_node)\nprint(resp)\n\n# Add tranform node in the pipeline to get the Credit card users with their address details.\nquery \u003d \"select creditcard_sink.*,personalinfo_sink.dob, personalinfo_sink.contactNumber, personalinfo_sink.\" \\\n    \"address from creditcard_sink, personalinfo_sink where creditcard_sink.username\u003dpersonalinfo_sink.username\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"CollectInfo\", \"CreditCardUsersWithAddressDetails\", processor_node)\nprint(resp)\n\nsink_node \u003d openapi_client.SinkNode()\nsink_node.prev_node_name \u003d \"CreditCardUsersWithAddressDetails\"\nsink_node.metadata \u003d {\"fluir.sink.terminal\": False}\nsink_node.sink_type \u003d \"PARQUET\"\nresp \u003d pipeline_api.add_sink_node(\"CollectInfo\", \"CreditCardUsersWithAddressDetails_sink\", sink_node)\nprint(resp)\n\n# Add transform node in the pipeline performing join operations which gets the Customer with all the details like- credit card and bank\nquery \u003d \"select CreditCardUsersWithAddressDetails.*, CreditCardUsersWithBankDetails.bank_bban, CreditCardUsersWithBankDetails.bank_iban from CreditCardUsersWithAddressDetails, CreditCardUsersWithBankDetails where CreditCardUsersWithBankDetails.username \u003d CreditCardUsersWithAddressDetails.username\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"CollectInfo\", \"CustomerWithAllDetails\", processor_node)\nprint(resp)\n\nsink_node \u003d openapi_client.SinkNode()\nsink_node.prev_node_name \u003d \"CustomerWithAllDetails\"\nsink_node.metadata \u003d {\"fluir.sink.terminal\": \"false\"}\nsink_node.sink_type \u003d \"PARQUET\"\nresp \u003d pipeline_api.add_sink_node(\"CollectInfo\", \"CustomerWithAllDetails_sink\", sink_node)\nprint(resp)\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 07:39:51.221",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \u0027Pipeline CollectInfo created successfully.\u0027, \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027CollectInfo\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Sink Node\u0027. PipelineName: \u0027CollectInfo\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027CollectInfo\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Sink Node\u0027. PipelineName: \u0027CollectInfo\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027CollectInfo\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Sink Node\u0027. PipelineName: \u0027CollectInfo\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835654_611123901",
+      "id": "20190704-061105_1198766904",
+      "dateCreated": "2019-07-12 05:37:15.654",
+      "dateStarted": "2019-07-29 07:39:51.271",
+      "dateFinished": "2019-07-29 07:39:53.481",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/2wmw1esfyo2v7h0/cc4.png\" width\u003d\"1500\"\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-07 08:28:58.460",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/2wmw1esfyo2v7h0/cc4.png\" width\u003d\"1500\"\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564389683189_-2060458775",
+      "id": "20190729-084123_400377540",
+      "dateCreated": "2019-07-29 08:41:23.189",
+      "dateStarted": "2019-08-07 07:29:37.312",
+      "dateFinished": "2019-08-07 07:29:37.319",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\nquery \u003d \"refresh table CreditCardUsersWithAddressDetails\"\nnormal_run_api.analyze_sink_data(\"CollectInfo\", query)\nquery \u003d \"refresh table CreditCardUsersWithBankDetails\"\nnormal_run_api.analyze_sink_data(\"CollectInfo\", query)\n#start the pipelne\nresp \u003d normal_run_api.start_pipeline(\"CollectInfo\")\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 08:34:58.541",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \"Success: OpType \u0027 Start Pipeline\u0027. PipelineName: \u0027CollectInfo\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835654_-880993030",
+      "id": "20190704-073238_1540002661",
+      "dateCreated": "2019-07-12 05:37:15.654",
+      "dateStarted": "2019-07-29 08:34:58.607",
+      "dateFinished": "2019-07-29 08:35:07.604",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md \n#### 6. Analyze the sink data",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:37:15.654",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e6. Analyze the sink data\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835654_-2073405130",
+      "id": "20190704-073959_221497651",
+      "dateCreated": "2019-07-12 05:37:15.654",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\ntime.sleep(5)\nwhile pipeline_api.get_pipeline_state(\"CollectInfo\").result !\u003d \"NotRunning\":\n    print(\"pipeline execution in progress\")\n    time.sleep(5)\nprint(\"pipeline execution completed, you can now check the sink data\")",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 08:35:20.380",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "pipeline execution completed, you can now check the sink data\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835654_459409536",
+      "id": "20190704-063607_1471711831",
+      "dateCreated": "2019-07-12 05:37:15.654",
+      "dateStarted": "2019-07-29 08:35:20.432",
+      "dateFinished": "2019-07-29 08:35:25.450",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\nquery \u003d \"select count(*) as cnt from CreditCardUsersWithAddressDetails_sink\"\nnum \u003d int(normal_run_api.analyze_sink_data(\"CollectInfo\", query).lstrip(\"{u\\\u0027cnt\\\u0027: \").rstrip(\u0027}\u0027))\nprint(\"Number of creditcard users with address  : \"+str(num))",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 08:36:03.962",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Number of creditcard users with address  : 3\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835655_-1072230732",
+      "id": "20190704-063722_1342775400",
+      "dateCreated": "2019-07-12 05:37:15.655",
+      "dateStarted": "2019-07-29 08:36:04.016",
+      "dateFinished": "2019-07-29 08:36:07.052",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nYou can also check the sample data from the fluirdb UI:\n\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/wqhnay0iu67l39b/cc5.png\" width\u003d\"1500\"\u003e\n\u003c/br\u003e \u003c/br\u003e\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/eukyshb1fdh3lvv/cc6.png\" width\u003d\"1500\"\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-09 05:24:07.759",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eYou can also check the sample data from the fluirdb UI:\u003c/p\u003e\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/wqhnay0iu67l39b/cc5.png\" width\u003d\"1500\"\u003e\n\u003cp\u003e\u003c/br\u003e \u003c/br\u003e\u003cbr/\u003e\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/eukyshb1fdh3lvv/cc6.png\" width\u003d\"1500\"\u003e\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564389382314_-1359576299",
+      "id": "20190729-083622_258141134",
+      "dateCreated": "2019-07-29 08:36:22.314",
+      "dateStarted": "2019-08-09 05:24:07.760",
+      "dateFinished": "2019-08-09 05:24:07.769",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\nquery \u003d \"select count(*) as cnt from CreditCardUsersWithBankDetails_sink\"\nnum \u003d int(normal_run_api.analyze_sink_data(\"CollectInfo\", query).lstrip(\"{u\\\u0027cnt\\\u0027: \").rstrip(\u0027}\u0027))\nprint(\"Number of creditcard users with bank details : \"+str(num))",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:37:15.655",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Number of creditcard users with bank details : 3\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835655_-1993457663",
+      "id": "20190704-073427_1610730876",
+      "dateCreated": "2019-07-12 05:37:15.655",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\nquery \u003d \"select count(*) as cnt from CustomerWithAllDetails_sink\"\nnum \u003d int(normal_run_api.analyze_sink_data(\"CollectInfo\", query).lstrip(\"{u\\\u0027cnt\\\u0027: \").rstrip(\u0027}\u0027))\nprint(\"Number of Customers with all details available : \"+str(num))\n\nquery \u003d \"select * from CustomerWithAllDetails_sink\"\nresp \u003d normal_run_api.analyze_sink_data(\"CollectInfo\", query)\nprint(resp)\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:37:15.655",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Number of Customers with all details available : 1\n{u\u0027username\u0027: u\u0027Christy Bender\u0027, u\u0027bank_iban\u0027: u\u0027GB13TGOK8710422990069\u0027, u\u0027dob\u0027: u\u00271994-06-14\u0027, u\u0027cardNo\u0027: u\u0027213132279383727\u0027, u\u0027address\u0027: u\u0027254 Juarez Court\\nSouth Jasonberg, WA 02240\u0027, u\u0027expiryDate\u0027: u\u002706/23\u0027, u\u0027bank_bban\u0027: u\u0027MKQE1426432279383\u0027, u\u0027contactNumber\u0027: u\u00276114264322793\u0027, u\u0027info_id\u0027: 1, u\u0027securityCode\u0027: u\u0027114\u0027, u\u0027provider\u0027: u\u0027VISA 16 digit\u0027, u\u0027fluirtimestamp\u0027: u\u00272019-07-04T07:05:39.924Z\u0027, u\u0027userprofession\u0027: u\u0027Insurance account manager\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835655_-2102101072",
+      "id": "20190704-073554_1362149015",
+      "dateCreated": "2019-07-12 05:37:15.655",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### 7. send more records to kafka topics.\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:37:15.656",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e7. send more records to kafka topics.\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835656_1805327251",
+      "id": "20190704-073659_2127858167",
+      "dateCreated": "2019-07-12 05:37:15.656",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\nimport json\n\nfake \u003d Faker()\nseed \u003d 222\nheaders \u003d {\u0027Content-Type\u0027: \"application/vnd.kafka.json.v1+json\"}\nrest_host \u003d \u0027http://172.21.75.218:8082/topics/\u0027\n\nurl \u003d rest_host.__add__(\"creditcard\")\nfake.seed(seed)\nrecords \u003d []\nfor e in range(125):\n    creditcard_details \u003d {\u0027value\u0027: {\u0027info_id\u0027: e+1, \u0027username\u0027: fake.name().encode(\u0027utf-8\u0027), \u0027userprofession\u0027: fake.job().encode(\u0027utf-8\u0027), \u0027expiryDate\u0027: fake.credit_card_expire(start\u003d\u0027now\u0027, end\u003d\u0027+10y\u0027, date_format\u003d\u0027%m/%y\u0027).encode(\u0027utf-8\u0027), \u0027securityCode\u0027: fake.credit_card_security_code(card_type\u003dNone).encode(\u0027utf-8\u0027), \u0027provider\u0027: fake.credit_card_provider(card_type\u003dNone).encode(\u0027utf-8\u0027), \u0027cardNo\u0027: fake.credit_card_number(card_type\u003dNone).encode(\u0027utf-8\u0027)}}\n    records.append(creditcard_details)\ndata \u003d json.dumps({\"records\": records})\nresp \u003d requests.post(url, data\u003ddata, headers\u003dheaders)\nprint(resp.text)\n\nurl \u003d rest_host.__add__(\"bankdetails\")\nfake.seed(seed)\nrecords \u003d []\nfor e in range(125):\n    bank_details \u003d {\u0027value\u0027: {\u0027ubid\u0027: e+1, \u0027username\u0027: fake.name().encode(\u0027utf-8\u0027), \u0027users_bank_country\u0027: fake.bank_country().encode(\u0027utf-8\u0027), \u0027bank_bban\u0027: fake.bban().encode(\u0027utf-8\u0027), \u0027bank_iban\u0027: fake.iban().encode(\u0027utf-8\u0027)}}\n    records.append(bank_details)\ndata \u003d json.dumps({\"records\": records})\nresp \u003d requests.post(url, data\u003ddata, headers\u003dheaders)\nprint(resp.text)\n\nurl \u003d rest_host.__add__(\"personalinfo\")\nfake.seed(seed)\nrecords \u003d []\nfor e in range(125):\n    personal_info \u003d {\u0027value\u0027:{\u0027uid\u0027: e+1, \u0027username\u0027: fake.name().encode(\u0027utf-8\u0027), \u0027dob\u0027: fake.date(pattern\u003d\"%Y-%m-%d\"), \u0027contactNumber\u0027: fake.msisdn().encode(\u0027utf-8\u0027), \u0027address\u0027: fake.address().encode(\u0027utf-8\u0027), \u0027email\u0027: fake.email().encode(\u0027utf-8\u0027)}}\n    records.append(personal_info)\ndata \u003d json.dumps({\"records\": records})\nresp \u003d requests.post(url, data\u003ddata, headers\u003dheaders)\nprint(resp.text)\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-07 08:51:33.607",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\"offsets\":[{\"partition\":0,\"offset\":125,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":126,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":127,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":128,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":129,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":130,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":131,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":132,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":133,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":134,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":135,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":136,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":137,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":138,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":139,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":140,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":141,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":142,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":143,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":144,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":145,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":146,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":147,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":148,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":149,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":150,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":151,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":152,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":153,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":154,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":155,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":156,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":157,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":158,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":159,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":160,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":161,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":162,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":163,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":164,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":165,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":166,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":167,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":168,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":169,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":170,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":171,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":172,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":173,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":174,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":175,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":176,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":177,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":178,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":179,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":180,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":181,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":182,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":183,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":184,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":185,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":186,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":187,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":188,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":189,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":190,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":191,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":192,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":193,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":194,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":195,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":196,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":197,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":198,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":199,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":200,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":201,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":202,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":203,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":204,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":205,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":206,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":207,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":208,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":209,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":210,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":211,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":212,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":213,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":214,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":215,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":216,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":217,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":218,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":219,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":220,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":221,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":222,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":223,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":224,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":225,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":226,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":227,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":228,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":229,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":230,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":231,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":232,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":233,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":234,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":235,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":236,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":237,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":238,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":239,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":240,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":241,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":242,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":243,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":244,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":245,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":246,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":247,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":248,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":249,\"error_code\":null,\"error\":null}],\"key_schema_id\":null,\"value_schema_id\":null}\n{\"offsets\":[{\"partition\":0,\"offset\":125,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":126,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":127,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":128,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":129,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":130,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":131,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":132,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":133,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":134,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":135,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":136,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":137,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":138,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":139,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":140,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":141,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":142,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":143,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":144,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":145,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":146,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":147,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":148,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":149,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":150,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":151,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":152,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":153,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":154,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":155,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":156,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":157,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":158,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":159,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":160,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":161,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":162,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":163,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":164,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":165,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":166,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":167,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":168,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":169,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":170,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":171,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":172,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":173,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":174,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":175,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":176,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":177,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":178,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":179,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":180,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":181,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":182,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":183,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":184,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":185,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":186,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":187,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":188,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":189,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":190,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":191,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":192,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":193,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":194,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":195,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":196,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":197,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":198,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":199,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":200,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":201,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":202,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":203,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":204,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":205,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":206,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":207,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":208,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":209,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":210,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":211,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":212,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":213,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":214,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":215,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":216,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":217,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":218,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":219,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":220,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":221,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":222,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":223,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":224,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":225,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":226,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":227,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":228,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":229,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":230,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":231,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":232,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":233,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":234,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":235,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":236,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":237,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":238,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":239,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":240,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":241,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":242,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":243,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":244,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":245,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":246,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":247,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":248,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":249,\"error_code\":null,\"error\":null}],\"key_schema_id\":null,\"value_schema_id\":null}\n{\"offsets\":[{\"partition\":0,\"offset\":125,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":126,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":127,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":128,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":129,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":130,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":131,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":132,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":133,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":134,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":135,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":136,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":137,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":138,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":139,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":140,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":141,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":142,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":143,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":144,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":145,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":146,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":147,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":148,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":149,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":150,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":151,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":152,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":153,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":154,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":155,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":156,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":157,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":158,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":159,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":160,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":161,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":162,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":163,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":164,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":165,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":166,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":167,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":168,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":169,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":170,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":171,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":172,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":173,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":174,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":175,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":176,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":177,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":178,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":179,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":180,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":181,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":182,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":183,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":184,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":185,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":186,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":187,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":188,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":189,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":190,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":191,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":192,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":193,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":194,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":195,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":196,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":197,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":198,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":199,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":200,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":201,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":202,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":203,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":204,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":205,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":206,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":207,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":208,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":209,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":210,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":211,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":212,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":213,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":214,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":215,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":216,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":217,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":218,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":219,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":220,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":221,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":222,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":223,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":224,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":225,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":226,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":227,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":228,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":229,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":230,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":231,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":232,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":233,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":234,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":235,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":236,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":237,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":238,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":239,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":240,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":241,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":242,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":243,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":244,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":245,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":246,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":247,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":248,\"error_code\":null,\"error\":null},{\"partition\":0,\"offset\":249,\"error_code\":null,\"error\":null}],\"key_schema_id\":null,\"value_schema_id\":null}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835656_-845599850",
+      "id": "20190704-074050_680707456",
+      "dateCreated": "2019-07-12 05:37:15.656",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md \n#### 8. Run the pipeline again",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:37:15.657",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e8. Run the pipeline again\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835657_-429179619",
+      "id": "20190704-081309_305507494",
+      "dateCreated": "2019-07-12 05:37:15.657",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n#refresh so that new data is taken\nquery \u003d \"refresh table CreditCardUsersWithAddressDetails\"\nnormal_run_api.analyze_sink_data(\"CollectInfo\", query)\nquery \u003d \"refresh table CreditCardUsersWithBankDetails\"\nnormal_run_api.analyze_sink_data(\"CollectInfo\", query)\n\n# run pipeline again\nresp \u003d normal_run_api.start_pipeline(\"CollectInfo\")\nprint(resp)\n\ntime.sleep(10)\nwhile pipeline_api.get_pipeline_state(\"CollectInfo\").result !\u003d \"NotRunning\":\n    print(\"pipeline execution in progress\")\n    time.sleep(5)\nprint(\"pipeline execution completed, you can now check the sink data\")",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:37:15.658",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \"Success: OpType \u0027 Start Pipeline\u0027. PipelineName: \u0027CollectInfo\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\npipeline execution completed, you can now check the sink data\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835657_-765298621",
+      "id": "20190704-081410_777999684",
+      "dateCreated": "2019-07-12 05:37:15.657",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md \n#### 9. Check for new data\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:37:15.658",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e9. Check for new data\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835658_248175477",
+      "id": "20190704-081424_2116540583",
+      "dateCreated": "2019-07-12 05:37:15.658",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\nquery \u003d \"select count(*) as cnt from CreditCardUsersWithAddressDetails_sink\"\nnum \u003d int(normal_run_api.analyze_sink_data(\"CollectInfo\", query).lstrip(\"{u\\\u0027cnt\\\u0027: \").rstrip(\u0027}\u0027))\nprint(\"Number of creditcard users with address  : \"+str(num))\n\nquery \u003d \"select count(*) as cnt from CreditCardUsersWithBankDetails_sink\"\nnum \u003d int(normal_run_api.analyze_sink_data(\"CollectInfo\", query).lstrip(\"{u\\\u0027cnt\\\u0027: \").rstrip(\u0027}\u0027))\nprint(\"Number of creditcard users with bank details : \"+str(num))\n\nquery \u003d \"select count(*) as cnt from CustomerWithAllDetails_sink\"\nnum \u003d int(normal_run_api.analyze_sink_data(\"CollectInfo\", query).lstrip(\"{u\\\u0027cnt\\\u0027: \").rstrip(\u0027}\u0027))\nprint(\"Number of Customers with all details available : \"+str(num))",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 08:46:30.580",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Number of creditcard users with address  : 8\nNumber of creditcard users with bank details : 9\nNumber of Customers with all details available : 2\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835658_-906213477",
+      "id": "20190704-081818_294089457",
+      "dateCreated": "2019-07-12 05:37:15.658",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\nquery \u003d \"select * from CustomerWithAllDetails_sink\"\nresp \u003d normal_run_api.analyze_sink_data(\"CollectInfo\", query)\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:37:15.658",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\"cardNo\":\"213132279383727\",\"expiryDate\":\"06/23\",\"info_id\":1,\"provider\":\"VISA 16 digit\",\"securityCode\":\"114\",\"username\":\"Christy Bender\",\"userprofession\":\"Insurance account manager\",\"fluirtimestamp\":\"2019-07-04T07:05:39.924Z\",\"dob\":\"1994-06-14\",\"contactNumber\":\"6114264322793\",\"address\":\"254 Juarez Court\\nSouth Jasonberg, WA 02240\",\"bank_bban\":\"MKQE1426432279383\",\"bank_iban\":\"GB13TGOK8710422990069\"}\n{\"cardNo\":\"630453234480\",\"expiryDate\":\"09/21\",\"info_id\":1,\"provider\":\"JCB 16 digit\",\"securityCode\":\"400\",\"username\":\"Cynthia Torres\",\"userprofession\":\"Adult nurse\",\"fluirtimestamp\":\"2019-07-04T08:13:10.386Z\",\"dob\":\"1971-06-12\",\"contactNumber\":\"7400904532344\",\"address\":\"PSC 9020, Box 5650\\nAPO AE 18144\",\"bank_bban\":\"AFTL0090453234489\",\"bank_iban\":\"GB34BHAN6503178659629\"}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835658_754767073",
+      "id": "20190704-082513_2050720914",
+      "dateCreated": "2019-07-12 05:37:15.658",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### 10. Cleanup\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-07 07:32:01.633",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true,
+        "editorHide": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e10. Cleanup\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835659_-1686049525",
+      "id": "20190704-090357_1052109674",
+      "dateCreated": "2019-07-12 05:37:15.659",
+      "dateStarted": "2019-08-07 07:31:59.795",
+      "dateFinished": "2019-08-07 07:31:59.799",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\nstop running pipelines\nresp \u003d normal_run_api.stop_pipeline(\"customerPersonalInfo\")\nprint(resp)\ntime.sleep(2)\nwhile pipeline_api.get_pipeline_state(\"customerPersonalInfo\").result !\u003d \"NotRunning\":\n    time.sleep(2)\nprint(\"pipeline customerPersonalInfo is stopped\")\n\nresp \u003d normal_run_api.stop_pipeline(\"CustomerBankDetails\")\nprint(resp)\ntime.sleep(2)\nwhile pipeline_api.get_pipeline_state(\"CustomerBankDetails\").result !\u003d \"NotRunning\":\n    time.sleep(2)\nprint(\"pipeline CustomerBankDetails is stopped\")\n\nresp \u003d normal_run_api.stop_pipeline(\"CreditCardInfo\")\nprint(resp)\ntime.sleep(2)\nwhile pipeline_api.get_pipeline_state(\"CreditCardInfo\").result !\u003d \"NotRunning\":\n    time.sleep(2)\nprint(\"pipeline CreditCardInfo is stopped\")\n\ndelete pipelines and exported tables\nresp \u003d pipeline_api.delete_pipeline(\"CollectInfo\")\nprint(resp)\ntime.sleep(20)\nresp \u003d exported_table_api.delete_exported_table(\"bankdetails_sink\")\nprint(resp)\nresp \u003d exported_table_api.delete_exported_table(\"personalinfo_sink\")\nprint(resp)\nresp \u003d exported_table_api.delete_exported_table(\"creditcard_sink\")\nprint(resp)\ntime.sleep(5)\nresp \u003d pipeline_api.delete_pipeline(\"customerPersonalInfo\")\nprint(resp)\nresp \u003d pipeline_api.delete_pipeline(\"CustomerBankDetails\")\nprint(resp)\nresp \u003d pipeline_api.delete_pipeline(\"CreditCardInfo\")\nprint(resp)\n\n# delete sources\ntime.sleep(30)\nresp \u003d source_api.delete_source(\"creditcard\")\nprint(resp)\nresp \u003d source_api.delete_source(\"bankdetails\")\nprint(resp)\nresp \u003d source_api.delete_source(\"personalinfo\")\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-07 07:31:59.015",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Dropped exported table \u0027bankdetails_sink\u0027\nDropped exported table \u0027personalinfo_sink\u0027\nDropped exported table \u0027creditcard_sink\u0027\n{\u0027result\u0027: \u0027Started pipeline deletion for customerPersonalInfo.\u0027,\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \u0027Started pipeline deletion for CustomerBankDetails.\u0027,\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \u0027Started pipeline deletion for CreditCardInfo.\u0027,\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \u0027creditcard\u0027}\n{\u0027result\u0027: \u0027bankdetails\u0027}\n{\u0027result\u0027: \u0027personalinfo\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909835659_313979240",
+      "id": "20190704-090435_29795071",
+      "dateCreated": "2019-07-12 05:37:15.659",
+      "dateStarted": "2019-07-31 12:36:49.548",
+      "dateFinished": "2019-07-31 12:37:26.449",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "FluirEngine / CreditCard Analysis with Streaming Kafka Data",
+  "id": "2EJ41Y61C",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "md:shared_process": [],
+    "python:shared_process": [],
+    "sh:shared_process": [],
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

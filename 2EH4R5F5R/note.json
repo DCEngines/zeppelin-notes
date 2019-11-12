@@ -1,0 +1,1940 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md\n# Advertising Analytics Click Prediction\n\nThis notebook has been refrenced from : https://databricks.com/blog/2018/07/19/simplify-advertising-analytics-click-prediction-with-databricks-unified-analytics-platform.html\n\nAdvertising teams want to analyze their immense stores and varieties of data requiring a scalable, extensible, and elastic platform.  Advanced analytics, including but not limited to classification, clustering, recognition, prediction, and recommendations allow these organizations to gain deeper insights from their data and drive business outcomes. As data of various types grow in volume, Apache Spark provides an API and distributed compute engine to process data easily and in parallel, thereby decreasing time to value.  \n\n\nCopy your train and test files in zeppelin dir \u0027/ovs_data\u0027 which is availble to yarn resource manager and node managers as well.\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 09:11:52.224",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003eAdvertising Analytics Click Prediction\u003c/h1\u003e\n\u003cp\u003eThis notebook has been refrenced from : \u003ca href\u003d\"https://databricks.com/blog/2018/07/19/simplify-advertising-analytics-click-prediction-with-databricks-unified-analytics-platform.html\"\u003ehttps://databricks.com/blog/2018/07/19/simplify-advertising-analytics-click-prediction-with-databricks-unified-analytics-platform.html\u003c/a\u003e\u003c/p\u003e\n\u003cp\u003eAdvertising teams want to analyze their immense stores and varieties of data requiring a scalable, extensible, and elastic platform. Advanced analytics, including but not limited to classification, clustering, recognition, prediction, and recommendations allow these organizations to gain deeper insights from their data and drive business outcomes. As data of various types grow in volume, Apache Spark provides an API and distributed compute engine to process data easily and in parallel, thereby decreasing time to value. \u003c/p\u003e\n\u003cp\u003eCopy your train and test files in zeppelin dir \u0026lsquo;/ovs_data\u0026rsquo; which is availble to yarn resource manager and node managers as well.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564122418118_-1151340691",
+      "id": "20190726-062658_506161667",
+      "dateCreated": "2019-07-26 06:26:58.118",
+      "dateStarted": "2019-07-26 09:11:52.225",
+      "dateFinished": "2019-07-26 09:11:52.238",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nLet’s look at a concrete example with the [Click-Through Rate Prediction dataset](https://www.kaggle.com/c/avazu-ctr-prediction/data) of ad impressions and clicks from the data science website Kaggle.  The goal of this workflow is to create a machine learning model that, given a new ad impression, predicts whether or not there will be a click.\n\n**To build our advanced analytics workflow, let’s focus on the three main steps:**\n\n1. ETL\n2. Data Exploration\n3. Advanced Analytics / Machine Learning\n\n### ELT and data exploration can be done using [ELUIRENGINE](http://server:8100/src/#/app/dashboard-v1) and then the data can be directly fed to the Machine Leaning steps",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 10:32:42.949",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eLet’s look at a concrete example with the \u003ca href\u003d\"https://www.kaggle.com/c/avazu-ctr-prediction/data\"\u003eClick-Through Rate Prediction dataset\u003c/a\u003e of ad impressions and clicks from the data science website Kaggle. The goal of this workflow is to create a machine learning model that, given a new ad impression, predicts whether or not there will be a click.\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eTo build our advanced analytics workflow, let’s focus on the three main steps:\u003c/strong\u003e\u003c/p\u003e\n\u003col\u003e\n  \u003cli\u003eETL\u003c/li\u003e\n  \u003cli\u003eData Exploration\u003c/li\u003e\n  \u003cli\u003eAdvanced Analytics / Machine Learning\u003c/li\u003e\n\u003c/ol\u003e\n\u003ch3\u003eELT and data exploration can be done using \u003ca href\u003d\"http://server:8100/src/#/app/dashboard-v1\"\u003eELUIRENGINE\u003c/a\u003e and then the data can be directly fed to the Machine Leaning steps\u003c/h3\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564132361996_1702928513",
+      "id": "20190726-091241_1343319182",
+      "dateCreated": "2019-07-26 09:12:41.996",
+      "dateStarted": "2019-07-26 10:32:42.949",
+      "dateFinished": "2019-07-26 10:32:42.961",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n### 1. ETL: Building the ETL process for the advertising logs\nFirst, we download the dataset to our dcefs storage. Once we have the data in dcefs storage, we can read it into Spark. Here, we\u0027re considering you\u0027ve copied the data into dcefs location into dir \u0027avazu\u0027\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 09:18:54.877",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch3\u003e1. ETL: Building the ETL process for the advertising logs\u003c/h3\u003e\n\u003cp\u003eFirst, we download the dataset to our dcefs storage. Once we have the data in dcefs storage, we can read it into Spark. Here, we\u0026rsquo;re considering you\u0026rsquo;ve copied the data into dcefs location into dir \u0026lsquo;avazu\u0026rsquo;\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564132566316_1022884348",
+      "id": "20190726-091606_1760021641",
+      "dateCreated": "2019-07-26 09:16:06.316",
+      "dateStarted": "2019-07-26 09:18:54.913",
+      "dateFinished": "2019-07-26 09:18:54.922",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n*A. Read train.gz file using spark code*",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 09:25:12.281",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003e\u003cem\u003eA. Read train.gz file using spark code\u003c/em\u003e\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564124714345_788017508",
+      "id": "20190726-070514_2130357322",
+      "dateCreated": "2019-07-26 07:05:14.345",
+      "dateStarted": "2019-07-26 09:25:12.282",
+      "dateFinished": "2019-07-26 09:25:12.288",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\nval df \u003d spark.read.format(\"csv\").option(\"header\", \"true\").load(\"/avazu/train.gz\")",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 07:04:57.826",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "df: org.apache.spark.sql.DataFrame \u003d [id: string, click: string ... 22 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564123072234_-1665591513",
+      "id": "20190726-063752_977085327",
+      "dateCreated": "2019-07-26 06:37:52.235",
+      "dateStarted": "2019-07-26 06:41:47.233",
+      "dateFinished": "2019-07-26 06:41:53.476",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n*B. Convert to parquet format and store it in \u0027train\u0027 dir*\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 09:25:05.813",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003e\u003cem\u003eB. Convert to parquet format and store it in \u0026lsquo;train\u0026rsquo; dir\u003c/em\u003e\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564124701882_1394285077",
+      "id": "20190726-070501_843225411",
+      "dateCreated": "2019-07-26 07:05:01.882",
+      "dateStarted": "2019-07-26 09:25:05.797",
+      "dateFinished": "2019-07-26 09:25:05.802",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\ndf.coalesce(4).write.mode(\"overwrite\").parquet(\"/avazu/train\")",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 07:10:33.252",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1564124577271_1727641100",
+      "id": "20190726-070257_1082277310",
+      "dateCreated": "2019-07-26 07:02:57.271",
+      "dateStarted": "2019-07-26 07:10:33.289",
+      "dateFinished": "2019-07-26 07:11:15.086",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n*C. Read the parquet file and create a view with name \u0027impression\u0027. With this your data is loaded*\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 09:25:00.208",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003e\u003cem\u003eC. Read the parquet file and create a view with name \u0026lsquo;impression\u0026rsquo;. With this your data is loaded\u003c/em\u003e\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564124873363_-2085365466",
+      "id": "20190726-070753_1546203188",
+      "dateCreated": "2019-07-26 07:07:53.363",
+      "dateStarted": "2019-07-26 09:25:00.209",
+      "dateFinished": "2019-07-26 09:25:00.217",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nimpression \u003d spark.read.parquet(\"/avazu/train/\")\nimpression.createOrReplaceTempView(\"impression\")\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 07:12:19.631",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1564124927697_-1966932255",
+      "id": "20190726-070847_268493318",
+      "dateCreated": "2019-07-26 07:08:47.697",
+      "dateStarted": "2019-07-26 07:12:19.672",
+      "dateFinished": "2019-07-26 07:12:19.916",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n### 2. Data Exploration: Explore Advertising Logs with Spark SQL\n\n*A. Display the schema of impressions*\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 09:30:19.780",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch3\u003e2. Data Exploration: Explore Advertising Logs with Spark SQL\u003c/h3\u003e\n\u003cp\u003e\u003cem\u003eA. Display the schema of impressions\u003c/em\u003e\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564132888272_-78340511",
+      "id": "20190726-092128_1673125143",
+      "dateCreated": "2019-07-26 09:21:28.272",
+      "dateStarted": "2019-07-26 09:30:19.825",
+      "dateFinished": "2019-07-26 09:30:19.830",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark\nimpression.show()",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 07:12:29.631",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-----+--------+----+----------+--------+-----------+-------------+--------+----------+------------+---------+---------+------------+-----------+----------------+-----+---+---+----+---+---+------+---+\n|                  id|click|    hour|  C1|banner_pos| site_id|site_domain|site_category|  app_id|app_domain|app_category|device_id|device_ip|device_model|device_type|device_conn_type|  C14|C15|C16| C17|C18|C19|   C20|C21|\n+--------------------+-----+--------+----+----------+--------+-----------+-------------+--------+----------+------------+---------+---------+------------+-----------+----------------+-----+---+---+----+---+---+------+---+\n| 1000009418151094273|    0|14102100|1005|         0|1fbe01fe|   f3845767|     28905ebd|ecad2386|  7801e8d9|    07d7df22| a99f214a| ddd2926e|    44956a24|          1|               2|15706|320| 50|1722|  0| 35|    -1| 79|\n|10000169349117863715|    0|14102100|1005|         0|1fbe01fe|   f3845767|     28905ebd|ecad2386|  7801e8d9|    07d7df22| a99f214a| 96809ac8|    711ee120|          1|               0|15704|320| 50|1722|  0| 35|100084| 79|\n|10000371904215119486|    0|14102100|1005|         0|1fbe01fe|   f3845767|     28905ebd|ecad2386|  7801e8d9|    07d7df22| a99f214a| b3cf8def|    8a4875bd|          1|               0|15704|320| 50|1722|  0| 35|100084| 79|\n|10000640724480838376|    0|14102100|1005|         0|1fbe01fe|   f3845767|     28905ebd|ecad2386|  7801e8d9|    07d7df22| a99f214a| e8275b8f|    6332421a|          1|               0|15706|320| 50|1722|  0| 35|100084| 79|\n|10000679056417042096|    0|14102100|1005|         1|fe8cc448|   9166c161|     0569f928|ecad2386|  7801e8d9|    07d7df22| a99f214a| 9644d0bf|    779d90c2|          1|               0|18993|320| 50|2161|  0| 35|    -1|157|\n|10000720757801103869|    0|14102100|1005|         0|d6137915|   bb1ef334|     f028772b|ecad2386|  7801e8d9|    07d7df22| a99f214a| 05241af0|    8a4875bd|          1|               0|16920|320| 50|1899|  0|431|100077|117|\n|10000724729988544911|    0|14102100|1005|         0|8fda644b|   25d4cfcd|     f028772b|ecad2386|  7801e8d9|    07d7df22| a99f214a| b264c159|    be6db1d7|          1|               0|20362|320| 50|2333|  0| 39|    -1|157|\n|10000918755742328737|    0|14102100|1005|         1|e151e245|   7e091613|     f028772b|ecad2386|  7801e8d9|    07d7df22| a99f214a| e6f67278|    be74e6fe|          1|               0|20632|320| 50|2374|  3| 39|    -1| 23|\n|10000949271186029916|    1|14102100|1005|         0|1fbe01fe|   f3845767|     28905ebd|ecad2386|  7801e8d9|    07d7df22| a99f214a| 37e8da74|    5db079b5|          1|               2|15707|320| 50|1722|  0| 35|    -1| 79|\n|10001264480619467364|    0|14102100|1002|         0|84c7ba46|   c4e18dd6|     50e219e0|ecad2386|  7801e8d9|    07d7df22| c357dbff| f1ac7184|    373ecbe6|          0|               0|21689|320| 50|2496|  3|167|100191| 23|\n|10001868339616595934|    0|14102100|1005|         1|e151e245|   7e091613|     f028772b|ecad2386|  7801e8d9|    07d7df22| a99f214a| 5d877109|    8f5c9827|          1|               0|17747|320| 50|1974|  2| 39|100019| 33|\n|10001966791793526909|    0|14102100|1005|         0|1fbe01fe|   f3845767|     28905ebd|ecad2386|  7801e8d9|    07d7df22| a99f214a| 6f407810|    1f0bc64f|          1|               0|15701|320| 50|1722|  0| 35|    -1| 79|\n|10002028568167339219|    0|14102100|1005|         0|9e8cf15d|   0d3cb7be|     f028772b|ecad2386|  7801e8d9|    07d7df22| a99f214a| 58811cdf|    8326c04b|          1|               2|20596|320| 50|2161|  0| 35|100148|157|\n|10002044883120869786|    0|14102100|1005|         0|d6137915|   bb1ef334|     f028772b|ecad2386|  7801e8d9|    07d7df22| a99f214a| 72aab6df|    04258293|          1|               0|19771|320| 50|2227|  0|687|100077| 48|\n|10002518649031436658|    0|14102100|1005|         0|85f751fd|   c4e18dd6|     50e219e0|98fed791|  d9b5648e|    0f2161f8| a99f214a| 6dec2796|    aad45b01|          1|               0|20984|320| 50|2371|  0|551|    -1| 46|\n|10003539039235338011|    0|14102100|1005|         0|1fbe01fe|   f3845767|     28905ebd|ecad2386|  7801e8d9|    07d7df22| a99f214a| a4f47b2e|    8a4875bd|          1|               0|15699|320| 50|1722|  0| 35|100084| 79|\n|10003585669470236873|    0|14102100|1005|         0|d9750ee7|   98572c79|     f028772b|ecad2386|  7801e8d9|    07d7df22| a99f214a| 9b1fe278|    128f4ba1|          1|               0|17914|320| 50|2043|  2| 39|    -1| 32|\n|10004105575081229495|    0|14102100|1005|         0|1fbe01fe|   f3845767|     28905ebd|ecad2386|  7801e8d9|    07d7df22| a99f214a| c26c53cf|    be87996b|          1|               2|15708|320| 50|1722|  0| 35|100084| 79|\n|10004181428767727519|    0|14102100|1005|         1|0c2fe9d6|   27e3c518|     28905ebd|ecad2386|  7801e8d9|    07d7df22| a99f214a| b7a69808|    158e4944|          1|               0| 6558|320| 50| 571|  2| 39|    -1| 32|\n|10004482643316086592|    0|14102100|1005|         0|85f751fd|   c4e18dd6|     50e219e0|66a5f0f3|  d9b5648e|    cef3e649| a99f214a| fa60af6b|    b4b19c97|          1|               0|21234|320| 50|2434|  3|163|100088| 61|\n+--------------------+-----+--------+----+----------+--------+-----------+-------------+--------+----------+------------+---------+---------+------------+-----------+----------------+-----+---+---+----+---+---+------+---+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564123318223_-1155246368",
+      "id": "20190726-064158_493185535",
+      "dateCreated": "2019-07-26 06:41:58.223",
+      "dateStarted": "2019-07-26 07:12:29.669",
+      "dateFinished": "2019-07-26 07:12:31.513",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n*B. Visualize the data*\n\nWe can now explore our data with the familiar and ubiquitous SQL language. Databricks and Spark support Scala, Python, R, and SQL. The following code snippets calculates the click through rate (CTR) by banner position and hour of day.\n\nCalculate CTR by Banner Position:",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 09:26:57.422",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003e\u003cem\u003eB. Visualize the data\u003c/em\u003e\u003c/p\u003e\n\u003cp\u003eWe can now explore our data with the familiar and ubiquitous SQL language. Databricks and Spark support Scala, Python, R, and SQL. The following code snippets calculates the click through rate (CTR) by banner position and hour of day.\u003c/p\u003e\n\u003cp\u003eCalculate CTR by Banner Position:\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564122811812_197930863",
+      "id": "20190726-063331_980710091",
+      "dateCreated": "2019-07-26 06:33:31.813",
+      "dateStarted": "2019-07-26 09:26:57.424",
+      "dateFinished": "2019-07-26 09:26:57.432",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql\nselect banner_pos,\nsum(case when click \u003d 1 then 1 else 0 end) / (count(1) * 1.0) as CTR\nfrom impression \ngroup by 1 \norder by 1",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-09 05:29:04.848",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "multiBarChart",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {
+                    "columns": [
+                      {
+                        "name": "banner_pos",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "CTR",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      }
+                    ],
+                    "scrollFocus": {},
+                    "selection": [],
+                    "grouping": {
+                      "grouping": [],
+                      "aggregations": [],
+                      "rowExpandedStates": {}
+                    },
+                    "treeView": {},
+                    "pagination": {
+                      "paginationCurrentPage": 1.0,
+                      "paginationPageSize": 250.0
+                    }
+                  },
+                  "tableColumnTypeState": {
+                    "updated": false,
+                    "names": {
+                      "banner_pos": "string",
+                      "CTR": "string"
+                    }
+                  },
+                  "updated": false,
+                  "initialized": false,
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  }
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default",
+                  "stacked": false
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "banner_pos",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "CTR",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "banner_pos\tCTR\n0\t0.15703298819099778\n1\t0.19508511565607623\n2\t0.11542857142857143\n3\t0E-17\n4\t0.16793893129770992\n5\t0.08945935433683392\n7\t0.07326007326007326\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564037553050_-2014835219",
+      "id": "20190725-065233_431493583",
+      "dateCreated": "2019-07-25 06:52:33.050",
+      "dateStarted": "2019-07-26 07:13:49.379",
+      "dateFinished": "2019-07-26 07:13:57.084",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nCalculate CTR by Hour of the day:\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 09:27:09.758",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eCalculate CTR by Hour of the day:\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564122897433_2099661997",
+      "id": "20190726-063457_928980557",
+      "dateCreated": "2019-07-26 06:34:57.433",
+      "dateStarted": "2019-07-26 09:27:09.760",
+      "dateFinished": "2019-07-26 09:27:09.766",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql\nselect substr(hour, 7) as hour,\nsum(case when click \u003d 1 then 1 else 0 end) / (count(1) * 1.0) as CTR\nfrom impression \ngroup by 1 \norder by 1\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-09 05:29:04.924",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "lineChart",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "hour": "string",
+                      "CTR": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "hour",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "CTR",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "hour\tCTR\n00\t0.17471387997243836\n01\t0.17369508592715473\n02\t0.15069575988933393\n03\t0.16979131649039332\n04\t0.15120641000940648\n05\t0.14884460694698355\n06\t0.16125896879692975\n07\t0.16975218693714138\n08\t0.16994460635772326\n09\t0.16370384164006981\n10\t0.17844501769752235\n11\t0.20195143055571368\n12\t0.19962525223407322\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564038316603_1515166436",
+      "id": "20190725-070516_1747352060",
+      "dateCreated": "2019-07-25 07:05:16.603",
+      "dateStarted": "2019-07-26 07:14:08.399",
+      "dateFinished": "2019-07-26 07:14:13.904",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql\nselect * from impression limit 10",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 09:27:46.356",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "id": "string",
+                      "click": "string",
+                      "hour": "string",
+                      "C1": "string",
+                      "banner_pos": "string",
+                      "site_id": "string",
+                      "site_domain": "string",
+                      "site_category": "string",
+                      "app_id": "string",
+                      "app_domain": "string",
+                      "app_category": "string",
+                      "device_id": "string",
+                      "device_ip": "string",
+                      "device_model": "string",
+                      "device_type": "string",
+                      "device_conn_type": "string",
+                      "C14": "string",
+                      "C15": "string",
+                      "C16": "string",
+                      "C17": "string",
+                      "C18": "string",
+                      "C19": "string",
+                      "C20": "string",
+                      "C21": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "id",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "click",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "id\tclick\thour\tC1\tbanner_pos\tsite_id\tsite_domain\tsite_category\tapp_id\tapp_domain\tapp_category\tdevice_id\tdevice_ip\tdevice_model\tdevice_type\tdevice_conn_type\tC14\tC15\tC16\tC17\tC18\tC19\tC20\tC21\n1000009418151094273\t0\t14102100\t1005\t0\t1fbe01fe\tf3845767\t28905ebd\tecad2386\t7801e8d9\t07d7df22\ta99f214a\tddd2926e\t44956a24\t1\t2\t15706\t320\t50\t1722\t0\t35\t-1\t79\n10000169349117863715\t0\t14102100\t1005\t0\t1fbe01fe\tf3845767\t28905ebd\tecad2386\t7801e8d9\t07d7df22\ta99f214a\t96809ac8\t711ee120\t1\t0\t15704\t320\t50\t1722\t0\t35\t100084\t79\n10000371904215119486\t0\t14102100\t1005\t0\t1fbe01fe\tf3845767\t28905ebd\tecad2386\t7801e8d9\t07d7df22\ta99f214a\tb3cf8def\t8a4875bd\t1\t0\t15704\t320\t50\t1722\t0\t35\t100084\t79\n10000640724480838376\t0\t14102100\t1005\t0\t1fbe01fe\tf3845767\t28905ebd\tecad2386\t7801e8d9\t07d7df22\ta99f214a\te8275b8f\t6332421a\t1\t0\t15706\t320\t50\t1722\t0\t35\t100084\t79\n10000679056417042096\t0\t14102100\t1005\t1\tfe8cc448\t9166c161\t0569f928\tecad2386\t7801e8d9\t07d7df22\ta99f214a\t9644d0bf\t779d90c2\t1\t0\t18993\t320\t50\t2161\t0\t35\t-1\t157\n10000720757801103869\t0\t14102100\t1005\t0\td6137915\tbb1ef334\tf028772b\tecad2386\t7801e8d9\t07d7df22\ta99f214a\t05241af0\t8a4875bd\t1\t0\t16920\t320\t50\t1899\t0\t431\t100077\t117\n10000724729988544911\t0\t14102100\t1005\t0\t8fda644b\t25d4cfcd\tf028772b\tecad2386\t7801e8d9\t07d7df22\ta99f214a\tb264c159\tbe6db1d7\t1\t0\t20362\t320\t50\t2333\t0\t39\t-1\t157\n10000918755742328737\t0\t14102100\t1005\t1\te151e245\t7e091613\tf028772b\tecad2386\t7801e8d9\t07d7df22\ta99f214a\te6f67278\tbe74e6fe\t1\t0\t20632\t320\t50\t2374\t3\t39\t-1\t23\n10000949271186029916\t1\t14102100\t1005\t0\t1fbe01fe\tf3845767\t28905ebd\tecad2386\t7801e8d9\t07d7df22\ta99f214a\t37e8da74\t5db079b5\t1\t2\t15707\t320\t50\t1722\t0\t35\t-1\t79\n10001264480619467364\t0\t14102100\t1002\t0\t84c7ba46\tc4e18dd6\t50e219e0\tecad2386\t7801e8d9\t07d7df22\tc357dbff\tf1ac7184\t373ecbe6\t0\t0\t21689\t320\t50\t2496\t3\t167\t100191\t23\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564040629477_1496925554",
+      "id": "20190725-074349_977717830",
+      "dateCreated": "2019-07-25 07:43:49.477",
+      "dateStarted": "2019-07-26 09:27:46.399",
+      "dateFinished": "2019-07-26 09:27:47.670",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql\ndescribe impression",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 09:28:01.127",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "col_name": "string",
+                      "data_type": "string",
+                      "comment": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "col_name",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "data_type",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "col_name\tdata_type\tcomment\nid\tstring\tnull\nclick\tstring\tnull\nhour\tstring\tnull\nC1\tstring\tnull\nbanner_pos\tstring\tnull\nsite_id\tstring\tnull\nsite_domain\tstring\tnull\nsite_category\tstring\tnull\napp_id\tstring\tnull\napp_domain\tstring\tnull\napp_category\tstring\tnull\ndevice_id\tstring\tnull\ndevice_ip\tstring\tnull\ndevice_model\tstring\tnull\ndevice_type\tstring\tnull\ndevice_conn_type\tstring\tnull\nC14\tstring\tnull\nC15\tstring\tnull\nC16\tstring\tnull\nC17\tstring\tnull\nC18\tstring\tnull\nC19\tstring\tnull\nC20\tstring\tnull\nC21\tstring\tnull\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564054154518_-1047595015",
+      "id": "20190725-112914_1439701002",
+      "dateCreated": "2019-07-25 11:29:14.518",
+      "dateStarted": "2019-07-26 09:28:01.194",
+      "dateFinished": "2019-07-26 09:28:01.219",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n### 3. Advance Analytics/Machine Learning\n\nOnce we have familiarized ourselves with our data, we can proceed to the machine learning phase, where we convert our data into features for input to a machine learning algorithm and produce a trained model with which we can predict.  Because Spark MLlib algorithms take a column of feature vectors of doubles as input, a typical feature engineering workflow includes:\n\n - Identifying numeri and categorical features\n - String indexing\n - Assembling them all into a sparse vector \n \nThe following code snippet is an example of a feature engineering workflow.",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 09:35:11.014",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch3\u003e3. Advance Analytics/Machine Learning\u003c/h3\u003e\n\u003cp\u003eOnce we have familiarized ourselves with our data, we can proceed to the machine learning phase, where we convert our data into features for input to a machine learning algorithm and produce a trained model with which we can predict. Because Spark MLlib algorithms take a column of feature vectors of doubles as input, a typical feature engineering workflow includes:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003eIdentifying numeri and categorical features\u003c/li\u003e\n  \u003cli\u003eString indexing\u003c/li\u003e\n  \u003cli\u003eAssembling them all into a sparse vector\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003eThe following code snippet is an example of a feature engineering workflow.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564133432279_1363382610",
+      "id": "20190726-093032_2055747866",
+      "dateCreated": "2019-07-26 09:30:32.280",
+      "dateStarted": "2019-07-26 09:35:11.017",
+      "dateFinished": "2019-07-26 09:35:11.030",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%spark.pyspark\nfrom pyspark.sql.functions import *\n# impression \u003d spark.sql(\"select * from fluir.impression\")\nstrCols \u003d map(lambda t: t[0], filter(lambda t: t[1] \u003d\u003d \u0027string\u0027, impression.dtypes))\nintCols \u003d map(lambda t: t[0], filter(lambda t: t[1] \u003d\u003d \u0027int\u0027, impression.dtypes))\n# [row_idx][json_idx]\\n\nstrColsCount \u003d sorted(map(lambda c: (c, impression.select(countDistinct(c)).collect()[0][0]), strCols), key\u003dlambda x: x[1], reverse\u003dTrue)\nintColsCount \u003d sorted(map(lambda c: (c, impression.select(countDistinct(c)).collect()[0][0]), intCols), key\u003dlambda x: x[1], reverse\u003dTrue)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 07:14:49.002",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1564059765131_1647261783",
+      "id": "20190725-130245_1975873297",
+      "dateCreated": "2019-07-25 13:02:45.131",
+      "dateStarted": "2019-07-26 07:14:38.354",
+      "dateFinished": "2019-07-26 07:16:21.454",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n\nfrom pyspark.ml.feature import StringIndexer, VectorAssembler\n\n\n# All of the columns (string or integer) are categorical columns\nmaxBins \u003d 70\nprint(strColsCount)\ncategorical \u003d map(lambda c: c[0], filter(lambda c: c[1] \u003c\u003d maxBins, strColsCount))\ncategorical +\u003d map(lambda c: c[0], filter(lambda c: c[1] \u003c\u003d maxBins, intColsCount))\n\nprint(categorical)\n#remove \u0027click\u0027 which we are trying to predict\ncategorical.remove(\u0027click\u0027)\n\n# Apply string indexer to all of the categorical columns\n#  And add _idx to the column name to indicate the index of the\n#  categorical value\nstringIndexers \u003d map(lambda c: StringIndexer(inputCol \u003d c, outputCol \u003d c + \"_idx\"), categorical)\n\n# Assemble the put as the input to the VectorAssembler \n#   with the output being our features\nassemblerInputs \u003d map(lambda c: c + \"_idx\", categorical)\nvectorAssembler \u003d VectorAssembler(inputCols \u003d assemblerInputs, outputCol \u003d \"features\")\n\n# The [click] column is our label \nlabelStringIndexer \u003d StringIndexer(inputCol \u003d \"click\", outputCol \u003d \"label\")\n\n# The stages of our ML pipeline \nstages \u003d stringIndexers + [vectorAssembler, labelStringIndexer]",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 07:18:57.185",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "[(\u0027id\u0027, 2499999), (\u0027device_ip\u0027, 682727), (\u0027device_id\u0027, 202503), (\u0027device_model\u0027, 5546), (\u0027app_id\u0027, 3384), (\u0027site_domain\u0027, 2890), (\u0027site_id\u0027, 2604), (\u0027C14\u0027, 719), (\u0027app_domain\u0027, 229), (\u0027C17\u0027, 183), (\u0027C20\u0027, 166), (\u0027C19\u0027, 44), (\u0027C21\u0027, 38), (\u0027app_category\u0027, 28), (\u0027site_category\u0027, 22), (\u0027hour\u0027, 13), (\u0027C16\u0027, 9), (\u0027C15\u0027, 8), (\u0027C1\u0027, 7), (\u0027banner_pos\u0027, 7), (\u0027device_type\u0027, 4), (\u0027device_conn_type\u0027, 4), (\u0027C18\u0027, 4), (\u0027click\u0027, 2)]\n[\u0027C19\u0027, \u0027C21\u0027, \u0027app_category\u0027, \u0027site_category\u0027, \u0027hour\u0027, \u0027C16\u0027, \u0027C15\u0027, \u0027C1\u0027, \u0027banner_pos\u0027, \u0027device_type\u0027, \u0027device_conn_type\u0027, \u0027C18\u0027, \u0027click\u0027]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564040688411_-1757629963",
+      "id": "20190725-074448_1657879985",
+      "dateCreated": "2019-07-25 07:44:48.411",
+      "dateStarted": "2019-07-26 07:18:57.220",
+      "dateFinished": "2019-07-26 07:18:57.447",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n\nIn our use of GBTClassifer, you may have noticed that while we use string indexer but we are not applying One Hot Encoder (OHE).When using StringIndexer, categorical features are kept as k-ary categorical features. A tree node will test if feature X has a value in {subset of categories}. With both StringIndexer + OHE: Your categorical features are turned into a bunch of binary features. A tree node will test if feature X \u003d category a vs. all the other categories (one vs. rest test).\n\nWhen using only StringIndexer, the benefits include:\n\n - There are fewer features to choose\n - Each node’s test is more expressive than with binary 1-vs-rest features\n\nTherefore, for because for tree based methods, it is preferable to not use OHE as it is a less expressive test and it takes up more space. But for non-tree-based algorithms such as like linear regression, you must use OHE or else the model will impose a false and misleading ordering on categories.\n\nWith our workflow created, we can create our ML pipeline.\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 10:00:40.423",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eIn our use of GBTClassifer, you may have noticed that while we use string indexer but we are not applying One Hot Encoder (OHE).When using StringIndexer, categorical features are kept as k-ary categorical features. A tree node will test if feature X has a value in {subset of categories}. With both StringIndexer + OHE: Your categorical features are turned into a bunch of binary features. A tree node will test if feature X \u003d category a vs. all the other categories (one vs. rest test).\u003c/p\u003e\n\u003cp\u003eWhen using only StringIndexer, the benefits include:\u003c/p\u003e\n\u003cul\u003e\n  \u003cli\u003eThere are fewer features to choose\u003c/li\u003e\n  \u003cli\u003eEach node’s test is more expressive than with binary 1-vs-rest features\u003c/li\u003e\n\u003c/ul\u003e\n\u003cp\u003eTherefore, for because for tree based methods, it is preferable to not use OHE as it is a less expressive test and it takes up more space. But for non-tree-based algorithms such as like linear regression, you must use OHE or else the model will impose a false and misleading ordering on categories.\u003c/p\u003e\n\u003cp\u003eWith our workflow created, we can create our ML pipeline.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564135231938_-754039882",
+      "id": "20190726-100031_1413395870",
+      "dateCreated": "2019-07-26 10:00:31.938",
+      "dateStarted": "2019-07-26 10:00:40.249",
+      "dateFinished": "2019-07-26 10:00:40.264",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nfrom pyspark.ml import Pipeline\n# Create our pipeline\npipeline \u003d Pipeline(stages \u003d stages)\n\n# create transformer to add features\nfeaturizer \u003d pipeline.fit(impression)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 07:19:02.432",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1564120855345_-1306657345",
+      "id": "20190726-060055_1599209480",
+      "dateCreated": "2019-07-26 06:00:55.345",
+      "dateStarted": "2019-07-26 07:19:02.470",
+      "dateFinished": "2019-07-26 07:19:26.368",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n#dataframe with feature and intermediate transformation columns appended\nfeaturizedImpressions \u003d featurizer.transform(impression)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 07:20:04.813",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1564121051129_-1122027704",
+      "id": "20190726-060411_413282270",
+      "dateCreated": "2019-07-26 06:04:11.129",
+      "dateStarted": "2019-07-26 07:20:04.842",
+      "dateFinished": "2019-07-26 07:20:05.026",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nfeaturizedImpressions.schema",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 10:10:29.333",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "StructType(List(StructField(id,DecimalType(20,0),true),StructField(click,IntegerType,true),StructField(hour,IntegerType,true),StructField(C1,IntegerType,true),StructField(banner_pos,IntegerType,true),StructField(site_id,StringType,true),StructField(site_domain,StringType,true),StructField(site_category,StringType,true),StructField(app_id,StringType,true),StructField(app_domain,StringType,true),StructField(app_category,StringType,true),StructField(device_id,StringType,true),StructField(device_ip,StringType,true),StructField(device_model,StringType,true),StructField(device_type,IntegerType,true),StructField(device_conn_type,IntegerType,true),StructField(C14,IntegerType,true),StructField(C15,IntegerType,true),StructField(C16,IntegerType,true),StructField(C17,IntegerType,true),StructField(C18,IntegerType,true),StructField(C19,IntegerType,true),StructField(C20,IntegerType,true),StructField(C21,IntegerType,true),StructField(C19_idx,DoubleType,false),StructField(C21_idx,DoubleType,false),StructField(app_category_idx,DoubleType,false),StructField(site_category_idx,DoubleType,false),StructField(hour_idx,DoubleType,false),StructField(C16_idx,DoubleType,false),StructField(C15_idx,DoubleType,false),StructField(C1_idx,DoubleType,false),StructField(banner_pos_idx,DoubleType,false),StructField(device_type_idx,DoubleType,false),StructField(device_conn_type_idx,DoubleType,false),StructField(C18_idx,DoubleType,false),StructField(features,VectorUDT,true),StructField(label,DoubleType,false)))\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564121749487_-358958369",
+      "id": "20190726-061549_1182099030",
+      "dateCreated": "2019-07-26 06:15:49.487",
+      "dateStarted": "2019-07-26 10:10:29.373",
+      "dateFinished": "2019-07-26 10:10:29.393",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nfeaturizedImpressions.select(\u0027features\u0027, \u0027label\u0027).show()",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 07:20:12.412",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+-----+\n|            features|label|\n+--------------------+-----+\n|(12,[3,4,10,11],[...|  0.0|\n|(12,[3,4,11],[2.0...|  0.0|\n|(12,[3,4,11],[2.0...|  0.0|\n|(12,[3,4,11],[2.0...|  0.0|\n|(12,[1,3,4,8,11],...|  0.0|\n|(12,[0,1,3,4,11],...|  0.0|\n|(12,[0,1,3,4,11],...|  0.0|\n|(12,[0,1,3,4,8],[...|  0.0|\n|(12,[3,4,10,11],[...|  1.0|\n|(12,[0,1,4,7,9],[...|  0.0|\n|(12,[0,1,3,4,8,11...|  0.0|\n|(12,[3,4,11],[2.0...|  0.0|\n|(12,[1,3,4,10,11]...|  0.0|\n|(12,[0,1,3,4,11],...|  0.0|\n|(12,[0,1,2,4,11],...|  0.0|\n|(12,[3,4,11],[2.0...|  0.0|\n|(12,[0,1,3,4,11],...|  0.0|\n|(12,[3,4,10,11],[...|  0.0|\n|(12,[0,1,3,4,8,11...|  0.0|\n|(12,[0,1,2,4],[10...|  0.0|\n+--------------------+-----+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564121149222_-711834538",
+      "id": "20190726-060549_250048612",
+      "dateCreated": "2019-07-26 06:05:49.223",
+      "dateStarted": "2019-07-26 07:20:12.448",
+      "dateFinished": "2019-07-26 07:20:26.329",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nNext, we will split our featurized dataset into training and test datasets via .randomSplit()\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 10:11:11.484",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eNext, we will split our featurized dataset into training and test datasets via .randomSplit()\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564135863707_-1578439415",
+      "id": "20190726-101103_614284789",
+      "dateCreated": "2019-07-26 10:11:03.707",
+      "dateStarted": "2019-07-26 10:11:11.486",
+      "dateFinished": "2019-07-26 10:11:11.491",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\ntrain, test \u003d featurizedImpressions.select([\"label\", \"features\", \"hour\"]).randomSplit([0.7, 0.3], 42)\ntrain.cache()\ntest.cache()",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 06:16:43.206",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "DataFrame[label: double, features: vector, hour: int]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564121186443_-358535800",
+      "id": "20190726-060626_273745094",
+      "dateCreated": "2019-07-26 06:06:26.443",
+      "dateStarted": "2019-07-26 06:16:43.250",
+      "dateFinished": "2019-07-26 06:16:44.353",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nNext, we will train, predict, and evaluate our model using the GBTClassifier.  As a side note, a good primer on solving binary classification problems with Spark MLlib is Susan Li’s [Machine Learning with PySpark and MLlib — Solving a Binary Classification Problem](https://towardsdatascience.com/machine-learning-with-pyspark-and-mllib-solving-a-binary-classification-problem-96396065d2aa).\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 10:12:03.047",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/scala"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eNext, we will train, predict, and evaluate our model using the GBTClassifier. As a side note, a good primer on solving binary classification problems with Spark MLlib is Susan Li’s \u003ca href\u003d\"https://towardsdatascience.com/machine-learning-with-pyspark-and-mllib-solving-a-binary-classification-problem-96396065d2aa\"\u003eMachine Learning with PySpark and MLlib — Solving a Binary Classification Problem\u003c/a\u003e.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564135891581_-1151573700",
+      "id": "20190726-101131_2082278727",
+      "dateCreated": "2019-07-26 10:11:31.581",
+      "dateStarted": "2019-07-26 10:12:03.089",
+      "dateFinished": "2019-07-26 10:12:03.094",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nfrom pyspark.ml.classification import GBTClassifier\n# Train our GBTClassifier model\nclassifier \u003d GBTClassifier(labelCol\u003d\"label\", featuresCol\u003d\"features\", maxBins\u003dmaxBins, maxDepth\u003d10, maxIter\u003d10)\nmodel \u003d classifier.fit(train)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 07:22:22.776",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1564121417605_-495592882",
+      "id": "20190726-061017_27628802",
+      "dateCreated": "2019-07-26 06:10:17.605",
+      "dateStarted": "2019-07-26 07:22:22.807",
+      "dateFinished": "2019-07-26 07:26:20.753",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n#Execute our predictions\npredictions \u003d model.transform(test)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 07:27:07.966",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1564121475766_-132093492",
+      "id": "20190726-061115_1571337758",
+      "dateCreated": "2019-07-26 06:11:15.766",
+      "dateStarted": "2019-07-26 07:27:08.028",
+      "dateFinished": "2019-07-26 07:27:08.058",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nfrom pyspark.ml.evaluation import BinaryClassificationEvaluator\n\n# Evaluate our GBTClassifier model using BinaryClassificationEvaluator()\nev \u003d BinaryClassificationEvaluator(rawPredictionCol\u003d\"rawPrediction\", metricName\u003d\"areaUnderROC\")\nprint ev.evaluate(predictions)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 07:27:12.188",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "0.725210509046\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564121850302_169127030",
+      "id": "20190726-061730_1699548970",
+      "dateCreated": "2019-07-26 06:17:30.303",
+      "dateStarted": "2019-07-26 07:27:12.268",
+      "dateFinished": "2019-07-26 07:27:25.697",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nWith our predictions, we can evaluate the model according to some evaluation metric, for example, area under the ROC curve, and view features by importance.  We can also see the AUC value which in this case is 0.725210509046.\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 10:12:47.460",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eWith our predictions, we can evaluate the model according to some evaluation metric, for example, area under the ROC curve, and view features by importance. We can also see the AUC value which in this case is 0.725210509046.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564135947180_942435111",
+      "id": "20190726-101227_1036166619",
+      "dateCreated": "2019-07-26 10:12:27.180",
+      "dateStarted": "2019-07-26 10:12:47.461",
+      "dateFinished": "2019-07-26 10:12:47.467",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nimport json\nfeatures \u003d map(lambda c: str(json.loads(json.dumps(c))[\u0027name\u0027]), predictions.schema[\u0027features\u0027].metadata.get(\u0027ml_attr\u0027).get(\u0027attrs\u0027).values()[0])\n\n#convert numpy.float64 to str for spark.createDataFrame()\nweights\u003dmap(lambda w: \u0027%.10f\u0027 % w, model.featureImportances)\nweightedFeatures \u003d sorted(zip(weights, features), key\u003dlambda x: x[1], reverse\u003dTrue)\nspark.createDataFrame(weightedFeatures).toDF(\"weight\", \"feature\").createOrReplaceTempView(\u0027wf\u0027)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 10:12:58.646",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1564121889837_357545239",
+      "id": "20190726-061809_1052967550",
+      "dateCreated": "2019-07-26 06:18:09.837",
+      "dateStarted": "2019-07-26 10:12:58.685",
+      "dateFinished": "2019-07-26 10:12:58.761",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql\nselect feature, weight from wf order by weight desc",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-09 05:29:06.277",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "stackedAreaChart",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "feature": "string",
+                      "weight": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "lineChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "feature",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "weight",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "feature\tweight\nC21_idx\t0.4177487329\nC19_idx\t0.1568063990\nsite_category_idx\t0.1128820585\nhour_idx\t0.0946347352\napp_category_idx\t0.0741270054\nbanner_pos_idx\t0.0387547628\ndevice_conn_type_idx\t0.0357779433\nC16_idx\t0.0242824873\nC15_idx\t0.0132284327\nC1_idx\t0.0120744964\nC18_idx\t0.0106200059\ndevice_type_idx\t0.0090629406\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564122007343_2034725187",
+      "id": "20190726-062007_1776818693",
+      "dateCreated": "2019-07-26 06:20:07.344",
+      "dateStarted": "2019-07-26 07:27:35.003",
+      "dateFinished": "2019-07-26 07:27:35.070",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\npredictions.createOrReplaceTempView(\"predictions\")",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 07:27:42.460",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/python"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1564122042959_2032220829",
+      "id": "20190726-062042_73438190",
+      "dateCreated": "2019-07-26 06:20:42.959",
+      "dateStarted": "2019-07-26 07:27:42.495",
+      "dateFinished": "2019-07-26 07:27:42.549",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql\nselect (count(1) * 1.0) from predictions\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 10:23:07.971",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "(CAST(CAST(count(1) AS DECIMAL(20,0)) AS DECIMAL(21,1)) * CAST(1.0 AS DECIMAL(21,1)))": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "(CAST(CAST(count(1) AS DECIMAL(20,0)) AS DECIMAL(21,1)) * CAST(1.0 AS DECIMAL(21,1)))\n749323.0\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564122076181_-2131567142",
+      "id": "20190726-062116_1473756896",
+      "dateCreated": "2019-07-26 06:21:16.181",
+      "dateStarted": "2019-07-26 10:22:53.232",
+      "dateFinished": "2019-07-26 10:22:53.439",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nCalculate the accuracy of the model by checking the cases where oour model has actually predicted the correct output\nformula:\n\n**accuracy \u003d Number of correct preductions/ total number of predictions**\n\n[Classification: Accuracy reference](https://developers.google.com/machine-learning/crash-course/classification/accuracy)\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 10:25:41.569",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eCalculate the accuracy of the model by checking the cases where oour model has actually predicted the correct output\u003cbr/\u003eformula:\u003c/p\u003e\n\u003cp\u003e\u003cstrong\u003eaccuracy \u003d Number of correct preductions/ total number of predictions\u003c/strong\u003e\u003c/p\u003e\n\u003cp\u003e\u003ca href\u003d\"https://developers.google.com/machine-learning/crash-course/classification/accuracy\"\u003eClassification: Accuracy reference\u003c/a\u003e\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564136353450_-1103678966",
+      "id": "20190726-101913_657557378",
+      "dateCreated": "2019-07-26 10:19:13.450",
+      "dateStarted": "2019-07-26 10:25:41.571",
+      "dateFinished": "2019-07-26 10:25:41.578",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql\nselect sum(case when prediction \u003d label then 1 else 0 end) / count(*) as accuracy from predictions",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 10:24:14.512",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "accuracy": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            },
+            "helium": {}
+          }
+        },
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "editorMode": "ace/mode/sql"
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "accuracy\n0.83645237100689556\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564122097390_943247670",
+      "id": "20190726-062137_2123639695",
+      "dateCreated": "2019-07-26 06:21:37.390",
+      "dateStarted": "2019-07-26 10:23:50.801",
+      "dateFinished": "2019-07-26 10:24:01.184",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nAccuracy value shows how accurately our model has predicted the click. In this case the accuracy is 0.8364523710068955 .\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-26 10:27:36.718",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eAccuracy value shows how accurately our model has predicted the click. In this case the accuracy is 0.8364523710068955 .\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564136602285_-93144165",
+      "id": "20190726-102322_107280852",
+      "dateCreated": "2019-07-26 10:23:22.285",
+      "dateStarted": "2019-07-26 10:27:36.720",
+      "dateFinished": "2019-07-26 10:27:36.725",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "Spark/ Advertising Analytics Ad Click Prediction using Spark",
+  "id": "2EH4R5F5R",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "md:shared_process": [],
+    "python:shared_process": [],
+    "sh:shared_process": [],
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

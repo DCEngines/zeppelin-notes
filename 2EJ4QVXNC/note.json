@@ -1,0 +1,1124 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md\n# This is a sample zeppelin notebook analyzing the TPC-H data using fluirdb-python-sdk. Follow inline steps\n\n#### 1. Generate tpch data",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:35:34.187",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003eThis is a sample zeppelin notebook analyzing the TPC-H data using fluirdb-python-sdk. Follow inline steps\u003c/h1\u003e\n\u003ch4\u003e1. Generate tpch data\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734177_-1097396056",
+      "id": "20190704-082704_1902461007",
+      "dateCreated": "2019-07-12 05:35:34.177",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sh\nwget https://www.dropbox.com/s/ev7x2deudaa21re/dbgen\nwget https://www.dropbox.com/s/ciq2icrq3u1n7q3/dists.dss\n\nchmod 777 dbgen\nmkdir -p /ovs_data/user/root/tpch\nmv dbgen /ovs_data/user/root/tpch/\nmv dists.dss /ovs_data/user/root/tpch/\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-31 06:07:35.803",
+      "config": {
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sh",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "--2019-07-31 06:07:37--  https://www.dropbox.com/s/ev7x2deudaa21re/dbgen\nResolving www.dropbox.com (www.dropbox.com)... 162.125.4.1, 2620:100:6019:1::a27d:401\nConnecting to www.dropbox.com (www.dropbox.com)|162.125.4.1|:443... connected.\nHTTP request sent, awaiting response... 301 Moved Permanently\nLocation: /s/raw/ev7x2deudaa21re/dbgen [following]\n--2019-07-31 06:07:38--  https://www.dropbox.com/s/raw/ev7x2deudaa21re/dbgen\nReusing existing connection to www.dropbox.com:443.\nHTTP request sent, awaiting response... 302 Found\nLocation: https://uc8b0e7917176d88665397a1f0d9.dl.dropboxusercontent.com/cd/0/inline/Altpmz5TtgQL6ep-4X2obgB_nPyUO-uiIBge90h18X0uqNRTAbfd_FwIZ3AMKpOQJ67_C977MYeWoe-X3fBqpLjZ-jM0uWEW2yDZYArfQxFjDw/file# [following]\n--2019-07-31 06:07:38--  https://uc8b0e7917176d88665397a1f0d9.dl.dropboxusercontent.com/cd/0/inline/Altpmz5TtgQL6ep-4X2obgB_nPyUO-uiIBge90h18X0uqNRTAbfd_FwIZ3AMKpOQJ67_C977MYeWoe-X3fBqpLjZ-jM0uWEW2yDZYArfQxFjDw/file\nResolving uc8b0e7917176d88665397a1f0d9.dl.dropboxusercontent.com (uc8b0e7917176d88665397a1f0d9.dl.dropboxusercontent.com)... 162.125.4.6, 2620:100:6019:6::a27d:406\nConnecting to uc8b0e7917176d88665397a1f0d9.dl.dropboxusercontent.com (uc8b0e7917176d88665397a1f0d9.dl.dropboxusercontent.com)|162.125.4.6|:443... connected.\nHTTP request sent, awaiting response... 302 FOUND\nLocation: /cd/0/inline2/AluRy34lIpE2KM2hy8Ugm9Zxz69ug6JLGH0wNRzy_soEDl-kXGhcrTnfoObVnjzqJ0rPyt3BFQ1Sh6D6MuBDzO6BkNoJbezJTrcou1f3J6eHNNAFASf6B1ZC4TMjMzLxNJblf8IcPbLMLVd6rTeufnxoruHNVSe2Zz04La9DdjNvIb1QW_RVTlJFOyAWt9oTSw19qcrPXJ4S9P9okHhYyNCf0SWRFjtxx2tcGPU11FB23_BR7QZWVRTpBIFp2AwB-8tK4uMfwPQ6lAXviQoG-6AiqRJu3mQ-juOK9VBq_zumui-zor5VQljUVj2g-6LdYuRhxjdqF5t1UmU-TfUqESmU/file [following]\n--2019-07-31 06:07:39--  https://uc8b0e7917176d88665397a1f0d9.dl.dropboxusercontent.com/cd/0/inline2/AluRy34lIpE2KM2hy8Ugm9Zxz69ug6JLGH0wNRzy_soEDl-kXGhcrTnfoObVnjzqJ0rPyt3BFQ1Sh6D6MuBDzO6BkNoJbezJTrcou1f3J6eHNNAFASf6B1ZC4TMjMzLxNJblf8IcPbLMLVd6rTeufnxoruHNVSe2Zz04La9DdjNvIb1QW_RVTlJFOyAWt9oTSw19qcrPXJ4S9P9okHhYyNCf0SWRFjtxx2tcGPU11FB23_BR7QZWVRTpBIFp2AwB-8tK4uMfwPQ6lAXviQoG-6AiqRJu3mQ-juOK9VBq_zumui-zor5VQljUVj2g-6LdYuRhxjdqF5t1UmU-TfUqESmU/file\nReusing existing connection to uc8b0e7917176d88665397a1f0d9.dl.dropboxusercontent.com:443.\nHTTP request sent, awaiting response... 200 OK\nLength: 70336 (69K) [application/octet-stream]\nSaving to: \u0027dbgen\u0027\n\n     0K .......... .......... .......... .......... .......... 72% 1.75M 0s\n    50K .......... ........                                   100% 1.39M\u003d0.04s\n\n2019-07-31 06:07:39 (1.64 MB/s) - \u0027dbgen\u0027 saved [70336/70336]\n\n--2019-07-31 06:07:39--  https://www.dropbox.com/s/ciq2icrq3u1n7q3/dists.dss\nResolving www.dropbox.com (www.dropbox.com)... 162.125.4.1, 2620:100:6019:1::a27d:401\nConnecting to www.dropbox.com (www.dropbox.com)|162.125.4.1|:443... connected.\nHTTP request sent, awaiting response... 301 Moved Permanently\nLocation: /s/raw/ciq2icrq3u1n7q3/dists.dss [following]\n--2019-07-31 06:07:39--  https://www.dropbox.com/s/raw/ciq2icrq3u1n7q3/dists.dss\nReusing existing connection to www.dropbox.com:443.\nHTTP request sent, awaiting response... 302 Found\nLocation: https://uc70c822f024a8240a8fdda03c86.dl.dropboxusercontent.com/cd/0/inline/AluQvINRHtPAOKdZ9o4-3krDT6b_7nm79obP3g98hjVgN0zURtQqC3rWpqOfvJ9Jgl-nb0If4KIfwvnKBuwxX5GKQe_K44AYs4uATrPS_VcYaA/file# [following]\n--2019-07-31 06:07:40--  https://uc70c822f024a8240a8fdda03c86.dl.dropboxusercontent.com/cd/0/inline/AluQvINRHtPAOKdZ9o4-3krDT6b_7nm79obP3g98hjVgN0zURtQqC3rWpqOfvJ9Jgl-nb0If4KIfwvnKBuwxX5GKQe_K44AYs4uATrPS_VcYaA/file\nResolving uc70c822f024a8240a8fdda03c86.dl.dropboxusercontent.com (uc70c822f024a8240a8fdda03c86.dl.dropboxusercontent.com)... 162.125.4.6, 2620:100:6019:6::a27d:406\nConnecting to uc70c822f024a8240a8fdda03c86.dl.dropboxusercontent.com (uc70c822f024a8240a8fdda03c86.dl.dropboxusercontent.com)|162.125.4.6|:443... connected.\nHTTP request sent, awaiting response... 200 OK\nLength: 11815 (12K) [text/plain]\nSaving to: \u0027dists.dss\u0027\n\n     0K .......... .                                          100%  235M\u003d0s\n\n2019-07-31 06:07:41 (235 MB/s) - \u0027dists.dss\u0027 saved [11815/11815]\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734187_-109202479",
+      "id": "20190704-083244_975781099",
+      "dateCreated": "2019-07-12 05:35:34.187",
+      "dateStarted": "2019-07-31 06:07:36.148",
+      "dateFinished": "2019-07-31 06:07:41.254",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sh\n# generate 1 GB of tpch data using dbgen\ncd /ovs_data/user/root/tpch\n./dbgen -s 1\nls",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 05:49:35.482",
+      "config": {
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sh",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "TPC-H Population Generator (Version 2.17.3)\nCopyright Transaction Processing Performance Council 1994 - 2010\ncustomer.tbl\ndbgen\ndists.dss\nlineitem.tbl\nnation.tbl\norders.tbl\npart.tbl\npartsupp.tbl\nregion.tbl\nsupplier.tbl\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734188_-1059517736",
+      "id": "20190704-083256_1629192751",
+      "dateCreated": "2019-07-12 05:35:34.188",
+      "dateStarted": "2019-07-31 06:07:54.687",
+      "dateFinished": "2019-07-31 06:08:46.852",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### 2. Create sources from data files generated\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-31 06:08:07.893",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e2. Create sources from data files generated\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734188_-1222477728",
+      "id": "20190704-085429_327795916",
+      "dateCreated": "2019-07-12 05:35:34.188",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n\nimport openapi_client\nfrom openapi_client.rest import ApiException\nimport time\n\n#Initialization\nconfiguration \u003d openapi_client.configuration.Configuration()\nconfiguration.host \u003d \"http://server:8090\"\napi_instance \u003d openapi_client.ApiClient(configuration)\nsource_api \u003d openapi_client.SourceApi(api_instance)\npipeline_api \u003d openapi_client.PipelineApi(api_instance)\nnormal_run_api \u003d openapi_client.PipelineNormalRunApi(api_instance)\nexported_table_api \u003d openapi_client.ExportedTablesApi(api_instance)\nupload_api \u003d openapi_client.UploadApi(api_instance)\n\n# Create sources: \n####customer\ncustomer_source \u003d openapi_client.Source()\ncustomer_source.source_name \u003d \"customer\"\ncustomer_source.metadata \u003d {\"fluir.spark.format\": \"csv\", \"fluir.spark.header\": False,\n                        \"fluir.spark.delimiter\": \"|\",\n                        \"fluir.spark.path\": \"/user/root/tpch/customer.tbl\", \"displayType\": \"SCP\"}\ncustomer_source.data_schema \u003d \u0027{\\\"type\\\":\\\"struct\\\",\\\"fields\\\":[{\\\"name\\\":\\\"C_CUSTKEY\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"C_NAME\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"C_ADDRESS\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"C_NATIONKEY\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"C_PHONE\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"C_ACCTBAL\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"C_MKTSEGMENT\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"C_COMMENT\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}}]}\u0027\ncustomer_source.source_type \u003d \"SPARKDATASOURCE\"\nresp \u003d source_api.create_source(\"customer\", customer_source)\nprint(resp)\n\n# lineitem\nlineitem_source \u003d openapi_client.Source()\nlineitem_source.source_name \u003d \"lineitem\"\nlineitem_source.metadata \u003d {\"fluir.spark.format\": \"csv\", \"fluir.spark.header\": False,\n                        \"fluir.spark.delimiter\": \"|\",\n                        \"fluir.spark.path\": \"/user/root/tpch/lineitem.tbl\", \"displayType\": \"SCP\"}\nlineitem_source.data_schema \u003d \u0027{\\\"type\\\":\\\"struct\\\",\\\"fields\\\":[{\\\"name\\\":\\\"L_ORDERKEY\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"L_PARTKEY\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"L_SUPPKEY\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"L_LINENUMBER\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"L_QUANTITY\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"L_EXTENDEDPRICE\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"L_DISCOUNT\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"L_TAX\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"L_RETURNFLAG\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"L_LINESTATUS\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"L_SHIPDATE\\\",\\\"type\\\":\\\"date\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"L_COMMITDATE\\\",\\\"type\\\":\\\"date\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"L_RECEIPTDATE\\\",\\\"type\\\":\\\"date\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"L_SHIPINSTRUCT\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"L_SHIPMODE\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"L_COMMENT\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}}]}\u0027\nlineitem_source.source_type \u003d \"SPARKDATASOURCE\"\nresp \u003d source_api.create_source(\"lineitem\", lineitem_source)\nprint(resp)\n\n# nation\nnation_source \u003d openapi_client.Source()\nnation_source.source_name \u003d \"nation\"\nnation_source.metadata \u003d {\"fluir.spark.format\": \"csv\", \"fluir.spark.header\": False,\n                      \"fluir.spark.delimiter\": \"|\",\n                      \"fluir.spark.path\": \"/user/root/tpch/nation.tbl\", \"displayType\": \"SCP\"}\nnation_source.data_schema \u003d \u0027{\\\"type\\\":\\\"struct\\\",\\\"fields\\\":[{\\\"name\\\":\\\"N_NATIONKEY\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"N_NAME\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"N_REGIONKEY\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"N_COMMENT\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}}]}\u0027\nnation_source.source_type \u003d \"SPARKDATASOURCE\"\nresp \u003d source_api.create_source(\"nation\", nation_source)\nprint(resp)\n\n# orders\norders_source \u003d openapi_client.Source()\norders_source.source_name \u003d \"orders\"\norders_source.metadata \u003d {\"fluir.spark.format\": \"csv\", \"fluir.spark.header\": False,\n                      \"fluir.spark.delimiter\": \"|\",\n                      \"fluir.spark.path\": \"/user/root/tpch/orders.tbl\", \"displayType\": \"SCP\"}\norders_source.data_schema \u003d \u0027{\\\"type\\\":\\\"struct\\\",\\\"fields\\\":[{\\\"name\\\":\\\"O_ORDERKEY\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"O_CUSTKEY\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"O_ORDERSTATUS\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"O_TOTALPRICE\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"O_ORDERDATE\\\",\\\"type\\\":\\\"date\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"O_ORDERPRIORITY\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"O_CLERK\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"O_SHIPPRIORITY\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"O_COMMENT\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}}]}\u0027\norders_source.source_type \u003d \"SPARKDATASOURCE\"\nresp \u003d source_api.create_source(\"orders\", orders_source)\nprint(resp)\n\n# part\npart_source \u003d openapi_client.Source()\npart_source.source_name \u003d \"part\"\npart_source.metadata \u003d {\"fluir.spark.format\": \"csv\", \"fluir.spark.header\": False,\n                    \"fluir.spark.delimiter\": \"|\", \"fluir.spark.path\": \"/user/root/tpch/part.tbl\",\n                    \"displayType\": \"SCP\"}\npart_source.data_schema \u003d \u0027{\\\"type\\\":\\\"struct\\\",\\\"fields\\\":[{\\\"name\\\":\\\"P_PARTKEY\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"P_NAME\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"P_MFGR\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"P_BRAND\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"P_TYPE\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"P_SIZE\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"P_CONTAINER\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"P_RETAILPRICE\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"P_COMMENT\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}}]}\u0027\npart_source.source_type \u003d \"SPARKDATASOURCE\"\nresp \u003d source_api.create_source(\"part\", part_source)\nprint(resp)\n\n# partsupp\npartsupp_source \u003d openapi_client.Source()\npartsupp_source.source_name \u003d \"partsupp\"\npartsupp_source.metadata \u003d {\"fluir.spark.format\": \"csv\", \"fluir.spark.header\": False,\n                        \"fluir.spark.delimiter\": \"|\",\n                        \"fluir.spark.path\": \"/user/root/tpch/partsupp.tbl\", \"displayType\": \"SCP\"}\npartsupp_source.data_schema \u003d \u0027{\\\"type\\\":\\\"struct\\\",\\\"fields\\\":[{\\\"name\\\":\\\"PS_PARTKEY\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"PS_SUPPKEY\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"PS_AVAILQTY\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"PS_SUPPLYCOST\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"PS_COMMENT\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}}]}\u0027\npartsupp_source.source_type \u003d \"SPARKDATASOURCE\"\nresp \u003d source_api.create_source(\"partsupp\", partsupp_source)\nprint(resp)\n\nregion_source \u003d openapi_client.Source()\nregion_source.source_name \u003d \"region\"\nregion_source.metadata \u003d {\"fluir.spark.format\": \"csv\", \"fluir.spark.header\": False,\n                      \"fluir.spark.delimiter\": \"|\",\n                      \"fluir.spark.path\": \"/user/root/tpch/region.tbl\", \"displayType\": \"SCP\"}\nregion_source.data_schema \u003d \u0027{\\\"type\\\":\\\"struct\\\",\\\"fields\\\":[{\\\"name\\\":\\\"R_REGIONKEY\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"R_NAME\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"R_COMMENT\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}}]}\u0027\nregion_source.source_type \u003d \"SPARKDATASOURCE\"\nresp \u003d source_api.create_source(\"region\", region_source)\nprint(resp)\n\n# supplier\nsupplier_source \u003d openapi_client.Source()\nsupplier_source.source_name \u003d \"supplier\"\nsupplier_source.metadata \u003d {\"fluir.spark.format\": \"csv\", \"fluir.spark.header\": False,\n                        \"fluir.spark.delimiter\": \"|\",\n                        \"fluir.spark.path\": \"/user/root/tpch/supplier.tbl\", \"displayType\": \"SCP\"}\nsupplier_source.data_schema \u003d \u0027{\\\"type\\\":\\\"struct\\\",\\\"fields\\\":[{\\\"name\\\":\\\"S_SUPPKEY\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"S_NAME\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"S_ADDRESS\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"S_NATIONKEY\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"S_PHONE\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"S_ACCTBAL\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}},{\\\"name\\\":\\\"S_COMMENT\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":false,\\\"metadata\\\":{}}]}\u0027\nsupplier_source.source_type \u003d \"SPARKDATASOURCE\"\nresp \u003d source_api.create_source(\"supplier\", supplier_source)\nprint(resp)\n\n# creating views from source\nresp \u003d source_api.create_source_view(\"lineitem\")\nprint(resp)\nresp \u003d source_api.create_source_view(\"nation\")\nprint(resp)\nresp \u003d source_api.create_source_view(\"orders\")\nprint(resp)\nresp \u003d source_api.create_source_view(\"part\")\nprint(resp)\nresp \u003d source_api.create_source_view(\"partsupp\")\nprint(resp)\nresp \u003d source_api.create_source_view(\"region\")\nprint(resp)\nresp \u003d source_api.create_source_view(\"supplier\")\nprint(resp)\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-31 06:11:44.711",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \u0027customer\u0027}\n{\u0027result\u0027: \u0027lineitem\u0027}\n{\u0027result\u0027: \u0027nation\u0027}\n{\u0027result\u0027: \u0027orders\u0027}\n{\u0027result\u0027: \u0027part\u0027}\n{\u0027result\u0027: \u0027partsupp\u0027}\n{\u0027result\u0027: \u0027region\u0027}\n{\u0027result\u0027: \u0027supplier\u0027}\n{\u0027result\u0027: \"Exported View \u0027lineitem\u0027 successfully.\", \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Exported View \u0027nation\u0027 successfully.\", \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Exported View \u0027orders\u0027 successfully.\", \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Exported View \u0027part\u0027 successfully.\", \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Exported View \u0027partsupp\u0027 successfully.\", \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Exported View \u0027region\u0027 successfully.\", \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Exported View \u0027supplier\u0027 successfully.\", \u0027status\u0027: \u0027SUCCESS\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734188_2115138366",
+      "id": "20190704-090109_1758582095",
+      "dateCreated": "2019-07-12 05:35:34.188",
+      "dateStarted": "2019-07-31 06:11:44.821",
+      "dateFinished": "2019-07-31 06:11:46.573",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nYou can check the sources created from the \u0027sources\u0027 section in fluirdb UI:\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/rs6poupw0fq2eho/tpch1.png\" width\u003d\"1500\"\u003e\n\n\nYou can see the list of views created from these sources in the \u0027sinks\u0027 section of fluirdb UI:\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/u76egfjzd2xsmz1/tpch2.png\" width\u003d\"1500\"\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-07 08:47:17.274",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eYou can check the sources created from the \u0026lsquo;sources\u0026rsquo; section in fluirdb UI:\u003cbr/\u003e\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/rs6poupw0fq2eho/tpch1.png\" width\u003d\"1500\"\u003e\u003c/p\u003e\n\u003cp\u003eYou can see the list of views created from these sources in the \u0026lsquo;sinks\u0026rsquo; section of fluirdb UI:\u003cbr/\u003e\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/u76egfjzd2xsmz1/tpch2.png\" width\u003d\"1500\"\u003e\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564381487695_962865208",
+      "id": "20190729-062447_547193138",
+      "dateCreated": "2019-07-29 06:24:47.695",
+      "dateStarted": "2019-08-07 08:47:17.275",
+      "dateFinished": "2019-08-07 08:47:17.283",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### 3. Create pipelines from the sources and exported tables and add transform nodes in a pipeline\n\nPipeline created with inline code is like displayed in the screen clipping:\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/q9ie7o5895s1cst/tpch3.png\" width\u003d\"1500\"\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-07 08:47:28.394",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e3. Create pipelines from the sources and exported tables and add transform nodes in a pipeline\u003c/h4\u003e\n\u003cp\u003ePipeline created with inline code is like displayed in the screen clipping:\u003cbr/\u003e\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/q9ie7o5895s1cst/tpch3.png\" width\u003d\"1500\"\u003e\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734189_180134426",
+      "id": "20190704-090256_1357183843",
+      "dateCreated": "2019-07-12 05:35:34.189",
+      "dateStarted": "2019-08-07 08:47:28.395",
+      "dateFinished": "2019-08-07 08:47:28.401",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n# create tpch pipeline\npipelineBody \u003d openapi_client.PipelineMetadata()\npipelineBody.auto_schema_refresh \u003d \"true\"\npipelineBody.description \u003d \"TPCH data application\"\nresp \u003d pipeline_api.create_pipeline(\"tpchpipeline\", pipelineBody)\nprint(resp)\n\n# add nodes in pipeline\nsource_node \u003d openapi_client.SourceNode(source\u003d\"customer\", configuration\u003dconfiguration)\nresp \u003d pipeline_api.add_source_node(\"tpchpipeline\", \"customer\", source_node)\nprint(resp)\nquery \u003d \"select * from nation, region where nation.N_REGIONKEY \u003d region.R_REGIONKEY\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"tpchpipeline\", \"nationregion\", processor_node)\nprint(resp)\n\nquery \u003d \"select * from customer, nationregion where customer.C_NATIONKEY \u003d nationregion.N_NATIONKEY\".upper()\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"tpchpipeline\", \"custnationregion\", processor_node)\nprint(resp)\n\nquery \u003d \"select S_SUPPKEY as S_SUPPKEY, S_NAME as S_NAME, S_ADDRESS as S_ADDRESS, S_PHONE as S_PHONE, S_ACCTBAL as S_ACCTBAL, S_COMMENT as S_COMMENT, N_NAME as S_NATION, R_NAME as S_REGION from supplier, nationregion where supplier.S_NATIONKEY \u003d nationregion.N_NATIONKEY\".upper()\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"tpchpipeline\", \"suppnationregion\", processor_node)\nprint(resp)\n\nquery \u003d \"select * from part, partsupp where part.P_PARTKEY \u003d partsupp.PS_PARTKEY\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"tpchpipeline\", \"partpartsupp\", processor_node)\nprint(resp)\n\nquery \u003d \"select * from suppnationregion, partpartsupp where suppnationregion.S_SUPPKEY \u003d partpartsupp.PS_SUPPKEY\".upper()\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"tpchpipeline\", \"supppartpartsupp\", processor_node)\nprint(resp)\n\nquery \u003d \"select * from custnationregion, orders where custnationregion.C_CUSTKEY \u003d orders.O_CUSTKEY\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"tpchpipeline\", \"custorder\", processor_node)\nprint(resp)\n\nquery \u003d \"select * from supppartpartsupp, lineitem where supppartpartsupp.PS_PARTKEY \u003d lineitem.L_PARTKEY AND supppartpartsupp.PS_SUPPKEY \u003d lineitem.L_SUPPKEY\".upper()\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"tpchpipeline\", \"supplierlineitem\", processor_node)\nprint(resp)\n\nquery \u003d \"select * from supplierlineitem, custorder where supplierlineitem.L_ORDERKEY \u003d custorder.O_ORDERKEY\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"tpchpipeline\", \"custorderlineitem\", processor_node)\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-31 06:12:40.163",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \u0027Pipeline tpchpipeline created successfully.\u0027, \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Source Node\u0027. PipelineName: \u0027tpchpipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027tpchpipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027tpchpipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027tpchpipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027tpchpipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027tpchpipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027tpchpipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027tpchpipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027tpchpipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734189_913762344",
+      "id": "20190704-091935_259513174",
+      "dateCreated": "2019-07-12 05:35:34.189",
+      "dateStarted": "2019-07-31 06:12:40.256",
+      "dateFinished": "2019-07-31 06:12:43.172",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### 4. Add sink node in pipeline and export the sink node",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:35:34.190",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e4. Add sink node in pipeline and export the sink node\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734190_132910420",
+      "id": "20190704-092117_1567593954",
+      "dateCreated": "2019-07-12 05:35:34.190",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n## adding sink node in pipeline\nsink_node \u003d openapi_client.SinkNode()\nsink_node.prev_node_name \u003d \"custorderlineitem\"\nsink_node.metadata \u003d {\"fluir.sink.terminal\": \"false\"}\nsink_node.sink_type \u003d \"PARQUET\"\nresp \u003d pipeline_api.add_sink_node(\"tpchpipeline\", \"custorderlineitem_sink\", sink_node)\nprint(resp)\n\n# export sink node\nresp \u003d pipeline_api.export_table(\"tpchpipeline\", \"custorderlineitem_sink\", \"custorderlineitem_sink\")\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-31 06:12:59.855",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \"Success: OpType \u0027Add Sink Node\u0027. PipelineName: \u0027tpchpipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Exported table \u0027custorderlineitem_sink\u0027 successfully.\",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734190_1783152070",
+      "id": "20190704-092105_22280625",
+      "dateCreated": "2019-07-12 05:35:34.190",
+      "dateStarted": "2019-07-31 06:12:59.960",
+      "dateFinished": "2019-07-31 06:13:01.075",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### 5. Start the pipeline and check for its completion\n\nWhile the pipeline is running you\u0027ll see the message in the UI \u0027Pipeline is running...\u0027\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/tnwpuqumy4r0dyq/tpch4.png\" width\u003d\"1500\"\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-07 08:47:42.200",
+      "config": {
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true,
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e5. Start the pipeline and check for its completion\u003c/h4\u003e\n\u003cp\u003eWhile the pipeline is running you\u0026rsquo;ll see the message in the UI \u0026lsquo;Pipeline is running\u0026hellip;\u0026rsquo;\u003cbr/\u003e\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/tnwpuqumy4r0dyq/tpch4.png\" width\u003d\"1500\"\u003e\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734190_-294404520",
+      "id": "20190704-092200_493688877",
+      "dateCreated": "2019-07-12 05:35:34.190",
+      "dateStarted": "2019-08-07 08:47:42.202",
+      "dateFinished": "2019-08-07 08:47:42.207",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n# start the tpchpipeline\nresp \u003d normal_run_api.start_pipeline(\"tpchpipeline\")\nprint(resp)\n\n###check every 1 minute if tpchpipeline execution has completed\ntime.sleep(60)\nwhile pipeline_api.get_pipeline_state(\"tpchpipeline\").result !\u003d \"NotRunning\":\n    print(\"pipeline execution in progress\")\n    time.sleep(60)\nprint(\"tpchpipeline run completed\")",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 05:56:19.057",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \"Success: OpType \u0027 Start Pipeline\u0027. PipelineName: \u0027tpchpipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\npipeline execution in progress\npipeline execution in progress\npipeline execution in progress\npipeline execution in progress\npipeline execution in progress\npipeline execution in progress\npipeline execution in progress\ntpchpipeline run completed\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734190_-146743353",
+      "id": "20190704-092639_976098182",
+      "dateCreated": "2019-07-12 05:35:34.190",
+      "dateStarted": "2019-07-31 06:13:08.947",
+      "dateFinished": "2019-07-31 06:21:09.334",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### 6. Now run different tpc-h queries to the meaningful data/information",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:35:34.191",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e6. Now run different tpc-h queries to the meaningful data/information\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734191_882314556",
+      "id": "20190704-092914_2076469423",
+      "dateCreated": "2019-07-12 05:35:34.191",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n# TPC-H query-1: Calculate the pricing summary report\nquery \u003d \"select l_returnflag, l_linestatus, sum(l_quantity) as sum_qty, sum(l_extendedprice) as sum_base_price, sum(l_extendedprice*(1-l_discount)) as sum_disc_price, sum(l_extendedprice*(1-l_discount)*(1+l_tax)) as sum_charge, avg(l_quantity) as avg_qty, avg(l_extendedprice) as avg_price, avg(l_discount) as avg_disc, count(*) as count_order from custorderlineitem_sink where l_shipdate \u003c \\\"1998-09-01\\\" group by l_returnflag, l_linestatus order by l_returnflag, l_linestatus\"\n\nresp \u003d normal_run_api.analyze_sink_data(\"tpchpipeline\", query)\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:35:34.191",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\"l_returnflag\":\"A\",\"l_linestatus\":\"F\",\"sum_qty\":3.7734107E7,\"sum_base_price\":5.658655440073005E10,\"sum_disc_price\":5.3758257134870056E10,\"sum_charge\":5.590906522282769E10,\"avg_qty\":25.522005853257337,\"avg_price\":38273.1297346217,\"avg_disc\":0.04998529583842219,\"count_order\":1478493}\n{\"l_returnflag\":\"N\",\"l_linestatus\":\"F\",\"sum_qty\":991417.0,\"sum_base_price\":1.4875047103799996E9,\"sum_disc_price\":1.4130821680540996E9,\"sum_charge\":1.4696492231943755E9,\"avg_qty\":25.516471920522985,\"avg_price\":38284.467760848296,\"avg_disc\":0.050093426674216276,\"count_order\":38854}\n{\"l_returnflag\":\"N\",\"l_linestatus\":\"O\",\"sum_qty\":7.4378864E7,\"sum_base_price\":1.1155512995902989E11,\"sum_disc_price\":1.059788475199343E11,\"sum_charge\":1.1022203207300761E11,\"avg_qty\":25.50223996609707,\"avg_price\":38248.84571595937,\"avg_disc\":0.04999797021293413,\"count_order\":2916562}\n{\"l_returnflag\":\"R\",\"l_linestatus\":\"F\",\"sum_qty\":3.7719753E7,\"sum_base_price\":5.65680413809E10,\"sum_disc_price\":5.374129268460407E10,\"sum_charge\":5.588961911983201E10,\"avg_qty\":25.50579361269077,\"avg_price\":38250.85462609966,\"avg_disc\":0.050009405830151725,\"count_order\":1478870}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734191_-116020716",
+      "id": "20190704-093153_118446756",
+      "dateCreated": "2019-07-12 05:35:34.191",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n# TPC-H query-2: Calculate top revenue orders\nquery \u003d \"select  o_orderkey,  sum(l_extendedprice*(1-l_discount)) as revenue, o_orderdate,  o_shippriority  from  custorderlineitem_sink where  c_mktsegment \u003d \\\"BUILDING\\\" and o_orderdate \u003c \\\"1995-03-15\\\" and l_shipdate \u003e \\\"1995-03-15\\\"  group by o_orderkey,  o_orderdate,  o_shippriority order by  revenue desc, o_orderdate  limit 1\"\n\nresp \u003d normal_run_api.analyze_sink_data(\"tpchpipeline\", query)\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:35:34.191",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{u\u0027o_shippriority\u0027: 0, u\u0027o_orderdate\u0027: u\u00271995-03-05\u0027, u\u0027o_orderkey\u0027: 2456423, u\u0027revenue\u0027: 406181.01109999995}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734191_-804373928",
+      "id": "20190704-095031_1128369375",
+      "dateCreated": "2019-07-12 05:35:34.191",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n# TPC-H query-3: Check order priorities\nquery \u003d \"select o_orderpriority, count(distinct o_orderkey) as order_count  from custorderlineitem_sink where o_orderdate \u003c \\\"1993-10-01\\\" and o_orderdate \u003e\u003d \\\"1993-07-01\\\" and l_commitdate \u003c l_receiptdate group by o_orderpriority  order by o_orderpriority\"\n\nresp \u003d normal_run_api.analyze_sink_data(\"tpchpipeline\", query)\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:35:34.191",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\"o_orderpriority\":\"1-URGENT\",\"order_count\":10594}\n{\"o_orderpriority\":\"2-HIGH\",\"order_count\":10476}\n{\"o_orderpriority\":\"3-MEDIUM\",\"order_count\":10410}\n{\"o_orderpriority\":\"4-NOT SPECIFIED\",\"order_count\":10556}\n{\"o_orderpriority\":\"5-LOW\",\"order_count\":10487}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734191_-651394249",
+      "id": "20190704-100512_1914608071",
+      "dateCreated": "2019-07-12 05:35:34.191",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n# TPC-H query-4: Calculate Nation wise revenue\nquery \u003d \"select s_nation, sum(l_extendedprice * (1 - l_discount)) as revenue  from custorderlineitem_sink where s_region \u003d \\\"ASIA\\\" and o_orderdate \u003e\u003d \\\"1994-01-01\\\" and o_orderdate \u003c \\\"1995-01-01\\\" group by s_nation  order by revenue desc\"\n\nresp \u003d normal_run_api.analyze_sink_data(\"tpchpipeline\", query)\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:35:34.192",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\"s_nation\":\"INDIA\",\"revenue\":1.3528636426968E9}\n{\"s_nation\":\"INDONESIA\",\"revenue\":1.3481944248022E9}\n{\"s_nation\":\"CHINA\",\"revenue\":1.3420697403607001E9}\n{\"s_nation\":\"VIETNAM\",\"revenue\":1.3171354475598E9}\n{\"s_nation\":\"JAPAN\",\"revenue\":1.2303564584009998E9}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734192_-1634275341",
+      "id": "20190704-100518_735447736",
+      "dateCreated": "2019-07-12 05:35:34.192",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n# TPC-H query-5: calculate total reveenue between particular shipping dates\nquery \u003d \"select sum(l_extendedprice*l_discount) as revenue from custorderlineitem_sink where l_shipdate \u003e\u003d \\\"1994-01-01\\\" and l_shipdate \u003c \\\"1995-01-01\\\" and l_discount between 0.06 - 0.01 and 0.06 + 0.01 and l_quantity \u003c 24\"\n\nresp \u003d normal_run_api.analyze_sink_data(\"tpchpipeline\", query)\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:35:34.192",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{u\u0027revenue\u0027: 123141078.2283}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734192_-1875857569",
+      "id": "20190704-100526_313540544",
+      "dateCreated": "2019-07-12 05:35:34.192",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n# TPC-H query-6: Calculate France and Germany\u0027s total revenue\nquery \u003d \"select s_nation,  n_name, year(l_shipdate) as l_year, sum(l_extendedprice * (1 - l_discount)) as revenue from custorderlineitem_sink where ((s_nation \u003d \\\"FRANCE\\\" and  n_name \u003d \\\"GERMANY\\\") or ( n_name \u003d \\\"FRANCE\\\" and s_nation \u003d \\\"GERMANY\\\")) group by s_nation,  n_name, year(l_shipdate)  order by s_nation,  n_name, l_year\"\n\nresp \u003d normal_run_api.analyze_sink_data(\"tpchpipeline\", query)\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:35:34.192",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\"s_nation\":\"FRANCE\",\"n_name\":\"GERMANY\",\"l_year\":1992,\"revenue\":4.10649068755E7}\n{\"s_nation\":\"FRANCE\",\"n_name\":\"GERMANY\",\"l_year\":1993,\"revenue\":5.225251757109999E7}\n{\"s_nation\":\"FRANCE\",\"n_name\":\"GERMANY\",\"l_year\":1994,\"revenue\":5.2993600835200004E7}\n{\"s_nation\":\"FRANCE\",\"n_name\":\"GERMANY\",\"l_year\":1995,\"revenue\":5.463973273359999E7}\n{\"s_nation\":\"FRANCE\",\"n_name\":\"GERMANY\",\"l_year\":1996,\"revenue\":5.46330833076E7}\n{\"s_nation\":\"FRANCE\",\"n_name\":\"GERMANY\",\"l_year\":1997,\"revenue\":5.247149618480001E7}\n{\"s_nation\":\"FRANCE\",\"n_name\":\"GERMANY\",\"l_year\":1998,\"revenue\":3.827760698919998E7}\n{\"s_nation\":\"GERMANY\",\"n_name\":\"FRANCE\",\"l_year\":1992,\"revenue\":4.400862661330001E7}\n{\"s_nation\":\"GERMANY\",\"n_name\":\"FRANCE\",\"l_year\":1993,\"revenue\":5.3575108500900015E7}\n{\"s_nation\":\"GERMANY\",\"n_name\":\"FRANCE\",\"l_year\":1994,\"revenue\":5.2388286204199985E7}\n{\"s_nation\":\"GERMANY\",\"n_name\":\"FRANCE\",\"l_year\":1995,\"revenue\":5.253174666969998E7}\n{\"s_nation\":\"GERMANY\",\"n_name\":\"FRANCE\",\"l_year\":1996,\"revenue\":5.252054902239998E7}\n{\"s_nation\":\"GERMANY\",\"n_name\":\"FRANCE\",\"l_year\":1997,\"revenue\":5.370766775550001E7}\n{\"s_nation\":\"GERMANY\",\"n_name\":\"FRANCE\",\"l_year\":1998,\"revenue\":3.956901935220001E7}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734192_-965185659",
+      "id": "20190704-100532_140154304",
+      "dateCreated": "2019-07-12 05:35:34.192",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n# TPC-H query-7: Calculate India\u0027s yearly market share\nquery \u003d \"select year(o_orderdate) as o_year, sum(case when s_nation \u003d \\\"INDIA\\\" then l_extendedprice * (1-l_discount) else 0 end) / sum(l_extendedprice * (1-l_discount)) as mkt_share from custorderlineitem_sink where r_name \u003d \\\"ASIA\\\" and p_type \u003d \\\"LARGE BURNISHED BRASS\\\" and o_orderdate \u003e\u003d \\\"1993-01-01\\\" and o_orderdate \u003c\u003d \\\"1996-12-31\\\" group by year(o_orderdate) order by o_year\"\n\nresp \u003d normal_run_api.analyze_sink_data(\"tpchpipeline\", query)\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:35:34.192",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\"o_year\":1993,\"mkt_share\":0.04612623606570157}\n{\"o_year\":1994,\"mkt_share\":0.03616237899518073}\n{\"o_year\":1995,\"mkt_share\":0.04190285969139214}\n{\"o_year\":1996,\"mkt_share\":0.03711604337490836}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734192_-128452076",
+      "id": "20190704-100539_57282866",
+      "dateCreated": "2019-07-12 05:35:34.192",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n# TPC-H query-8: Calculate Yearly profit of almond suppliers nation wise\nquery \u003d \"select s_nation, year(o_orderdate) as o_year, sum(l_extendedprice * (1 - l_discount) - ps_supplycost * l_quantity) as sum_profit from custorderlineitem_sink where p_name like \\\"%almond%\\\" group by s_nation, year(o_orderdate) order by s_nation, o_year\"\n\nresp \u003d normal_run_api.analyze_sink_data(\"tpchpipeline\", query)\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:35:34.193",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\"s_nation\":\"ALGERIA\",\"o_year\":1992,\"sum_profit\":5.0453727622499995E7}\n{\"s_nation\":\"ALGERIA\",\"o_year\":1993,\"sum_profit\":5.0053487835700005E7}\n{\"s_nation\":\"ALGERIA\",\"o_year\":1994,\"sum_profit\":5.1652512542799994E7}\n{\"s_nation\":\"ALGERIA\",\"o_year\":1995,\"sum_profit\":5.1171447848599985E7}\n{\"s_nation\":\"ALGERIA\",\"o_year\":1996,\"sum_profit\":5.04231449949E7}\n{\"s_nation\":\"ALGERIA\",\"o_year\":1997,\"sum_profit\":5.22424755249E7}\n{\"s_nation\":\"ALGERIA\",\"o_year\":1998,\"sum_profit\":3.1099203842299998E7}\n{\"s_nation\":\"ARGENTINA\",\"o_year\":1992,\"sum_profit\":4.704755814180001E7}\n{\"s_nation\":\"ARGENTINA\",\"o_year\":1993,\"sum_profit\":4.6707429688300006E7}\n{\"s_nation\":\"ARGENTINA\",\"o_year\":1994,\"sum_profit\":4.8404409148899995E7}\n{\"s_nation\":\"ARGENTINA\",\"o_year\":1995,\"sum_profit\":4.7077741573800005E7}\n{\"s_nation\":\"ARGENTINA\",\"o_year\":1996,\"sum_profit\":4.5939700399199985E7}\n{\"s_nation\":\"ARGENTINA\",\"o_year\":1997,\"sum_profit\":4.76350793256E7}\n{\"s_nation\":\"ARGENTINA\",\"o_year\":1998,\"sum_profit\":2.7366028488900002E7}\n{\"s_nation\":\"BRAZIL\",\"o_year\":1992,\"sum_profit\":4.6939053223699994E7}\n{\"s_nation\":\"BRAZIL\",\"o_year\":1993,\"sum_profit\":4.657431532530001E7}\n{\"s_nation\":\"BRAZIL\",\"o_year\":1994,\"sum_profit\":4.56633272438E7}\n{\"s_nation\":\"BRAZIL\",\"o_year\":1995,\"sum_profit\":4.807849967839999E7}\n{\"s_nation\":\"BRAZIL\",\"o_year\":1996,\"sum_profit\":4.675824726539999E7}\n{\"s_nation\":\"BRAZIL\",\"o_year\":1997,\"sum_profit\":4.609485163279999E7}\n{\"s_nation\":\"BRAZIL\",\"o_year\":1998,\"sum_profit\":2.87494237658E7}\n{\"s_nation\":\"CANADA\",\"o_year\":1992,\"sum_profit\":4.91859906196E7}\n{\"s_nation\":\"CANADA\",\"o_year\":1993,\"sum_profit\":5.07491482692E7}\n{\"s_nation\":\"CANADA\",\"o_year\":1994,\"sum_profit\":4.86379073544E7}\n{\"s_nation\":\"CANADA\",\"o_year\":1995,\"sum_profit\":4.8794865582100004E7}\n{\"s_nation\":\"CANADA\",\"o_year\":1996,\"sum_profit\":5.06836882859E7}\n{\"s_nation\":\"CANADA\",\"o_year\":1997,\"sum_profit\":5.042027890270001E7}\n{\"s_nation\":\"CANADA\",\"o_year\":1998,\"sum_profit\":2.8260184471800007E7}\n{\"s_nation\":\"CHINA\",\"o_year\":1992,\"sum_profit\":4.922539261970001E7}\n{\"s_nation\":\"CHINA\",\"o_year\":1993,\"sum_profit\":4.9140990698099986E7}\n{\"s_nation\":\"CHINA\",\"o_year\":1994,\"sum_profit\":4.767320027830001E7}\n{\"s_nation\":\"CHINA\",\"o_year\":1995,\"sum_profit\":4.70950934491E7}\n{\"s_nation\":\"CHINA\",\"o_year\":1996,\"sum_profit\":4.82413049678E7}\n{\"s_nation\":\"CHINA\",\"o_year\":1997,\"sum_profit\":4.9823344594E7}\n{\"s_nation\":\"CHINA\",\"o_year\":1998,\"sum_profit\":2.83309986826E7}\n{\"s_nation\":\"EGYPT\",\"o_year\":1992,\"sum_profit\":4.87617295105E7}\n{\"s_nation\":\"EGYPT\",\"o_year\":1993,\"sum_profit\":5.1298353467499994E7}\n{\"s_nation\":\"EGYPT\",\"o_year\":1994,\"sum_profit\":5.056666623730001E7}\n{\"s_nation\":\"EGYPT\",\"o_year\":1995,\"sum_profit\":4.988850939479999E7}\n{\"s_nation\":\"EGYPT\",\"o_year\":1996,\"sum_profit\":5.1833978260199994E7}\n{\"s_nation\":\"EGYPT\",\"o_year\":1997,\"sum_profit\":4.7098172197799996E7}\n{\"s_nation\":\"EGYPT\",\"o_year\":1998,\"sum_profit\":3.06726201047E7}\n{\"s_nation\":\"ETHIOPIA\",\"o_year\":1992,\"sum_profit\":4.643234591040002E7}\n{\"s_nation\":\"ETHIOPIA\",\"o_year\":1993,\"sum_profit\":4.579757873829999E7}\n{\"s_nation\":\"ETHIOPIA\",\"o_year\":1994,\"sum_profit\":4.48385920824E7}\n{\"s_nation\":\"ETHIOPIA\",\"o_year\":1995,\"sum_profit\":4.5424332868200004E7}\n{\"s_nation\":\"ETHIOPIA\",\"o_year\":1996,\"sum_profit\":4.644524798109999E7}\n{\"s_nation\":\"ETHIOPIA\",\"o_year\":1997,\"sum_profit\":4.08967991969E7}\n{\"s_nation\":\"ETHIOPIA\",\"o_year\":1998,\"sum_profit\":2.53479109636E7}\n{\"s_nation\":\"FRANCE\",\"o_year\":1992,\"sum_profit\":4.595016159319999E7}\n{\"s_nation\":\"FRANCE\",\"o_year\":1993,\"sum_profit\":4.887964344519999E7}\n{\"s_nation\":\"FRANCE\",\"o_year\":1994,\"sum_profit\":4.550748042740001E7}\n{\"s_nation\":\"FRANCE\",\"o_year\":1995,\"sum_profit\":4.755877313520001E7}\n{\"s_nation\":\"FRANCE\",\"o_year\":1996,\"sum_profit\":4.704795523379999E7}\n{\"s_nation\":\"FRANCE\",\"o_year\":1997,\"sum_profit\":4.4941240406500004E7}\n{\"s_nation\":\"FRANCE\",\"o_year\":1998,\"sum_profit\":2.8712712905400004E7}\n{\"s_nation\":\"GERMANY\",\"o_year\":1992,\"sum_profit\":4.837978034819999E7}\n{\"s_nation\":\"GERMANY\",\"o_year\":1993,\"sum_profit\":4.770870909120001E7}\n{\"s_nation\":\"GERMANY\",\"o_year\":1994,\"sum_profit\":5.036079051529999E7}\n{\"s_nation\":\"GERMANY\",\"o_year\":1995,\"sum_profit\":4.92624312892E7}\n{\"s_nation\":\"GERMANY\",\"o_year\":1996,\"sum_profit\":4.9187017499299996E7}\n{\"s_nation\":\"GERMANY\",\"o_year\":1997,\"sum_profit\":4.7442201567999996E7}\n{\"s_nation\":\"GERMANY\",\"o_year\":1998,\"sum_profit\":2.85361399332E7}\n{\"s_nation\":\"INDIA\",\"o_year\":1992,\"sum_profit\":4.9229683805199996E7}\n{\"s_nation\":\"INDIA\",\"o_year\":1993,\"sum_profit\":4.986904644000001E7}\n{\"s_nation\":\"INDIA\",\"o_year\":1994,\"sum_profit\":4.932063631419999E7}\n{\"s_nation\":\"INDIA\",\"o_year\":1995,\"sum_profit\":4.7310550692899995E7}\n{\"s_nation\":\"INDIA\",\"o_year\":1996,\"sum_profit\":4.88060583117E7}\n{\"s_nation\":\"INDIA\",\"o_year\":1997,\"sum_profit\":5.020463226829999E7}\n{\"s_nation\":\"INDIA\",\"o_year\":1998,\"sum_profit\":2.9196566044899993E7}\n{\"s_nation\":\"INDONESIA\",\"o_year\":1992,\"sum_profit\":4.83131407482E7}\n{\"s_nation\":\"INDONESIA\",\"o_year\":1993,\"sum_profit\":4.903031709079998E7}\n{\"s_nation\":\"INDONESIA\",\"o_year\":1994,\"sum_profit\":4.815568096159999E7}\n{\"s_nation\":\"INDONESIA\",\"o_year\":1995,\"sum_profit\":4.968968969200001E7}\n{\"s_nation\":\"INDONESIA\",\"o_year\":1996,\"sum_profit\":4.99161589784E7}\n{\"s_nation\":\"INDONESIA\",\"o_year\":1997,\"sum_profit\":5.05662179712E7}\n{\"s_nation\":\"INDONESIA\",\"o_year\":1998,\"sum_profit\":2.80873694692E7}\n{\"s_nation\":\"IRAN\",\"o_year\":1992,\"sum_profit\":4.471667534690001E7}\n{\"s_nation\":\"IRAN\",\"o_year\":1993,\"sum_profit\":4.6340627909499995E7}\n{\"s_nation\":\"IRAN\",\"o_year\":1994,\"sum_profit\":4.644389140989999E7}\n{\"s_nation\":\"IRAN\",\"o_year\":1995,\"sum_profit\":4.5056814664400004E7}\n{\"s_nation\":\"IRAN\",\"o_year\":1996,\"sum_profit\":4.891284398799999E7}\n{\"s_nation\":\"IRAN\",\"o_year\":1997,\"sum_profit\":4.59597732814E7}\n{\"s_nation\":\"IRAN\",\"o_year\":1998,\"sum_profit\":2.6425645302699998E7}\n{\"s_nation\":\"IRAQ\",\"o_year\":1992,\"sum_profit\":5.477339039719999E7}\n{\"s_nation\":\"IRAQ\",\"o_year\":1993,\"sum_profit\":5.24771620249E7}\n{\"s_nation\":\"IRAQ\",\"o_year\":1994,\"sum_profit\":5.339046521960001E7}\n{\"s_nation\":\"IRAQ\",\"o_year\":1995,\"sum_profit\":5.072003761160001E7}\n{\"s_nation\":\"IRAQ\",\"o_year\":1996,\"sum_profit\":5.4583542266299985E7}\n{\"s_nation\":\"IRAQ\",\"o_year\":1997,\"sum_profit\":5.269542352599999E7}\n{\"s_nation\":\"IRAQ\",\"o_year\":1998,\"sum_profit\":3.1607266852100004E7}\n{\"s_nation\":\"JAPAN\",\"o_year\":1992,\"sum_profit\":4.43053703104E7}\n{\"s_nation\":\"JAPAN\",\"o_year\":1993,\"sum_profit\":4.502882479639998E7}\n{\"s_nation\":\"JAPAN\",\"o_year\":1994,\"sum_profit\":4.33109733229E7}\n{\"s_nation\":\"JAPAN\",\"o_year\":1995,\"sum_profit\":4.60083798668E7}\n{\"s_nation\":\"JAPAN\",\"o_year\":1996,\"sum_profit\":4.3330249411699995E7}\n{\"s_nation\":\"JAPAN\",\"o_year\":1997,\"sum_profit\":4.172991634779999E7}\n{\"s_nation\":\"JAPAN\",\"o_year\":1998,\"sum_profit\":2.7344553648699995E7}\n{\"s_nation\":\"JORDAN\",\"o_year\":1992,\"sum_profit\":3.9496239748199984E7}\n{\"s_nation\":\"JORDAN\",\"o_year\":1993,\"sum_profit\":4.06906128226E7}\n{\"s_nation\":\"JORDAN\",\"o_year\":1994,\"sum_profit\":4.2793160151800014E7}\n{\"s_nation\":\"JORDAN\",\"o_year\":1995,\"sum_profit\":4.159041178160001E7}\n{\"s_nation\":\"JORDAN\",\"o_year\":1996,\"sum_profit\":4.0355685085700005E7}\n{\"s_nation\":\"JORDAN\",\"o_year\":1997,\"sum_profit\":4.05146605411E7}\n{\"s_nation\":\"JORDAN\",\"o_year\":1998,\"sum_profit\":2.4287693320800003E7}\n{\"s_nation\":\"KENYA\",\"o_year\":1992,\"sum_profit\":4.5989246315000005E7}\n{\"s_nation\":\"KENYA\",\"o_year\":1993,\"sum_profit\":4.30463461223E7}\n{\"s_nation\":\"KENYA\",\"o_year\":1994,\"sum_profit\":4.5075424426599994E7}\n{\"s_nation\":\"KENYA\",\"o_year\":1995,\"sum_profit\":4.19509809483E7}\n{\"s_nation\":\"KENYA\",\"o_year\":1996,\"sum_profit\":4.43279459842E7}\n{\"s_nation\":\"KENYA\",\"o_year\":1997,\"sum_profit\":4.444154276049999E7}\n{\"s_nation\":\"KENYA\",\"o_year\":1998,\"sum_profit\":2.5453175358099993E7}\n{\"s_nation\":\"MOROCCO\",\"o_year\":1992,\"sum_profit\":4.4808002653199986E7}\n{\"s_nation\":\"MOROCCO\",\"o_year\":1993,\"sum_profit\":4.27170739459E7}\n{\"s_nation\":\"MOROCCO\",\"o_year\":1994,\"sum_profit\":4.310081476240001E7}\n{\"s_nation\":\"MOROCCO\",\"o_year\":1995,\"sum_profit\":4.574243098569999E7}\n{\"s_nation\":\"MOROCCO\",\"o_year\":1996,\"sum_profit\":4.09207597193E7}\n{\"s_nation\":\"MOROCCO\",\"o_year\":1997,\"sum_profit\":4.26181691182E7}\n{\"s_nation\":\"MOROCCO\",\"o_year\":1998,\"sum_profit\":2.63139387648E7}\n{\"s_nation\":\"MOZAMBIQUE\",\"o_year\":1992,\"sum_profit\":5.237437368839999E7}\n{\"s_nation\":\"MOZAMBIQUE\",\"o_year\":1993,\"sum_profit\":5.05884936448E7}\n{\"s_nation\":\"MOZAMBIQUE\",\"o_year\":1994,\"sum_profit\":4.999290157319999E7}\n{\"s_nation\":\"MOZAMBIQUE\",\"o_year\":1995,\"sum_profit\":5.17176712952E7}\n{\"s_nation\":\"MOZAMBIQUE\",\"o_year\":1996,\"sum_profit\":5.146125053099999E7}\n{\"s_nation\":\"MOZAMBIQUE\",\"o_year\":1997,\"sum_profit\":4.9633928453999996E7}\n{\"s_nation\":\"MOZAMBIQUE\",\"o_year\":1998,\"sum_profit\":3.0527453696599998E7}\n{\"s_nation\":\"PERU\",\"o_year\":1992,\"sum_profit\":4.3433709128599994E7}\n{\"s_nation\":\"PERU\",\"o_year\":1993,\"sum_profit\":4.9369082971000016E7}\n{\"s_nation\":\"PERU\",\"o_year\":1994,\"sum_profit\":4.73773735294E7}\n{\"s_nation\":\"PERU\",\"o_year\":1995,\"sum_profit\":4.903160939939999E7}\n{\"s_nation\":\"PERU\",\"o_year\":1996,\"sum_profit\":4.6872798455299996E7}\n{\"s_nation\":\"PERU\",\"o_year\":1997,\"sum_profit\":4.696245498689999E7}\n{\"s_nation\":\"PERU\",\"o_year\":1998,\"sum_profit\":2.805161988039999E7}\n{\"s_nation\":\"ROMANIA\",\"o_year\":1992,\"sum_profit\":4.82541534837E7}\n{\"s_nation\":\"ROMANIA\",\"o_year\":1993,\"sum_profit\":4.535131285139998E7}\n{\"s_nation\":\"ROMANIA\",\"o_year\":1994,\"sum_profit\":4.767885640750001E7}\n{\"s_nation\":\"ROMANIA\",\"o_year\":1995,\"sum_profit\":4.52129608433E7}\n{\"s_nation\":\"ROMANIA\",\"o_year\":1996,\"sum_profit\":4.86863999613E7}\n{\"s_nation\":\"ROMANIA\",\"o_year\":1997,\"sum_profit\":4.66042202988E7}\n{\"s_nation\":\"ROMANIA\",\"o_year\":1998,\"sum_profit\":2.78919638674E7}\n{\"s_nation\":\"RUSSIA\",\"o_year\":1992,\"sum_profit\":4.7389416269E7}\n{\"s_nation\":\"RUSSIA\",\"o_year\":1993,\"sum_profit\":4.852590612320001E7}\n{\"s_nation\":\"RUSSIA\",\"o_year\":1994,\"sum_profit\":5.0804922386099994E7}\n{\"s_nation\":\"RUSSIA\",\"o_year\":1995,\"sum_profit\":4.78882737635E7}\n{\"s_nation\":\"RUSSIA\",\"o_year\":1996,\"sum_profit\":4.78084379841E7}\n{\"s_nation\":\"RUSSIA\",\"o_year\":1997,\"sum_profit\":4.6810266767200015E7}\n{\"s_nation\":\"RUSSIA\",\"o_year\":1998,\"sum_profit\":2.840611665039999E7}\n{\"s_nation\":\"SAUDI ARABIA\",\"o_year\":1992,\"sum_profit\":4.77550339718E7}\n{\"s_nation\":\"SAUDI ARABIA\",\"o_year\":1993,\"sum_profit\":4.99949067116E7}\n{\"s_nation\":\"SAUDI ARABIA\",\"o_year\":1994,\"sum_profit\":5.0918096718200006E7}\n{\"s_nation\":\"SAUDI ARABIA\",\"o_year\":1995,\"sum_profit\":4.85163749784E7}\n{\"s_nation\":\"SAUDI ARABIA\",\"o_year\":1996,\"sum_profit\":4.816905864480001E7}\n{\"s_nation\":\"SAUDI ARABIA\",\"o_year\":1997,\"sum_profit\":4.69932607405E7}\n{\"s_nation\":\"SAUDI ARABIA\",\"o_year\":1998,\"sum_profit\":2.81303153448E7}\n{\"s_nation\":\"UNITED KINGDOM\",\"o_year\":1992,\"sum_profit\":4.238032868159999E7}\n{\"s_nation\":\"UNITED KINGDOM\",\"o_year\":1993,\"sum_profit\":4.3293738221599996E7}\n{\"s_nation\":\"UNITED KINGDOM\",\"o_year\":1994,\"sum_profit\":4.46763461791E7}\n{\"s_nation\":\"UNITED KINGDOM\",\"o_year\":1995,\"sum_profit\":4.361463498780001E7}\n{\"s_nation\":\"UNITED KINGDOM\",\"o_year\":1996,\"sum_profit\":4.3075408736899994E7}\n{\"s_nation\":\"UNITED KINGDOM\",\"o_year\":1997,\"sum_profit\":4.469679694239999E7}\n{\"s_nation\":\"UNITED KINGDOM\",\"o_year\":1998,\"sum_profit\":2.31838637197E7}\n{\"s_nation\":\"UNITED STATES\",\"o_year\":1992,\"sum_profit\":4.64487585887E7}\n{\"s_nation\":\"UNITED STATES\",\"o_year\":1993,\"sum_profit\":4.49282243495E7}\n{\"s_nation\":\"UNITED STATES\",\"o_year\":1994,\"sum_profit\":4.459376555709999E7}\n{\"s_nation\":\"UNITED STATES\",\"o_year\":1995,\"sum_profit\":4.60255106953E7}\n{\"s_nation\":\"UNITED STATES\",\"o_year\":1996,\"sum_profit\":4.156521257439999E7}\n{\"s_nation\":\"UNITED STATES\",\"o_year\":1997,\"sum_profit\":4.64993490208E7}\n{\"s_nation\":\"UNITED STATES\",\"o_year\":1998,\"sum_profit\":2.4050102328100007E7}\n{\"s_nation\":\"VIETNAM\",\"o_year\":1992,\"sum_profit\":4.8866821189E7}\n{\"s_nation\":\"VIETNAM\",\"o_year\":1993,\"sum_profit\":4.910068419020001E7}\n{\"s_nation\":\"VIETNAM\",\"o_year\":1994,\"sum_profit\":4.48691885158E7}\n{\"s_nation\":\"VIETNAM\",\"o_year\":1995,\"sum_profit\":4.847908106359999E7}\n{\"s_nation\":\"VIETNAM\",\"o_year\":1996,\"sum_profit\":4.781555462449999E7}\n{\"s_nation\":\"VIETNAM\",\"o_year\":1997,\"sum_profit\":4.40053939656E7}\n{\"s_nation\":\"VIETNAM\",\"o_year\":1998,\"sum_profit\":2.8489857899E7}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734193_339136527",
+      "id": "20190704-100548_999675023",
+      "dateCreated": "2019-07-12 05:35:34.193",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n# TPC-H query-9: Calculate per cusyto\nquery \u003d \"select c_name, c_acctbal, n_name, c_address, c_phone, c_comment, sum(l_extendedprice * (1 - l_discount)) as revenue from custorderlineitem_sink where   o_orderdate \u003e\u003d \\\"1993-10-01\\\" and    o_orderdate \u003c \\\"1994-01-01\\\" and   l_returnflag \u003d \\\"R\\\" group by c_name, c_acctbal, n_name, c_address, c_phone, c_comment order by revenue desc\"\n\nresp \u003d normal_run_api.analyze_sink_data(\"tpchpipeline\", query)\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:35:34.193",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\"c_name\":\"Customer#000057040\",\"c_acctbal\":632.87,\"n_name\":\"JAPAN\",\"c_address\":\"Eioyzjf4pp\",\"c_phone\":\"22-895-641-3466\",\"c_comment\":\"sits. slyly regular requests sleep alongside of the regular inst\",\"revenue\":734235.2455000001}\n{\"c_name\":\"Customer#000143347\",\"c_acctbal\":2557.47,\"n_name\":\"EGYPT\",\"c_address\":\"1aReFYv,Kw4\",\"c_phone\":\"14-742-935-3718\",\"c_comment\":\"ggle carefully enticing requests. final deposits use bold, bold pinto beans. ironic, idle re\",\"revenue\":721002.6947999999}\n{\"c_name\":\"Customer#000060838\",\"c_acctbal\":2454.77,\"n_name\":\"BRAZIL\",\"c_address\":\"64EaJ5vMAHWJlBOxJklpNc2RJiWE\",\"c_phone\":\"12-913-494-9813\",\"c_comment\":\" need to boost against the slyly regular account\",\"revenue\":679127.3077}\n{\"c_name\":\"Customer#000101998\",\"c_acctbal\":3790.89,\"n_name\":\"UNITED KINGDOM\",\"c_address\":\"01c9CILnNtfOQYmZj\",\"c_phone\":\"33-593-865-6378\",\"c_comment\":\"ress foxes wake slyly after the bold excuses. ironic platelets are furiously carefully bold theodolites\",\"revenue\":637029.5667}\n{\"c_name\":\"Customer#000125341\",\"c_acctbal\":4983.51,\"n_name\":\"GERMANY\",\"c_address\":\"S29ODD6bceU8QSuuEJznkNaK\",\"c_phone\":\"17-582-695-5962\",\"c_comment\":\"arefully even depths. blithely even excuses sleep furiously. foxes use except the dependencies. ca\",\"revenue\":633508.0860000001}\n{\"c_name\":\"Customer#000025501\",\"c_acctbal\":7725.04,\"n_name\":\"ETHIOPIA\",\"c_address\":\"  W556MXuoiaYCCZamJI,Rn0B4ACUGdkQ8DZ\",\"c_phone\":\"15-874-808-6793\",\"c_comment\":\"he pending instructions wake carefully at the pinto beans. regular, final instructions along the slyly fina\",\"revenue\":620269.7848999999}\n{\"c_name\":\"Customer#000115831\",\"c_acctbal\":5098.1,\"n_name\":\"FRANCE\",\"c_address\":\"rFeBbEEyk dl ne7zV5fDrmiq1oK09wV7pxqCgIc\",\"c_phone\":\"16-715-386-3788\",\"c_comment\":\"l somas sleep. furiously final deposits wake blithely regular pinto b\",\"revenue\":596423.8672}\n{\"c_name\":\"Customer#000084223\",\"c_acctbal\":528.65,\"n_name\":\"UNITED KINGDOM\",\"c_address\":\"nAVZCs6BaWap rrM27N 2qBnzc5WBauxbA\",\"c_phone\":\"33-442-824-8191\",\"c_comment\":\" slyly final deposits haggle regular, pending dependencies. pending escapades wake \",\"revenue\":594998.0238999999}\n{\"c_name\":\"Customer#000054289\",\"c_acctbal\":5583.02,\"n_name\":\"IRAN\",\"c_address\":\"vXCxoCsU0Bad5JQI ,oobkZ\",\"c_phone\":\"20-834-292-4707\",\"c_comment\":\"ely special foxes are quickly finally ironic p\",\"revenue\":585603.3918}\n{\"c_name\":\"Customer#000039922\",\"c_acctbal\":7321.11,\"n_name\":\"GERMANY\",\"c_address\":\"Zgy4s50l2GKN4pLDPBU8m342gIw6R\",\"c_phone\":\"17-147-757-8036\",\"c_comment\":\"y final requests. furiously final foxes cajole blithely special platelets. f\",\"revenue\":584878.1134}\n{\"c_name\":\"Customer#000006226\",\"c_acctbal\":2230.09,\"n_name\":\"UNITED KINGDOM\",\"c_address\":\"8gPu8,NPGkfyQQ0hcIYUGPIBWc,ybP5g,\",\"c_phone\":\"33-657-701-3391\",\"c_comment\":\"ending platelets along the express deposits cajole carefully final \",\"revenue\":576783.7605999999}\n{\"c_name\":\"Customer#000000922\",\"c_acctbal\":3869.25,\"n_name\":\"GERMANY\",\"c_address\":\"Az9RFaut7NkPnc5zSD2PwHgVwr4jRzq\",\"c_phone\":\"17-945-916-9648\",\"c_comment\":\"luffily fluffy deposits. packages c\",\"revenue\":576767.5332999999}\n{\"c_name\":\"Customer#000147946\",\"c_acctbal\":2030.13,\"n_name\":\"ALGERIA\",\"c_address\":\"iANyZHjqhyy7Ajah0pTrYyhJ\",\"c_phone\":\"10-886-956-3143\",\"c_comment\":\"ithely ironic deposits haggle blithely ironic requests. quickly regu\",\"revenue\":576455.132}\n{\"c_name\":\"Customer#000115640\",\"c_acctbal\":6436.1,\"n_name\":\"ARGENTINA\",\"c_address\":\"Vtgfia9qI 7EpHgecU1X\",\"c_phone\":\"11-411-543-4901\",\"c_comment\":\"ost slyly along the patterns; pinto be\",\"revenue\":569341.1932999999}\n{\"c_name\":\"Customer#000073606\",\"c_acctbal\":1785.67,\"n_name\":\"JAPAN\",\"c_address\":\"xuR0Tro5yChDfOCrjkd2ol\",\"c_phone\":\"22-437-653-6966\",\"c_comment\":\"he furiously regular ideas. slowly\",\"revenue\":568656.8578}\n{\"c_name\":\"Customer#000110246\",\"c_acctbal\":7763.35,\"n_name\":\"VIETNAM\",\"c_address\":\"7KzflgX MDOq7sOkI\",\"c_phone\":\"31-943-426-9837\",\"c_comment\":\"egular deposits serve blithely above the fl\",\"revenue\":566842.9815}\n{\"c_name\":\"Customer#000142549\",\"c_acctbal\":5085.99,\"n_name\":\"INDONESIA\",\"c_address\":\"ChqEoK43OysjdHbtKCp6dKqjNyvvi9\",\"c_phone\":\"19-955-562-2398\",\"c_comment\":\"sleep pending courts. ironic deposits against the carefully unusual platelets cajole carefully express accounts.\",\"revenue\":563537.2368}\n{\"c_name\":\"Customer#000146149\",\"c_acctbal\":1791.55,\"n_name\":\"ROMANIA\",\"c_address\":\"s87fvzFQpU\",\"c_phone\":\"29-744-164-6487\",\"c_comment\":\" of the slyly silent accounts. quickly final accounts across the \",\"revenue\":557254.9865}\n{\"c_name\":\"Customer#000052528\",\"c_acctbal\":551.79,\"n_name\":\"ARGENTINA\",\"c_address\":\"NFztyTOR10UOJ\",\"c_phone\":\"11-208-192-3205\",\"c_comment\":\" deposits hinder. blithely pending asymptotes breach slyly regular re\",\"revenue\":556397.3509000001}\n{\"c_name\":\"Customer#000023431\",\"c_acctbal\":3381.86,\"n_name\":\"ROMANIA\",\"c_address\":\"HgiV0phqhaIa9aydNoIlb\",\"c_phone\":\"29-915-458-2654\",\"c_comment\":\"nusual, even instructions: furiously stealthy n\",\"revenue\":554269.536}\n{\"c_name\":\"Customer#000084727\",\"c_acctbal\":7246.85,\"n_name\":\"PERU\",\"c_address\":\"r,ogEwpPifiWgZmw\",\"c_phone\":\"27-718-973-7873\",\"c_comment\":\"requests use furiously fluffily final accounts. final, special packages integrate busily regular \",\"revenue\":552460.2264}\n{\"c_name\":\"Customer#000076693\",\"c_acctbal\":8431.53,\"n_name\":\"JAPAN\",\"c_address\":\"mbhQ8fdTMsAiovJDeRzNPeVQzDX4fy1H9s\",\"c_phone\":\"22-377-858-5197\",\"c_comment\":\"al requests. carefully bold excuses about the quickly even packages hinder blithely furiously regular packages. \",\"revenue\":550652.5204}\n{\"c_name\":\"Customer#000058354\",\"c_acctbal\":2565.32,\"n_name\":\"RUSSIA\",\"c_address\":\"pinLU8jsObOJwcNtOuCOiGpa5Y7MsJb0vD4Ve A\",\"c_phone\":\"32-291-430-2654\",\"c_comment\":\"fluffily even ideas run. expr\",\"revenue\":548721.5623}\n{\"c_name\":\"Customer#000061948\",\"c_acctbal\":2014.59,\"n_name\":\"EGYPT\",\"c_address\":\"hF66lmZ3,Q GBH3e,S\",\"c_phone\":\"14-192-858-6373\",\"c_comment\":\". bold pinto beans affix against the furiously enticing tithes. furious, special requests are blithely alo\",\"revenue\":547328.8935}\n{\"c_name\":\"Customer#000083542\",\"c_acctbal\":4981.46,\"n_name\":\"SAUDI ARABIA\",\"c_address\":\"sYY9olNfJxoCBOSQZIxgC\",\"c_phone\":\"30-805-210-7358\",\"c_comment\":\" deposits use carefully regular pinto beans. alw\",\"revenue\":545814.8805}\n{\"c_name\":\"Customer#000145294\",\"c_acctbal\":4206.84,\"n_name\":\"UNITED STATES\",\"c_address\":\"iJXQSX rtTOQZPT4ivyxYp,4DOIQBRxl\",\"c_phone\":\"34-128-922-5825\",\"c_comment\":\" pending, unusual foxes are carefully express deposits. carefull\",\"revenue\":544318.6091}\n{\"c_name\":\"Customer#000008008\",\"c_acctbal\":4601.06,\"n_name\":\"KENYA\",\"c_address\":\"cp2rTubyh4LTKBosPuECOKpsZURmIkWpCdj5U6\",\"c_phone\":\"24-110-973-3604\",\"c_comment\":\" above the carefully bold ideas. furiously final instructions wake slyly. enticing accounts after the slyl\",\"revenue\":544040.6567}\n{\"c_name\":\"Customer#000048376\",\"c_acctbal\":7539.33,\"n_name\":\"FRANCE\",\"c_address\":\"Wfc9IZ BK8r PWcH57FMp8BGEtK FSikCmdM\",\"c_phone\":\"16-653-290-9942\",\"c_comment\":\" accounts boost slyly. regular pinto beans sleep furiously: blithely pending packages integrate car\",\"revenue\":543237.6914000001}\n{\"c_name\":\"Customer#000025429\",\"c_acctbal\":9589.41,\"n_name\":\"CHINA\",\"c_address\":\"RIEagNt4htVFAG\",\"c_phone\":\"28-199-372-8165\",\"c_comment\":\" the slyly ironic deposits. furiously bold theodolites haggle carefully. slyly final ideas boost alon\",\"revenue\":538641.3542}\n{\"c_name\":\"Customer#000119050\",\"c_acctbal\":2800.09,\"n_name\":\"UNITED KINGDOM\",\"c_address\":\"oGzdIN1hk3ZPD3,S3JmkG3P\",\"c_phone\":\"33-809-275-9380\",\"c_comment\":\"slyly after the special, pending courts-- stealthily final pinto beans detect along the bold, regular asympto\",\"revenue\":537666.6214}\n{\"c_name\":\"Customer#000098344\",\"c_acctbal\":8721.39,\"n_name\":\"BRAZIL\",\"c_address\":\"HRHHHWMaSeRkTKUNwCLc\",\"c_phone\":\"12-423-193-2073\",\"c_comment\":\"ackages. carefully unusual packages across the special, even pinto beans wake quickly according to the blith\",\"revenue\":532277.4037}\n{\"c_name\":\"Customer#000016099\",\"c_acctbal\":-26.49,\"n_name\":\"BRAZIL\",\"c_address\":\"XULkkFuWRojnJY0hYAqhvoTAunL \",\"c_phone\":\"12-276-728-2741\",\"c_comment\":\"eposits. quickly regular requests should cajole carefully regular asymptotes\",\"revenue\":531899.6681}\n{\"c_name\":\"Customer#000093559\",\"c_acctbal\":9816.77,\"n_name\":\"UNITED STATES\",\"c_address\":\"4 mXXbgo9dogY,pG0mKFiI7YRr,3O\",\"c_phone\":\"34-383-750-3203\",\"c_comment\":\"d foxes according to the deposits cajole slyly above the slyly regular theodolites. furiously even pinto bean\",\"revenue\":528313.627}\n{\"c_name\":\"Customer#000020671\",\"c_acctbal\":1498.24,\"n_name\":\"JORDAN\",\"c_address\":\"Q5D1EbNh7FwRbftc6kMZwOyk8ZyZ,a3rf\",\"c_phone\":\"23-807-806-7273\",\"c_comment\":\"the fluffily furious ideas should have to \",\"revenue\":527909.6427}\n{\"c_name\":\"Customer#000009601\",\"c_acctbal\":184.76,\"n_name\":\"ETHIOPIA\",\"c_address\":\"NTlFrD4KpceSzoVJJSM7pW9yUGh9tTr\",\"c_phone\":\"15-628-513-5840\",\"c_comment\":\" blithely against the special requ\",\"revenue\":523461.37659999996}\n{\"c_name\":\"Customer#000078790\",\"c_acctbal\":2241.94,\"n_name\":\"ARGENTINA\",\"c_address\":\"Ub1PPvbnz8987sZ,HDj89yWAszt,PH\",\"c_phone\":\"11-834-965-8401\",\"c_comment\":\"ly fluffily special deposits. \",\"revenue\":522637.37850000005}\n{\"c_name\":\"Customer#000078580\",\"c_acctbal\":4386.76,\"n_name\":\"JAPAN\",\"c_address\":\"PIMokVlNCR7\",\"c_phone\":\"22-827-660-7684\",\"c_comment\":\"uffily across the quickly express requests\",\"revenue\":521880.46140000003}\n{\"c_name\":\"Customer#000002437\",\"c_acctbal\":1907.53,\"n_name\":\"JAPAN\",\"c_address\":\"GA5ZY3WCIWK41fam\",\"c_phone\":\"22-235-126-9396\",\"c_comment\":\"ges. regular accounts wake blithely. regular foxes haggle near the requests! excuses use careful\",\"revenue\":517350.10620000004}\n{\"c_name\":\"Customer#000112723\",\"c_acctbal\":9196.43,\"n_name\":\"CHINA\",\"c_address\":\"UG0Dgfx2cWiwAEmRZXS2dm\",\"c_phone\":\"28-415-267-4302\",\"c_comment\":\"es. pending instructions are across t\",\"revenue\":517011.599}\n{\"c_name\":\"Customer#000013810\",\"c_acctbal\":5133.48,\"n_name\":\"CHINA\",\"c_address\":\"hnBypav 8dLiLA5708IY EkglglIu\",\"c_phone\":\"28-953-486-1222\",\"c_comment\":\"nts x-ray quickly ironic dependencies. final foxes cajole about t\",\"revenue\":516091.5921}\n{\"c_name\":\"Customer#000113240\",\"c_acctbal\":5208.22,\"n_name\":\"IRAN\",\"c_address\":\"j5IXCff9zRMo,e76PXCMbRjjNjzP0IDGwDN\",\"c_phone\":\"20-839-675-6935\",\"c_comment\":\"rate carefully slyly unusual pinto beans. furiously regula\",\"revenue\":513322.3206}\n{\"c_name\":\"Customer#000108598\",\"c_acctbal\":7074.14,\"n_name\":\"CANADA\",\"c_address\":\"fDuJgSmkItSWWXCcSzvOnjK2\",\"c_phone\":\"13-503-222-9338\",\"c_comment\":\"uriously final deposits. unusual, silent accounts against the\",\"revenue\":513235.06269999995}\n{\"c_name\":\"Customer#000049696\",\"c_acctbal\":-773.6,\"n_name\":\"CANADA\",\"c_address\":\"7i1F6lORR4ajtMx6Eg53oBjlqnr1\",\"c_phone\":\"13-431-497-3286\",\"c_comment\":\"equests. slyly regular sentiments are. carefully bol\",\"revenue\":511762.1895}\n{\"c_name\":\"Customer#000033688\",\"c_acctbal\":3922.07,\"n_name\":\"ETHIOPIA\",\"c_address\":\"oc0SWQBKjELUXV,ODvfiV7fYythy\",\"c_phone\":\"15-567-317-3181\",\"c_comment\":\"es haggle alongside of the blithely unusua\",\"revenue\":510928.1387}\n{\"c_name\":\"Customer#000077126\",\"c_acctbal\":2745.96,\"n_name\":\"FRANCE\",\"c_address\":\"09,UsIjhP,LabISXJMfTnWqdSH,nqAZ1jjMlvCF2\",\"c_phone\":\"16-563-280-8723\",\"c_comment\":\"counts. fluffily silent requests among the slyly ironic requests unwind furiously against the carefu\",\"revenue\":510764.5757}\n{\"c_name\":\"Customer#000097558\",\"c_acctbal\":5772.33,\"n_name\":\"INDIA\",\"c_address\":\"yzIF7RZ9xxool4a\",\"c_phone\":\"18-750-875-8115\",\"c_comment\":\" the slyly special ideas-- slyly silent accounts a\",\"revenue\":508563.1445}\n{\"c_name\":\"Customer#000000736\",\"c_acctbal\":9114.68,\"n_name\":\"ARGENTINA\",\"c_address\":\"zQNs5e2aFcVY8MigFQEBtoCaQ9e\",\"c_phone\":\"11-617-726-2039\",\"c_comment\":\" the deposits. blithely regular asymptotes boost q\",\"revenue\":507269.63759999996}\n{\"c_name\":\"Customer#000067378\",\"c_acctbal\":1018.96,\"n_name\":\"CANADA\",\"c_address\":\"r1tzAdzvq1yFjjkME2hqtQ fM6MeiMu\",\"c_phone\":\"13-621-280-9024\",\"c_comment\":\"cingly about the carefully final packages. furiously bold accounts unwind. never even\",\"revenue\":506883.5934}\n{\"c_name\":\"Customer#000065494\",\"c_acctbal\":1491.99,\"n_name\":\"VIETNAM\",\"c_address\":\"kym8IvbcmHhepoSH0\",\"c_phone\":\"31-946-412-6114\",\"c_comment\":\"fily special requests integrate furiously deposits. furiously special accounts unwind fluffi\",\"revenue\":506484.5052}\n{\"c_name\":\"Customer#000054958\",\"c_acctbal\":3168.12,\"n_name\":\"FRANCE\",\"c_address\":\"AFEP4RtDEuc8N17si2\",\"c_phone\":\"16-506-375-6445\",\"c_comment\":\". carefully bold deposits after the carefully final deposi\",\"revenue\":506174.11889999994}\n{\"c_name\":\"Customer#000061858\",\"c_acctbal\":-574.88,\"n_name\":\"BRAZIL\",\"c_address\":\"ynwNnff2igX6G9L3mFnXpB3MElZjDhnq\",\"c_phone\":\"12-390-479-1121\",\"c_comment\":\"ly final theodolites nag blithely blithely even foxes. accou\",\"revenue\":506062.1649}\n{\"c_name\":\"Customer#000015643\",\"c_acctbal\":5101.83,\"n_name\":\"ETHIOPIA\",\"c_address\":\"FdoK0PeD,pJG8ukKz\",\"c_phone\":\"15-706-665-6761\",\"c_comment\":\" slyly according to the special frets. regular requests are blithely quickly bold accounts. fluffily even courts ar\",\"revenue\":505261.7154}\n{\"c_name\":\"Customer#000133804\",\"c_acctbal\":-39.76,\"n_name\":\"BRAZIL\",\"c_address\":\"ZA0TroKKzh3AZd25TLH 3Mln\",\"c_phone\":\"12-646-970-5235\",\"c_comment\":\" final accounts are regular accounts. bold,\",\"revenue\":503396.06070000003}\n{\"c_name\":\"Customer#000113617\",\"c_acctbal\":4274.37,\"n_name\":\"PERU\",\"c_address\":\"2LMxLbVUfRIarLac2mJN52osDJZ8GOL8e36nZpQ\",\"c_phone\":\"27-912-170-4084\",\"c_comment\":\"latelets. ironic, ironic foxes integrate slyly along the final r\",\"revenue\":501845.3616}\n{\"c_name\":\"Customer#000130780\",\"c_acctbal\":6395.12,\"n_name\":\"BRAZIL\",\"c_address\":\"GrUHjluguOO,9Tej5f9YKVSn\",\"c_phone\":\"12-469-916-6105\",\"c_comment\":\"he unusual, dogged requests. furiously bold packages wake bold pinto b\",\"revenue\":501467.5426}\n{\"c_name\":\"Customer#000011327\",\"c_acctbal\":2208.86,\"n_name\":\"MOZAMBIQUE\",\"c_address\":\"iPvJWdqqAKgFmV9NwKkWUw\",\"c_phone\":\"26-381-356-5769\",\"c_comment\":\"beans haggle furiously: ruthlessly regular grouches cajole to the furiously unusual pinto beans. inst\",\"revenue\":500138.1059}\n{\"c_name\":\"Customer#000078770\",\"c_acctbal\":8073.92,\"n_name\":\"PERU\",\"c_address\":\"C6ELp1q3VPzyykUE7uV0gr WVnXK\",\"c_phone\":\"27-389-363-3438\",\"c_comment\":\" are across the regular, special platelets. blithely even accounts sleep quickly a\",\"revenue\":499769.9018}\n{\"c_name\":\"Customer#000123889\",\"c_acctbal\":6835.07,\"n_name\":\"JAPAN\",\"c_address\":\"cvpB4tebK,QtZHYB4b8JcKwj w,6V,1\",\"c_phone\":\"22-898-244-7064\",\"c_comment\":\"nic, regular foxes dazzle final deposits! slyly\",\"revenue\":499666.6777}\n{\"c_name\":\"Customer#000075307\",\"c_acctbal\":3419.66,\"n_name\":\"FRANCE\",\"c_address\":\"oGWdJa7WNcLBg1h \",\"c_phone\":\"16-160-673-6891\",\"c_comment\":\"uests. final requests sleep alongside of the ironic packages. slyly even theodolites are alongside of the packag\",\"revenue\":498622.5346}\n{\"c_name\":\"Customer#000148951\",\"c_acctbal\":898.03,\"n_name\":\"PERU\",\"c_address\":\"za,aGC2FhiFJf\",\"c_phone\":\"27-686-913-4111\",\"c_comment\":\"e. slyly unusual packages sleep carefully against the express\",\"revenue\":498590.64729999995}\n{\"c_name\":\"Customer#000135664\",\"c_acctbal\":8069.83,\"n_name\":\"VIETNAM\",\"c_address\":\"z9sga5odgzMaGDQCPnwcQ0Qf9GFDFrnPqtpYPFI\",\"c_phone\":\"31-502-979-8699\",\"c_comment\":\"es are carefully after the dep\",\"revenue\":498389.1135}\n{\"c_name\":\"Customer#000147727\",\"c_acctbal\":4288.02,\"n_name\":\"MOROCCO\",\"c_address\":\"dFZ WzKV2HpCrgN3V44Uj\",\"c_phone\":\"25-984-579-5735\",\"c_comment\":\"ackages thrash fluffily about the carefully silent \",\"revenue\":497213.6194000001}\n{\"c_name\":\"Customer#000129571\",\"c_acctbal\":2791.05,\"n_name\":\"UNITED KINGDOM\",\"c_address\":\"2DZgec,0Jc7,f5\",\"c_phone\":\"33-217-399-1269\",\"c_comment\":\" closely regular theodolites. regular foxes sleep blithely. blithely expre\",\"revenue\":497179.1999}\n{\"c_name\":\"Customer#000043849\",\"c_acctbal\":4405.21,\"n_name\":\"IRAN\",\"c_address\":\"PcYFCvRHI1P3kt8sn\",\"c_phone\":\"20-489-908-8753\",\"c_comment\":\"ts. thin, regular instructions are carefully along \",\"revenue\":494594.9837}\n{\"c_name\":\"Customer#000026857\",\"c_acctbal\":7727.26,\"n_name\":\"ETHIOPIA\",\"c_address\":\"VUZiEM,n5TDcFwbHLnEIbdNubFkti1Xwpi\",\"c_phone\":\"15-432-815-1266\",\"c_comment\":\"s. enticing packages sleep. slyly silent platelets above the ruthless packages are blithely across \",\"revenue\":494021.4143}\n{\"c_name\":\"Customer#000131308\",\"c_acctbal\":887.5,\"n_name\":\"ETHIOPIA\",\"c_address\":\"ju2AoqWuHB\",\"c_phone\":\"15-577-553-1234\",\"c_comment\":\"ding orbits. final packages sleep slyly around the final deposits. bo\",\"revenue\":490415.311}\n{\"c_name\":\"Customer#000012289\",\"c_acctbal\":2029.73,\"n_name\":\"FRANCE\",\"c_address\":\"d0y,pE4wVV wyXoxVha\",\"c_phone\":\"16-148-848-8470\",\"c_comment\":\"above the ironic requests. slyly regular deposits cajole. slyly fin\",\"revenue\":490018.2097}\n{\"c_name\":\"Customer#000082414\",\"c_acctbal\":47.42,\"n_name\":\"UNITED KINGDOM\",\"c_address\":\"NOAK  n0NdC4DZ6NDg\",\"c_phone\":\"33-834-953-5539\",\"c_comment\":\"c pinto beans. regular ideas of the slyly express ideas sleep across the bold deposits. final, pending plate\",\"revenue\":489839.81960000005}\n{\"c_name\":\"Customer#000057500\",\"c_acctbal\":8220.84,\"n_name\":\"ETHIOPIA\",\"c_address\":\"ZM85XL8V4EW2d,73xTVB5 GfMvWcUc\",\"c_phone\":\"15-976-670-6651\",\"c_comment\":\"ing sentiments detect. regular deposits boost carefully about the always final packages.\",\"revenue\":489127.74770000007}\n{\"c_name\":\"Customer#000040249\",\"c_acctbal\":2387.46,\"n_name\":\"GERMANY\",\"c_address\":\"p81XSIc2dNPtjXXrXUr03kDdwDuClrSboN9jE\",\"c_phone\":\"17-357-128-5786\",\"c_comment\":\"ons cajole carefully across the final patterns: regular pinto beans boost. slyly final excuses wake furiou\",\"revenue\":488633.8283}\n{\"c_name\":\"Customer#000047221\",\"c_acctbal\":6385.1,\"n_name\":\"INDIA\",\"c_address\":\"Rp4p8Q1tjKLv8Ht H6GLd,tG75TX\",\"c_phone\":\"18-637-949-4462\",\"c_comment\":\"urts. quickly pending packages according to the slyly ironic packages boost carefully idle, ironi\",\"revenue\":488091.98760000005}\n{\"c_name\":\"Customer#000101881\",\"c_acctbal\":6079.37,\"n_name\":\"GERMANY\",\"c_address\":\"tL1pcOAps0HMi4yqsQulDoQ k,ji\",\"c_phone\":\"17-218-889-1496\",\"c_comment\":\"excuses haggle stealthily furiously express pa\",\"revenue\":487991.52989999996}\n{\"c_name\":\"Customer#000139720\",\"c_acctbal\":3805.63,\"n_name\":\"VIETNAM\",\"c_address\":\"FIaA5LTpwzw73Jij4zPVYeY YdLxcP\",\"c_phone\":\"31-321-360-8040\",\"c_comment\":\"ts. blithely even requests would sleep furiou\",\"revenue\":486704.0936}\n{\"c_name\":\"Customer#000110407\",\"c_acctbal\":3931.75,\"n_name\":\"BRAZIL\",\"c_address\":\"vul41vqPzpKLjpdxrvkM0\",\"c_phone\":\"12-160-902-4540\",\"c_comment\":\"g pinto beans x-ray ironic theodolites. unusual acco\",\"revenue\":486320.54699999996}\n{\"c_name\":\"Customer#000032116\",\"c_acctbal\":3499.97,\"n_name\":\"JORDAN\",\"c_address\":\"hfXjHGdaLDd 9a,dg2m2s7GEDSm\",\"c_phone\":\"23-249-143-1017\",\"c_comment\":\" ironic packages alongside of the blithely express packages are carefully above the carefully final pinto bea\",\"revenue\":484093.9033}\n{\"c_name\":\"Customer#000137554\",\"c_acctbal\":8720.59,\"n_name\":\"GERMANY\",\"c_address\":\"F5wmFTDF4W20kp6\",\"c_phone\":\"17-485-844-3522\",\"c_comment\":\"s. fluffily ironic pains wake slyly packages. slyly regular accou\",\"revenue\":481769.9548}\n{\"c_name\":\"Customer#000110149\",\"c_acctbal\":4315.57,\"n_name\":\"ALGERIA\",\"c_address\":\"GRCbTS24fPpxaKvLB3PqFSMusKIdVm3\",\"c_phone\":\"10-702-652-8227\",\"c_comment\":\"ically. permanently regular requests solve. busily ironic foxes wake.\",\"revenue\":481746.5157}\n{\"c_name\":\"Customer#000047095\",\"c_acctbal\":5953.73,\"n_name\":\"JAPAN\",\"c_address\":\"bGA2NMQEO5uv L,OZ3,GJmtJY4\",\"c_phone\":\"22-626-961-4786\",\"c_comment\":\" quickly unusual ideas. slyly ironic accounts haggle. regular theodolites shall nag blithely. boldly\",\"revenue\":481453.91219999996}\n{\"c_name\":\"Customer#000019714\",\"c_acctbal\":9620.93,\"n_name\":\"CHINA\",\"c_address\":\"JmbRCclTv4X402ga6fyY\",\"c_phone\":\"28-822-883-4467\",\"c_comment\":\" ironic pinto beans sleep bravely along the packages-- carefully final requests u\",\"revenue\":479363.63029999996}\n{\"c_name\":\"Customer#000057718\",\"c_acctbal\":-606.34,\"n_name\":\"CANADA\",\"c_address\":\"QNmnaYaVyW\",\"c_phone\":\"13-550-650-3465\",\"c_comment\":\"nic, ironic accounts use blithely. \",\"revenue\":479175.8655999999}\n{\"c_name\":\"Customer#000009133\",\"c_acctbal\":4733.08,\"n_name\":\"ALGERIA\",\"c_address\":\"yEIv0stOc8BMQtqSxKkixh\",\"c_phone\":\"10-698-276-8570\",\"c_comment\":\"y quickly bold instructions. pending, pending excuses wake quickly above the carefully regular ideas. unusual brai\",\"revenue\":477972.1027}\n{\"c_name\":\"Customer#000139879\",\"c_acctbal\":7041.7,\"n_name\":\"BRAZIL\",\"c_address\":\"p5QKi68nte2Vc\",\"c_phone\":\"12-459-690-2895\",\"c_comment\":\"ully final accounts cajole quickly. quickly bold requests use. blithely unusual requests boost furiously. careful\",\"revenue\":477129.8154}\n{\"c_name\":\"Customer#000072284\",\"c_acctbal\":4299.42,\"n_name\":\"ALGERIA\",\"c_address\":\"AGFIZCWnza8hAxf8AL1XrczX\",\"c_phone\":\"10-839-135-2780\",\"c_comment\":\"y unusual hockey players affix blithely after the carefully fi\",\"revenue\":476591.4347}\n{\"c_name\":\"Customer#000007684\",\"c_acctbal\":3782.83,\"n_name\":\"IRAQ\",\"c_address\":\"iNGpOQSuUt2RjqyxahhGBQvN3lfK62PkwvSfiUxN\",\"c_phone\":\"21-125-646-6222\",\"c_comment\":\"ously even deposits. furiously even theodolites are furiously\",\"revenue\":476203.3105}\n{\"c_name\":\"Customer#000007510\",\"c_acctbal\":2261.44,\"n_name\":\"INDONESIA\",\"c_address\":\"Jelesl59ESFXlglVxFORcLGAUSeU4n U\",\"c_phone\":\"19-917-791-2783\",\"c_comment\":\"ular packages. furiously pending pinto beans integrate carefully. blithely regular package\",\"revenue\":474534.364}\n{\"c_name\":\"Customer#000102934\",\"c_acctbal\":4520.91,\"n_name\":\"EGYPT\",\"c_address\":\"EFcs7Y0g2ZRbDW0xgXQF\",\"c_phone\":\"14-876-515-4175\",\"c_comment\":\"le carefully regular deposits. unusual, final requests cajole blithely slyly ironic requ\",\"revenue\":474180.5057999999}\n{\"c_name\":\"Customer#000025645\",\"c_acctbal\":-244.46,\"n_name\":\"PERU\",\"c_address\":\"WUeBpTy9k7yDxmXXIoq,4z5hFz,S7ICpg1\",\"c_phone\":\"27-327-490-3928\",\"c_comment\":\" regular accounts mold slyly regular theodolites. slyly pending dolphins must have to use slyly against the express \",\"revenue\":473722.8425999999}\n{\"c_name\":\"Customer#000005611\",\"c_acctbal\":565.23,\"n_name\":\"IRAN\",\"c_address\":\"Aq0EJX63HiCph IFCplgwxUVzVwbo0xpFS\",\"c_phone\":\"20-619-193-1365\",\"c_comment\":\"even accounts are about the quickly regular excuses; slyly regular foxes \",\"revenue\":473614.91180000006}\n{\"c_name\":\"Customer#000055060\",\"c_acctbal\":4247.05,\"n_name\":\"IRAN\",\"c_address\":\"o9,4jbuOy2lpPV18nzlYrLdUBEb b\",\"c_phone\":\"20-881-927-4627\",\"c_comment\":\"yly about the patterns. ironic ideas cajole furiously f\",\"revenue\":471572.1274}\n{\"c_name\":\"Customer#000089140\",\"c_acctbal\":9570.28,\"n_name\":\"PERU\",\"c_address\":\"WEzrLJxjLk1rTnp4hWxeYbXiKCq Wmd\",\"c_phone\":\"27-119-607-9583\",\"c_comment\":\"ar ideas. slyly regular theodolites cajole according to the furiously \",\"revenue\":471283.1021}\n{\"c_name\":\"Customer#000016859\",\"c_acctbal\":866.06,\"n_name\":\"ROMANIA\",\"c_address\":\"u1uydM5iVmhK  zKrQGp355t6utHwZWFHWWCzWfV\",\"c_phone\":\"29-679-991-7084\",\"c_comment\":\"ns cajole regularly deposits. deposits believe special asymptotes. carefully ironic pinto beans nag fluffily careful\",\"revenue\":470672.3219}\n{\"c_name\":\"Customer#000067865\",\"c_acctbal\":1839.35,\"n_name\":\"JAPAN\",\"c_address\":\"qgmJFUHGmMHepJW3XvzkIugoRp HfsAk51\",\"c_phone\":\"22-484-874-5926\",\"c_comment\":\"ts. quickly ironic pinto beans to the carefully regular dolphins boost according to the careful excuses. slyly un\",\"revenue\":470670.71809999994}\n{\"c_name\":\"Customer#000065749\",\"c_acctbal\":5685.95,\"n_name\":\"JAPAN\",\"c_address\":\"QoNMYsZjCtx LJZxj5lEjd5 v2RAjXE,fSX x\",\"c_phone\":\"22-605-158-7179\",\"c_comment\":\"furiously pending packages are ruthlessly even theodolites. furiously final platel\",\"revenue\":469525.7511}\n{\"c_name\":\"Customer#000068549\",\"c_acctbal\":4226.81,\"n_name\":\"MOZAMBIQUE\",\"c_address\":\"DOA8rL1n0I,U9vUK\",\"c_phone\":\"26-776-172-3479\",\"c_comment\":\" unwind requests. furiously bold asymptotes according to\",\"revenue\":467214.1328}\n{\"c_name\":\"Customer#000089797\",\"c_acctbal\":6699.19,\"n_name\":\"CHINA\",\"c_address\":\"uUdmtcJIrQEWW31SaE\",\"c_phone\":\"28-732-673-1568\",\"c_comment\":\"theodolites cajole carefully alongside of the carefully ironic i\",\"revenue\":466700.4703}\n{\"c_name\":\"Customer#000061123\",\"c_acctbal\":-868.72,\"n_name\":\"ROMANIA\",\"c_address\":\"qD8arhTEw2eVPldj7xUuGa2Ci65,E8PQ\",\"c_phone\":\"29-230-269-8335\",\"c_comment\":\"al theodolites haggle. final packages among the slyly final requests nag quickly blithely final theodolites.\",\"revenue\":466638.17429999996}\n{\"c_name\":\"Customer#000027103\",\"c_acctbal\":9411.93,\"n_name\":\"KENYA\",\"c_address\":\"HDUn7E6FwlPxPgO 4\",\"c_phone\":\"24-744-650-9350\",\"c_comment\":\" carefully ironic accounts dazzle blithely slyly regu\",\"revenue\":464423.02749999997}\n{\"c_name\":\"Customer#000129188\",\"c_acctbal\":9009.32,\"n_name\":\"UNITED KINGDOM\",\"c_address\":\"ZQbY7PU7MkHFriL\",\"c_phone\":\"33-851-853-7200\",\"c_comment\":\"al pinto beans. final, stealthy pinto beans cajole fluffily. unusual somas across the pending, pending pinto b\",\"revenue\":464092.05449999997}\n{\"c_name\":\"Customer#000084760\",\"c_acctbal\":9656.12,\"n_name\":\"INDIA\",\"c_address\":\"P68jncJOQvmfAxG\",\"c_phone\":\"18-450-121-6947\",\"c_comment\":\"the quickly regular deposits boost sly\",\"revenue\":463797.7431999999}\n{\"c_name\":\"Customer#000005113\",\"c_acctbal\":4868.46,\"n_name\":\"ALGERIA\",\"c_address\":\"uWqz9igOPPLcR,lNSaNM0bX4J\",\"c_phone\":\"10-959-727-6144\",\"c_comment\":\"along the quickly bold requests haggle carefully careful\",\"revenue\":463201.17909999995}\n{\"c_name\":\"Customer#000112603\",\"c_acctbal\":107.35,\"n_name\":\"UNITED STATES\",\"c_address\":\"POOFlR5FbtvwzqwOD y\",\"c_phone\":\"34-796-517-7728\",\"c_comment\":\"sly about the express deposits? pending, unusual packages are furiously fluffily i\",\"revenue\":462881.5402}\n{\"c_name\":\"Customer#000147373\",\"c_acctbal\":5753.72,\"n_name\":\"RUSSIA\",\"c_address\":\"HZvxYsc5lDdp27TshB50XcG5\",\"c_phone\":\"32-998-621-3819\",\"c_comment\":\"ges nag after the careful, bold ideas. blithely regular instructi\",\"revenue\":462871.54170000006}\n{\"c_name\":\"Customer#000075715\",\"c_acctbal\":370.16,\"n_name\":\"ROMANIA\",\"c_address\":\"OC8AjYB9WX jiohjOdK0O0\",\"c_phone\":\"29-481-661-5111\",\"c_comment\":\"s. final requests are among the slyly unusual theodolites. even requests play quickly slyly regular dolphins.\",\"revenue\":462206.48209999996}\n{\"c_name\":\"Customer#000138637\",\"c_acctbal\":2406.6,\"n_name\":\"ETHIOPIA\",\"c_address\":\"ft 5q4YQDHrV\",\"c_phone\":\"15-484-602-4951\",\"c_comment\":\"d deposits. fluffily pending accounts wake slyly. regular ideas wake among the unusual ideas. quickly pendi\",\"revenue\":462171.2443}\n{\"c_name\":\"Customer#000061199\",\"c_acctbal\":9552.52,\"n_name\":\"CHINA\",\"c_address\":\"9M RQoqyMelHT3Oh 0t1KDK,DtvMRW\",\"c_phone\":\"28-345-200-3272\",\"c_comment\":\"r dolphins. express accounts sleep furiously along the even, regular packages. fluffil\",\"revenue\":462153.5295}\n{\"c_name\":\"Customer#000036277\",\"c_acctbal\":16.41,\"n_name\":\"ROMANIA\",\"c_address\":\"Gm,dLyioTE3JCNkT\",\"c_phone\":\"29-733-105-5649\",\"c_comment\":\"around the pending packages sleep quickly about the silent, final accounts. platelets haggle slyly. furiously i\",\"revenue\":461984.515}\n{\"c_name\":\"Customer#000026497\",\"c_acctbal\":8264.89,\"n_name\":\"GERMANY\",\"c_address\":\"rrmqkKNSSjPRDsQKTfIOrAWBKQO\",\"c_phone\":\"17-717-682-2080\",\"c_comment\":\"efully regular instructions. un\",\"revenue\":461680.9778}\n{\"c_name\":\"Customer#000110615\",\"c_acctbal\":8963.53,\"n_name\":\"INDONESIA\",\"c_address\":\"jNOUmh7seCzeST0z49KkAF7SCJAWYWMaJ\",\"c_phone\":\"19-586-363-1316\",\"c_comment\":\"osits across the ironic, bold instructions affix stealthily bold dolphins. escapades on the\",\"revenue\":461456.497}\n{\"c_name\":\"Customer#000030766\",\"c_acctbal\":8038.57,\"n_name\":\"INDONESIA\",\"c_address\":\"ZoYnYqXCVuG8AfQRV5x\",\"c_phone\":\"19-899-170-7368\",\"c_comment\":\"tes affix bravely-- regular instructions sleep quickly requests. quickly unusual packages will \",\"revenue\":460150.1078}\n{\"c_name\":\"Customer#000030718\",\"c_acctbal\":2596.48,\"n_name\":\"FRANCE\",\"c_address\":\"ZkxznPi85MNO15V103uZv3UA4I4ZEVuV4HzVu\",\"c_phone\":\"16-412-201-5602\",\"c_comment\":\"re blithely against the slyly furious packages. slyly express\",\"revenue\":459807.80749999994}\n{\"c_name\":\"Customer#000079471\",\"c_acctbal\":9293.02,\"n_name\":\"MOZAMBIQUE\",\"c_address\":\"hrknp6Z2QV4f0v0QtKRdry0Gyj\",\"c_phone\":\"26-775-661-5790\",\"c_comment\":\"sts nag furiously about the ruthless, ironic ideas. slyly final accounts wake. regular excus\",\"revenue\":458465.7178}\n{\"c_name\":\"Customer#000146756\",\"c_acctbal\":107.25,\"n_name\":\"EGYPT\",\"c_address\":\"WWH fjsDkKovu8jiTYZmxC3HMLIYEDnDT\",\"c_phone\":\"14-321-449-8957\",\"c_comment\":\"xes believe blithely platelets. even, final accounts nag carefully against the\",\"revenue\":458344.23949999997}\n{\"c_name\":\"Customer#000000856\",\"c_acctbal\":6988.55,\"n_name\":\"MOROCCO\",\"c_address\":\"X4U7LH4YtDzephie\",\"c_phone\":\"25-336-316-9641\",\"c_comment\":\"y bold pinto beans according to the pending foxes \",\"revenue\":458241.11380000005}\n{\"c_name\":\"Customer#000131707\",\"c_acctbal\":1800.08,\"n_name\":\"GERMANY\",\"c_address\":\"nITmydRe6DUuW Xr0G06cT\",\"c_phone\":\"17-435-974-5966\",\"c_comment\":\"ts are furiously slyly idle instructions. fluffily even courts are furiously above the instructions. escapades \",\"revenue\":456787.3863}\n{\"c_name\":\"Customer#000029023\",\"c_acctbal\":4531.0,\"n_name\":\"EGYPT\",\"c_address\":\"XQnAM02lodRyXVK\",\"c_phone\":\"14-611-957-8000\",\"c_comment\":\"ages. fluffily express requests cajole. b\",\"revenue\":456741.3317999999}\n{\"c_name\":\"Customer#000090104\",\"c_acctbal\":224.4,\"n_name\":\"CHINA\",\"c_address\":\"LGYARYRGEGszGXfcDzh8\",\"c_phone\":\"28-821-634-8816\",\"c_comment\":\"eposits cajole except the fluffily silent p\",\"revenue\":456349.93519999995}\n{\"c_name\":\"Customer#000118441\",\"c_acctbal\":9489.92,\"n_name\":\"INDONESIA\",\"c_address\":\"EiusM8KLmHAQBodIvZZT2kSdy8s\",\"c_phone\":\"19-765-677-8526\",\"c_comment\":\"e blithely slyly express deposits. even instructions to the blithely silent asymptotes was furiously courts. ca\",\"revenue\":456279.1474}\n{\"c_name\":\"Customer#000102754\",\"c_acctbal\":677.85,\"n_name\":\"MOROCCO\",\"c_address\":\"Xo5pai3km1sGCGaHoZ05we1,2lT4rOIQxubn\",\"c_phone\":\"25-957-505-1343\",\"c_comment\":\"ts shall are fluffily. blithely regul\",\"revenue\":455852.00789999997}\n{\"c_name\":\"Customer#000016847\",\"c_acctbal\":9633.79,\"n_name\":\"ARGENTINA\",\"c_address\":\"NME35g5cg2MFNkEmWW5jiNrXW\",\"c_phone\":\"11-961-378-9093\",\"c_comment\":\" ideas. regular, special instructions need to wake \",\"revenue\":454833.64210000006}\n{\"c_name\":\"Customer#000052369\",\"c_acctbal\":5409.95,\"n_name\":\"MOROCCO\",\"c_address\":\"jag83p3XbHBMt7Ork8sIooFcR\",\"c_phone\":\"25-450-120-3424\",\"c_comment\":\"accounts are carefully even frets. enticing courts cajole carefully pending \",\"revenue\":454462.3688}\n{\"c_name\":\"Customer#000023815\",\"c_acctbal\":3981.12,\"n_name\":\"UNITED KINGDOM\",\"c_address\":\"g3ZJGbQ6EWMiQ0DFgiGNZBh85ICc\",\"c_phone\":\"33-464-125-5917\",\"c_comment\":\"l ideas. ironic, final deposits sleep quickly busy requests. furiously regular requests \",\"revenue\":454262.46400000004}\n{\"c_name\":\"Customer#000123832\",\"c_acctbal\":-203.83,\"n_name\":\"INDIA\",\"c_address\":\"phIaOCuKR0eidJCKDFynmTGFg0\",\"c_phone\":\"18-852-468-9312\",\"c_comment\":\"y furiously special foxes. theodolites\",\"revenue\":454177.0686}\n{\"c_name\":\"Customer#000131062\",\"c_acctbal\":1450.95,\"n_name\":\"PERU\",\"c_address\":\"PB8xPQ66rE,pFwaF1cw7H85Rll4\",\"c_phone\":\"27-726-552-9821\",\"c_comment\":\"fully according to the slyly regular deposits. blithely unusual requests\",\"revenue\":454162.3228000001}\n{\"c_name\":\"Customer#000089798\",\"c_acctbal\":6271.35,\"n_name\":\"SAUDI ARABIA\",\"c_address\":\"HflMeP692YCWrAYxR0aNqPEAz t09Qn,\",\"c_phone\":\"30-805-859-3989\",\"c_comment\":\"e carefully special dependencies affix quickly after the silent \",\"revenue\":453428.03740000003}\n{\"c_name\":\"Customer#000077296\",\"c_acctbal\":1250.65,\"n_name\":\"BRAZIL\",\"c_address\":\"0GXx7apZ3 vkYQfONaVy6LuDpYDBzlOg\",\"c_phone\":\"12-248-307-9719\",\"c_comment\":\"ly unusual packages sleep excuses; special packages a\",\"revenue\":453005.58709999995}\n{\"c_name\":\"Customer#000080356\",\"c_acctbal\":3727.75,\"n_name\":\"IRAQ\",\"c_address\":\"fCUmVh5HOjIopY\",\"c_phone\":\"21-317-964-5214\",\"c_comment\":\"r deposits-- pending packages nod fluffily according to\",\"revenue\":452909.79419999995}\n{\"c_name\":\"Customer#000132724\",\"c_acctbal\":-619.05,\"n_name\":\"VIETNAM\",\"c_address\":\"q4 IsaXYq1qyX,grUIN8cL0OZSsJa6 \",\"c_phone\":\"31-912-528-5259\",\"c_comment\":\"ies. packages cajole. express, bold pinto beans wake slyly. bold instructions integrate past the qu\",\"revenue\":452731.7067}\n{\"c_name\":\"Customer#000142015\",\"c_acctbal\":3841.67,\"n_name\":\"UNITED KINGDOM\",\"c_address\":\"fr1cn7EjamsnfHHafh\",\"c_phone\":\"33-699-169-5328\",\"c_comment\":\"the bold deposits. slyly regular accounts ou\",\"revenue\":451992.3154999999}\n{\"c_name\":\"Customer#000031546\",\"c_acctbal\":8876.8,\"n_name\":\"MOROCCO\",\"c_address\":\"GiZBtmgmLA bt WSh7Gy33w\",\"c_phone\":\"25-195-480-6520\",\"c_comment\":\"posits wake! quickly even theod\",\"revenue\":451426.497}\n{\"c_name\":\"Customer#000072361\",\"c_acctbal\":-512.76,\"n_name\":\"JORDAN\",\"c_address\":\"kjeDEjWL32wWxAFA fMAsSbLBZy8XSYOkDgHOjMd\",\"c_phone\":\"23-110-917-1141\",\"c_comment\":\"ording to the foxes was blithely about the quickly silent\",\"revenue\":450645.85299999994}\n{\"c_name\":\"Customer#000063823\",\"c_acctbal\":7140.52,\"n_name\":\"CANADA\",\"c_address\":\"pkTZgNgMSL9oGE5vDc\",\"c_phone\":\"13-345-941-6883\",\"c_comment\":\" final accounts cajole fluffily. pending deposits wake furiously. unusual \",\"revenue\":450610.302}\n{\"c_name\":\"Customer#000144991\",\"c_acctbal\":-828.91,\"n_name\":\"IRAQ\",\"c_address\":\"MKdRTUqTjAH\",\"c_phone\":\"21-785-969-5249\",\"c_comment\":\"ts cajole slyly pinto beans. slyly even packages use carefully even dependencies. even, ironic d\",\"revenue\":450592.7287}\n{\"c_name\":\"Customer#000004508\",\"c_acctbal\":2170.05,\"n_name\":\"ETHIOPIA\",\"c_address\":\"h,OgEqnD4ZUDq4NaPCKAfTL0YJxYzj\",\"c_phone\":\"15-173-855-1164\",\"c_comment\":\"nto beans cajole blithely along the furiously special pinto beans. quickly unusual pinto beans haggle brav\",\"revenue\":449957.1162}\n{\"c_name\":\"Customer#000056263\",\"c_acctbal\":1092.24,\"n_name\":\"ALGERIA\",\"c_address\":\"YIWZo8uvPR3PvPi9zreoUZC Q3\",\"c_phone\":\"10-391-739-8546\",\"c_comment\":\"ests cajole. slyly unusual requests n\",\"revenue\":449894.75879999995}\n{\"c_name\":\"Customer#000084185\",\"c_acctbal\":6913.01,\"n_name\":\"MOROCCO\",\"c_address\":\"VShH5JDJ9KuA6R\",\"c_phone\":\"25-375-979-1163\",\"c_comment\":\"dinos. carefully regular requests sleep? pinto beans nag blithely. final requests across\",\"revenue\":449644.3689}\n{\"c_name\":\"Customer#000126556\",\"c_acctbal\":4240.95,\"n_name\":\"MOZAMBIQUE\",\"c_address\":\"RYeyGD2g8GhDuH3m9sv\",\"c_phone\":\"26-365-850-3812\",\"c_comment\":\"beans wake around the fluffily final instructions. regular asymptotes engage sl\",\"revenue\":449344.2208}\n{\"c_name\":\"Customer#000149995\",\"c_acctbal\":6103.74,\"n_name\":\"IRAN\",\"c_address\":\"PvEhdlAtDlAjNLPc,LFSenxB,Jso3tmHs9\",\"c_phone\":\"20-743-338-6282\",\"c_comment\":\"st the silent platelets. busily even deposits ought\",\"revenue\":448651.1467}\n{\"c_name\":\"Customer#000040207\",\"c_acctbal\":8621.8,\"n_name\":\"INDONESIA\",\"c_address\":\"q5bvYpBRn5YRp3W23J\",\"c_phone\":\"19-232-826-4940\",\"c_comment\":\"nts integrate quickly. carefully ironic instruc\",\"revenue\":448381.8288}\n{\"c_name\":\"Customer#000060094\",\"c_acctbal\":-408.23,\"n_name\":\"JAPAN\",\"c_address\":\"MkoqzelPE 8kI\",\"c_phone\":\"22-809-331-1348\",\"c_comment\":\"ges cajole slyly express dependencies. quickly special accounts are slyly against the furiously re\",\"revenue\":447836.1474}\n{\"c_name\":\"Customer#000023503\",\"c_acctbal\":4610.54,\"n_name\":\"GERMANY\",\"c_address\":\"wsesGlItl1fADHGws\",\"c_phone\":\"17-646-895-8547\",\"c_comment\":\" cajole fluffily. unusual, regular platelets use furiously quickly unusual deposits! enticingly final\",\"revenue\":447686.7412}\n{\"c_name\":\"Customer#000148573\",\"c_acctbal\":5652.89,\"n_name\":\"GERMANY\",\"c_address\":\"3lyUikF3B3YFob,wSSW68Xbcl31pjONwxeELWB2\",\"c_phone\":\"17-856-133-6461\",\"c_comment\":\"gular, ironic ideas sleep about the slyly even accounts. carefully even ideas alongside o\",\"revenue\":447489.19670000003}\n{\"c_name\":\"Customer#000145910\",\"c_acctbal\":7034.38,\"n_name\":\"MOZAMBIQUE\",\"c_address\":\"RRdPJFWXyimQkKoSj38PaTjtJ7B,\",\"c_phone\":\"26-918-755-2086\",\"c_comment\":\"y furiously unusual asymptotes. always busy deposits maintain blithely about the asympt\",\"revenue\":445807.7201}\n{\"c_name\":\"Customer#000129644\",\"c_acctbal\":4906.32,\"n_name\":\"PERU\",\"c_address\":\"AMmcFxWNLi0SCecORq5kHIDfr7K\",\"c_phone\":\"27-693-503-4043\",\"c_comment\":\"regular notornis. even accounts sle\",\"revenue\":444762.8208}\n{\"c_name\":\"Customer#000097108\",\"c_acctbal\":5912.43,\"n_name\":\"ALGERIA\",\"c_address\":\"fOk5EQQnpQgoR3qC0nYDwiwA9T\",\"c_phone\":\"10-759-759-4198\",\"c_comment\":\". carefully even epitaphs use across the carefully thin accounts. special warh\",\"revenue\":444452.804}\n{\"c_name\":\"Customer#000135640\",\"c_acctbal\":5058.0,\"n_name\":\"JAPAN\",\"c_address\":\"RAtOSOOVvGJDQcbJrmpovT5iE,yM6e2\",\"c_phone\":\"22-554-391-3693\",\"c_comment\":\"yly. carefully bold deposits wake across the quickly express packages. evenly enticing frets wake. qu\",\"revenue\":444397.598}\n{\"c_name\":\"Customer#000115201\",\"c_acctbal\":-505.45,\"n_name\":\"CANADA\",\"c_address\":\"vNswnQncDa\",\"c_phone\":\"13-639-145-1347\",\"c_comment\":\"egular pinto beans cajole furiously beyond the furiously regular dependencies. ironic, ironic requ\",\"revenue\":443107.8074}\n{\"c_name\":\"Customer#000064831\",\"c_acctbal\":5624.47,\"n_name\":\"PERU\",\"c_address\":\"Nnm7V6XX3w9a8TI0psBJkGDEMtL3\",\"c_phone\":\"27-472-606-4002\",\"c_comment\":\"ns. doggedly bold platelets grow evenly final dependencies. fluffily final dol\",\"revenue\":442544.12260000006}\n{\"c_name\":\"Customer#000014896\",\"c_acctbal\":4703.05,\"n_name\":\"INDIA\",\"c_address\":\"YMdOt14TCPZ7 Oj8gCjarOSD 1XtmEaXVfbAR7,1\",\"c_phone\":\"18-893-808-3927\",\"c_comment\":\"ggle across the unusual, final requests. f\",\"revenue\":442024.35810000007}\n{\"c_name\":\"Customer#000113476\",\"c_acctbal\":6141.34,\"n_name\":\"JORDAN\",\"c_address\":\"G, JGDbcQkxpYhsysPiLd1JauePVVgE zGwKaFa\",\"c_phone\":\"23-799-271-4928\",\"c_comment\":\"deas against the dogged, sly requests \",\"revenue\":441617.0307}\n{\"c_name\":\"Customer#000113066\",\"c_acctbal\":2908.44,\"n_name\":\"PERU\",\"c_address\":\"D9R3X0sn1mAFRM0RoAa PjuwnkBxSgwIioA\",\"c_phone\":\"27-452-491-5005\",\"c_comment\":\" blithely permanent ideas since the regular requests will have to are above the special instructio\",\"revenue\":441458.3525}\n{\"c_name\":\"Customer#000116560\",\"c_acctbal\":5025.79,\"n_name\":\"ARGENTINA\",\"c_address\":\"KrtxggNsT247cfR7kgQeqlff3UuV3ntO2O4V7\",\"c_phone\":\"11-288-140-7306\",\"c_comment\":\" cajole slyly: fluffily unusual forges cajole closely excuses. regular requests are car\",\"revenue\":441184.1234}\n{\"c_name\":\"Customer#000017981\",\"c_acctbal\":9040.3,\"n_name\":\"ALGERIA\",\"c_address\":\"QIYQhjnayNYyGfEwiCPkD\",\"c_phone\":\"10-552-796-1311\",\"c_comment\":\"final ideas. furiously final accounts doubt carefully along the carefully ironic deposits. sometimes regular hocke\",\"revenue\":440679.21609999996}\n{\"c_name\":\"Customer#000088279\",\"c_acctbal\":186.89,\"n_name\":\"GERMANY\",\"c_address\":\"OpYjOL2,xZX4ENeC3e1lBukiONKG,fHddUsv\",\"c_phone\":\"17-246-377-6847\",\"c_comment\":\"oost quickly. dolphins cajole slyly final accounts. deposits across the slyly express packages cajole fi\",\"revenue\":439881.869}\n{\"c_name\":\"Customer#000084289\",\"c_acctbal\":3286.99,\"n_name\":\"JORDAN\",\"c_address\":\"c,oxPMgUDH9cxlCUsVZ3C1SCZEy5zlUAa\",\"c_phone\":\"23-711-780-8775\",\"c_comment\":\"sly even instructions maintain against the s\",\"revenue\":439740.9298}\n{\"c_name\":\"Customer#000105994\",\"c_acctbal\":-662.94,\"n_name\":\"UNITED STATES\",\"c_address\":\"BLq2HVuc1KdG5Qy5CjAzLnV0qlLMwAax\",\"c_phone\":\"34-284-577-1896\",\"c_comment\":\"aggle slyly packages. quickly reg\",\"revenue\":439450.6471}\n{\"c_name\":\"Customer#000149044\",\"c_acctbal\":6268.87,\"n_name\":\"JAPAN\",\"c_address\":\"oSRKjyx4MX6x1rVWvnGeumXCuxoIpb\",\"c_phone\":\"22-338-912-3907\",\"c_comment\":\" packages. pending accounts with the carefully regular ideas haggle ideas. blithe foxes after the slyly final\",\"revenue\":439343.3021}\n{\"c_name\":\"Customer#000102460\",\"c_acctbal\":412.1,\"n_name\":\"IRAQ\",\"c_address\":\"WmFTpMhDWJzPeeIwE6mPBVW\",\"c_phone\":\"21-241-387-5691\",\"c_comment\":\" cajole carefully special Tiresias. silent, final accounts above the blithely final deposits are \",\"revenue\":439141.54720000003}\n{\"c_name\":\"Customer#000078103\",\"c_acctbal\":4725.68,\"n_name\":\"CANADA\",\"c_address\":\"z4DwaiiZVYJLNV9NdkDJyuHktAG4HAAb\",\"c_phone\":\"13-375-482-6251\",\"c_comment\":\"ages promise carefully bold instructions. final excuses after the express requests x-ray slyly sly\",\"revenue\":438513.0561}\n{\"c_name\":\"Customer#000082063\",\"c_acctbal\":9897.17,\"n_name\":\"IRAN\",\"c_address\":\"8b767QER5m\",\"c_phone\":\"20-163-257-5955\",\"c_comment\":\"as alongside of the carefully unusual acco\",\"revenue\":437613.13339999993}\n{\"c_name\":\"Customer#000128455\",\"c_acctbal\":6315.88,\"n_name\":\"JORDAN\",\"c_address\":\"5 5Nl932jkyj3,h1 VX4u96So,kvKHU4,bGKBqx\",\"c_phone\":\"23-251-191-3429\",\"c_comment\":\" deposits. blithely regular packages after the s\",\"revenue\":437479.3563}\n{\"c_name\":\"Customer#000030037\",\"c_acctbal\":-938.0,\"n_name\":\"IRAN\",\"c_address\":\"Fu7swRB2LS,tBXD7sbq2CLZMDQu\",\"c_phone\":\"20-666-222-9419\",\"c_comment\":\". blithely unusual instructions above the slyly unusual deposits wake final tith\",\"revenue\":436607.5163}\n{\"c_name\":\"Customer#000025378\",\"c_acctbal\":7051.97,\"n_name\":\"EGYPT\",\"c_address\":\"73pWwewXJcnj\",\"c_phone\":\"14-417-481-9670\",\"c_comment\":\"ithely blithe pinto beans boost about the platelets. blithel\",\"revenue\":434249.61159999995}\n{\"c_name\":\"Customer#000054031\",\"c_acctbal\":9916.49,\"n_name\":\"IRAN\",\"c_address\":\"lExaWU,G99Vtj1fS5hvvQGo1cnYp\",\"c_phone\":\"20-518-369-9890\",\"c_comment\":\". slyly ironic grouches might are across the \",\"revenue\":434011.2746}\n{\"c_name\":\"Customer#000134560\",\"c_acctbal\":2998.6,\"n_name\":\"INDIA\",\"c_address\":\"ynqqVYin2JlHMOJfoIZu64PZA\",\"c_phone\":\"18-693-728-7494\",\"c_comment\":\"ording to the enticingly final pinto beans. carefully final ideas haggle around the evenly pending forge\",\"revenue\":433913.8907}\n{\"c_name\":\"Customer#000020087\",\"c_acctbal\":9948.25,\"n_name\":\"ETHIOPIA\",\"c_address\":\"rr3wyEfj flMHU5j7asOPP1 C hjrBbdByb5o\",\"c_phone\":\"15-880-746-1620\",\"c_comment\":\"ets are along the carefully pending theodolites. evenly ironic requests lose above the blithel\",\"revenue\":433749.0311}\n{\"c_name\":\"Customer#000143975\",\"c_acctbal\":8185.96,\"n_name\":\"KENYA\",\"c_address\":\"7617R,3GLHDFwXxrImBpoWJ\",\"c_phone\":\"24-216-584-9543\",\"c_comment\":\"lithely. slyly ruthless foxes sleep quickly blithely regular orbits. requests sleep after the blithely spec\",\"revenue\":432910.35}\n{\"c_name\":\"Customer#000130837\",\"c_acctbal\":7324.63,\"n_name\":\"UNITED STATES\",\"c_address\":\"DN,o6cL5oexUKeoePA49RnNBkUciRlYNO\",\"c_phone\":\"34-387-803-5958\",\"c_comment\":\"packages according to the regular, ironic accounts integrate carefully outside the furi\",\"revenue\":432751.8177}\n{\"c_name\":\"Customer#000092479\",\"c_acctbal\":8777.65,\"n_name\":\"INDIA\",\"c_address\":\"73qo8SIyw1k6SX8gYoEBK0Xo,pQ SI3j0\",\"c_phone\":\"18-683-719-5891\",\"c_comment\":\"roughout the careful excuses. bold theodolites sleep furi\",\"revenue\":432490.0912}\n{\"c_name\":\"Customer#000002648\",\"c_acctbal\":2637.17,\"n_name\":\"CANADA\",\"c_address\":\"sTy1mYFhKKxk 9DTM4xDYT4J5Cz6672yKzjLsen\",\"c_phone\":\"13-806-879-4500\",\"c_comment\":\"ily even requests detect furiously ironic d\",\"revenue\":432130.2515}\n{\"c_name\":\"Customer#000035959\",\"c_acctbal\":9359.88,\"n_name\":\"JORDAN\",\"c_address\":\"awnOgh1XwxQoKMg7ytjRo8DLLnSJVM\",\"c_phone\":\"23-231-520-3771\",\"c_comment\":\"al notornis among the bold, even tithes sleep blithely insi\",\"revenue\":431572.8984}\n{\"c_name\":\"Customer#000006391\",\"c_acctbal\":3923.68,\"n_name\":\"IRAN\",\"c_address\":\"tJFRcLobeDbMdgzr1EfSw7PtH8Uqx97Pd\",\"c_phone\":\"20-447-685-8271\",\"c_comment\":\"yly thin braids haggle quickly unusual, pending deposits. ca\",\"revenue\":430694.08999999997}\n{\"c_name\":\"Customer#000128519\",\"c_acctbal\":700.83,\"n_name\":\"CANADA\",\"c_address\":\"xZ2pAylJsk5Skc3028VpzX1jK4\",\"c_phone\":\"13-652-281-3390\",\"c_comment\":\"s about the silent foxes detect blithe\",\"revenue\":430362.05610000005}\n{\"c_name\":\"Customer#000138247\",\"c_acctbal\":3366.27,\"n_name\":\"INDIA\",\"c_address\":\"1JgBWiXxLX1hr\",\"c_phone\":\"18-801-545-7955\",\"c_comment\":\"efully ironic packages. blithely regular instructions wake blithely.\",\"revenue\":430192.148}\n{\"c_name\":\"Customer#000075730\",\"c_acctbal\":7917.94,\"n_name\":\"UNITED STATES\",\"c_address\":\"qH6t,rrQ8P8SO6XBaftw9YzUty0chSxbtD2\",\"c_phone\":\"34-511-340-4746\",\"c_comment\":\"refully. accounts along the theodolites nag idly among the final deposits. quickly express depende\",\"revenue\":429933.4284}\n{\"c_name\":\"Customer#000112741\",\"c_acctbal\":5034.11,\"n_name\":\"FRANCE\",\"c_address\":\"4,ucmGt1tDVmmGtDfmXyMlwQ\",\"c_phone\":\"16-408-872-9357\",\"c_comment\":\". blithely final excuses thrash quickly regular theodolites. carefully final instructions haggle furiously among t\",\"revenue\":429717.0404}\n{\"c_name\":\"Customer#000003916\",\"c_acctbal\":6798.34,\"n_name\":\"INDONESIA\",\"c_address\":\"LKv,8qQNEqWJz lVLQzOQQYW8l01IW,1\",\"c_phone\":\"19-722-885-6693\",\"c_comment\":\"haggle. ironic pinto beans above the packages kindle f\",\"revenue\":429418.4259}\n{\"c_name\":\"Customer#000062851\",\"c_acctbal\":2735.81,\"n_name\":\"RUSSIA\",\"c_address\":\"DlZGmDBv,QzVl4QCz,m7\",\"c_phone\":\"32-949-168-6168\",\"c_comment\":\"pinto beans about the furiously \",\"revenue\":429326.0695}\n{\"c_name\":\"Customer#000111283\",\"c_acctbal\":8385.81,\"n_name\":\"SAUDI ARABIA\",\"c_address\":\"LJ1B1e,pgET6DojB0 cDlan4Wo3nuR60SSup\",\"c_phone\":\"30-880-954-9711\",\"c_comment\":\"ily even theodolites sleep furiously silent foxes. s\",\"revenue\":429277.4969}\n{\"c_name\":\"Customer#000002005\",\"c_acctbal\":-827.73,\"n_name\":\"IRAN\",\"c_address\":\"RzXLgIlAKAgzzRNNzYMkP6ZscEkG\",\"c_phone\":\"20-360-101-6891\",\"c_comment\":\" are furiously against the quickly express requests: final, regular excuses cajole quickly. caref\",\"revenue\":428896.26519999997}\n{\"c_name\":\"Customer#000026134\",\"c_acctbal\":2826.61,\"n_name\":\"CHINA\",\"c_address\":\"Anz9Pft4CT,Zo3sE83mZB3ihgfeHsFXodxk4oc3\",\"c_phone\":\"28-156-426-1802\",\"c_comment\":\"slyly even requests wake carefully carefully even sentiments. carefull\",\"revenue\":428667.7717}\n{\"c_name\":\"Customer#000088312\",\"c_acctbal\":18.46,\"n_name\":\"BRAZIL\",\"c_address\":\"Y9CfRauBOYBfUWUJS\",\"c_phone\":\"12-501-601-5598\",\"c_comment\":\"s. slyly special excuses use along the flu\",\"revenue\":428345.9717}\n{\"c_name\":\"Customer#000090379\",\"c_acctbal\":3087.82,\"n_name\":\"EGYPT\",\"c_address\":\"rOdic4aSB3fxKuiM\",\"c_phone\":\"14-910-306-5408\",\"c_comment\":\"r accounts wake slyly about the carefully ironic platelets. fi\",\"revenue\":428253.42880000005}\n{\"c_name\":\"Customer#000001412\",\"c_acctbal\":6368.38,\"n_name\":\"IRAN\",\"c_address\":\"gfsI6WU i7kYypv09gGIqUFrUod9uhb\",\"c_phone\":\"20-715-510-2804\",\"c_comment\":\"fully regular accounts print ironic, regular platelets. deposits promise slyly. express, ironic ideas \",\"revenue\":428191.2656}\n{\"c_name\":\"Customer#000142642\",\"c_acctbal\":-421.39,\"n_name\":\"ETHIOPIA\",\"c_address\":\"qVgAujYoXb\",\"c_phone\":\"15-926-106-5231\",\"c_comment\":\"eas haggle. fluffy ideas wake slyly according to the thinly silent sentiments. blithely idle pinto beans sleep af\",\"revenue\":427918.68759999995}\n{\"c_name\":\"Customer#000108961\",\"c_acctbal\":3438.22,\"n_name\":\"UNITED STATES\",\"c_address\":\"COHiMBD PAttv0\",\"c_phone\":\"34-264-518-8958\",\"c_comment\":\"tect furiously furiously bold excuses. carefully sly packages sleep blith\",\"revenue\":427146.3626}\n{\"c_name\":\"Customer#000065792\",\"c_acctbal\":8847.8,\"n_name\":\"GERMANY\",\"c_address\":\"DLwqCXA0hzDPEN7MYR47NmiZcvTo6\",\"c_phone\":\"17-754-692-6398\",\"c_comment\":\"thely special packages are. furiously special instructions beneath the fluffily regular requests \",\"revenue\":426794.29559999995}\n{\"c_name\":\"Customer#000023368\",\"c_acctbal\":9450.56,\"n_name\":\"KENYA\",\"c_address\":\"vJp1xmfYaS056ouJV7 9nmbrIC8q1\",\"c_phone\":\"24-329-379-4804\",\"c_comment\":\"p fluffily among the slyly final requests. furiously regular requests nag carefull\",\"revenue\":425626.473}\n{\"c_name\":\"Customer#000127537\",\"c_acctbal\":-176.86,\"n_name\":\"IRAQ\",\"c_address\":\"8KsgGlOqFHQ q SI5WZWUwkf96A5kmQM\",\"c_phone\":\"21-148-783-2492\",\"c_comment\":\"quiet requests against the blithely bold frets sleep among the deposits. regular, \",\"revenue\":425085.8432}\n{\"c_name\":\"Customer#000059071\",\"c_acctbal\":6874.46,\"n_name\":\"CHINA\",\"c_address\":\"1kPSCPtMaO4A94idvyK,6bJ9tbdyXzR6JVIPE6yn\",\"c_phone\":\"28-470-227-2514\",\"c_comment\":\"es wake slyly beside the special ideas. carefully final deposits wake! requests was slyly pending theodolit\",\"revenue\":424744.23250000004}\n{\"c_name\":\"Customer#000045100\",\"c_acctbal\":1604.08,\"n_name\":\"MOZAMBIQUE\",\"c_address\":\"5D0Iz0,r,0KnWdjMrkyJ2Y\",\"c_phone\":\"26-753-742-7376\",\"c_comment\":\"quests cajole furiously carefully brave dependencies. fluffil\",\"revenue\":424322.16870000004}\n{\"c_name\":\"Customer#000145246\",\"c_acctbal\":3511.88,\"n_name\":\"MOROCCO\",\"c_address\":\"fVHScggKNSC5\",\"c_phone\":\"25-181-450-3509\",\"c_comment\":\"fily regular instructions about the final accounts use alongside of the deposits. furiously bol\",\"revenue\":424273.0594}\n{\"c_name\":\"Customer#000078622\",\"c_acctbal\":268.84,\"n_name\":\"KENYA\",\"c_address\":\"A6U5cLLFmviaCSU6IVcWxQlcY3 mVO2SjWwuJns\",\"c_phone\":\"24-736-894-7777\",\"c_comment\":\"as. quickly regular platelets integrate sometimes. silent dependenci\",\"revenue\":424253.8278}\n{\"c_name\":\"Customer#000051634\",\"c_acctbal\":-220.53,\"n_name\":\"RUSSIA\",\"c_address\":\"AQ4mGbthgNxn3of3PgsQbFj3hpeBvWHVaKB,4U\",\"c_phone\":\"32-772-532-7345\",\"c_comment\":\" pinto beans. final, regular excuses boost\",\"revenue\":424119.3078}\n{\"c_name\":\"Customer#000081211\",\"c_acctbal\":5225.48,\"n_name\":\"JORDAN\",\"c_address\":\"xoJZrVP 6Q0l1MhRgJjwUj8qrGiu\",\"c_phone\":\"23-397-944-1364\",\"c_comment\":\"accounts grow. furiously pending pi\",\"revenue\":423518.35589999997}\n{\"c_name\":\"Customer#000010030\",\"c_acctbal\":-831.35,\"n_name\":\"IRAN\",\"c_address\":\"8fw7wuXyyi1dP6JVs5S,M,CTqrdnfcZ,1om6\",\"c_phone\":\"20-574-646-5054\",\"c_comment\":\"y final forges. busy, special packages sleep idly about the pending deposits. slyly pending foxes n\",\"revenue\":423224.7359999999}\n{\"c_name\":\"Customer#000086332\",\"c_acctbal\":8889.61,\"n_name\":\"CANADA\",\"c_address\":\"RuzylwsQjAstcTWCr6gyKxW8Nexn87 Gg\",\"c_phone\":\"13-247-519-3963\",\"c_comment\":\"even dependencies. express, even requests print fluffily bold ideas: theodolites cajol\",\"revenue\":423091.9662}\n{\"c_name\":\"Customer#000109925\",\"c_acctbal\":487.54,\"n_name\":\"ARGENTINA\",\"c_address\":\"ZbaGUPUc0QQHvX7jvODvcPuEkoyprpwYgfF J3Ke\",\"c_phone\":\"11-139-842-5740\",\"c_comment\":\"arefully bold theodolites detect. fluffily special accounts nag carefully; pinto beans n\",\"revenue\":422750.6341}\n{\"c_name\":\"Customer#000024946\",\"c_acctbal\":8230.91,\"n_name\":\"ALGERIA\",\"c_address\":\"kOs W70C7xCGajlbS0qsotloOK\",\"c_phone\":\"10-670-356-2462\",\"c_comment\":\"odolites along the deposits detect along the special, ironic accounts-- carefully s\",\"revenue\":422552.62049999996}\n{\"c_name\":\"Customer#000097688\",\"c_acctbal\":2470.68,\"n_name\":\"CANADA\",\"c_address\":\"eB44y8EfjriAQLqAdg7fgbsNU1ae5I\",\"c_phone\":\"13-260-749-7028\",\"c_comment\":\"nts. slyly final pinto beans nag always regular, \",\"revenue\":422320.62830000004}\n{\"c_name\":\"Customer#000059242\",\"c_acctbal\":2080.11,\"n_name\":\"FRANCE\",\"c_address\":\"0AX7DJJlQZmHttESjAwTa12BPpeWrKhA,tesF\",\"c_phone\":\"16-617-947-6957\",\"c_comment\":\"fily final packages. careful \",\"revenue\":422138.3391}\n{\"c_name\":\"Customer#000028153\",\"c_acctbal\":9459.45,\"n_name\":\"ARGENTINA\",\"c_address\":\"cEdsbvyU2ufQ\",\"c_phone\":\"11-533-314-6821\",\"c_comment\":\"nto beans across the ironic, bold accounts mold busily around the fluffily express accounts. unus\",\"revenue\":421636.93220000004}\n{\"c_name\":\"Customer#000071179\",\"c_acctbal\":6224.86,\"n_name\":\"PERU\",\"c_address\":\"neSNza0r42334fnUMTK\",\"c_phone\":\"27-536-475-5161\",\"c_comment\":\"slyly pending theodolites wake furiously ironic accounts. \",\"revenue\":421388.8673}\n{\"c_name\":\"Customer#000124807\",\"c_acctbal\":8688.12,\"n_name\":\"JORDAN\",\"c_address\":\"fQ4,K,hQdt2L4zrsiwPnE 8btf0bTmNeEhUorBy\",\"c_phone\":\"23-525-295-2940\",\"c_comment\":\"lyly express pains. quickly special excuses wake fluffily\",\"revenue\":421182.69409999996}\n{\"c_name\":\"Customer#000099118\",\"c_acctbal\":1886.09,\"n_name\":\"PERU\",\"c_address\":\"zJZWbeWIlPkZnfOJo\",\"c_phone\":\"27-226-504-6278\",\"c_comment\":\"s sleep furiously slyly ironic deposits. special theodolites are fluffily final instructions: b\",\"revenue\":420997.8079}\n{\"c_name\":\"Customer#000139837\",\"c_acctbal\":8548.5,\"n_name\":\"JAPAN\",\"c_address\":\"gPwCK9PTqMA94ZbPDIOnXpQldlLF\",\"c_phone\":\"22-147-406-6479\",\"c_comment\":\"silent realms was slyly pending deposits! even, even\",\"revenue\":420507.0236}\n{\"c_name\":\"Customer#000046258\",\"c_acctbal\":2443.57,\"n_name\":\"VIETNAM\",\"c_address\":\"mtJCJMorp2bF\",\"c_phone\":\"31-797-923-3388\",\"c_comment\":\" final, express instructions integrate sheaves. fluffily even accounts\",\"revenue\":419475.901}\n{\"c_name\":\"Customer#000099649\",\"c_acctbal\":3202.74,\"n_name\":\"MOZAMBIQUE\",\"c_address\":\"mU RBQcej6DT6RxefY98FKzLJfrSVhj\",\"c_phone\":\"26-915-814-4201\",\"c_comment\":\"furiously. carefully pending deposits cajole furious\",\"revenue\":419302.2611}\n{\"c_name\":\"Customer#000146092\",\"c_acctbal\":3860.22,\"n_name\":\"ETHIOPIA\",\"c_address\":\"c0YlVq0V6raw\",\"c_phone\":\"15-357-715-1133\",\"c_comment\":\" pinto beans. regular pinto beans are carefully \",\"revenue\":418795.12539999996}\n{\"c_name\":\"Customer#000030320\",\"c_acctbal\":2931.23,\"n_name\":\"ETHIOPIA\",\"c_address\":\"KXmz6N AvKC t4gsrSM3xq4js\",\"c_phone\":\"15-490-733-4207\",\"c_comment\":\"y idly pending accounts. furiously regular courts nag furiously among the ironic pinto beans. carefully ironic req\",\"revenue\":418001.47849999997}\n{\"c_name\":\"Customer#000060004\",\"c_acctbal\":7975.22,\"n_name\":\"IRAN\",\"c_address\":\"NivCT2RVaavl,yUnKwBjDyMvB42WayXCnky\",\"c_phone\":\"20-573-674-7999\",\"c_comment\":\" furiously above the ironic packages. slyly brave ideas boost. final platelets detect according to the ironi\",\"revenue\":417520.35760000005}\n{\"c_name\":\"Customer#000005810\",\"c_acctbal\":2292.84,\"n_name\":\"ALGERIA\",\"c_address\":\"kuzcsKcHS ,i3TsmmIE3\",\"c_phone\":\"10-177-224-7108\",\"c_comment\":\"accounts haggle fluffily blith\",\"revenue\":416523.5386}\n{\"c_name\":\"Customer#000088225\",\"c_acctbal\":9689.81,\"n_name\":\"MOROCCO\",\"c_address\":\"3ZWotQZxH,ocTf7dZ\",\"c_phone\":\"25-645-350-7485\",\"c_comment\":\" ironic dependencies haggle slyly even requests. carefully bold notornis cajole carefull\",\"revenue\":416006.7131}\n{\"c_name\":\"Customer#000064072\",\"c_acctbal\":4713.52,\"n_name\":\"IRAN\",\"c_address\":\"4nt5qFdixf9IZQIX\",\"c_phone\":\"20-640-449-4052\",\"c_comment\":\" pinto beans lose slyly; carefully final deposits cajole doggedly quickly final de\",\"revenue\":415817.077}\n{\"c_name\":\"Customer#000004645\",\"c_acctbal\":-514.38,\"n_name\":\"ETHIOPIA\",\"c_address\":\"Vse8k2B5bX\",\"c_phone\":\"15-978-542-3036\",\"c_comment\":\"thely even theodolites. special requests affix according to the quietly unusual packages. blithely \",\"revenue\":415792.7517}\n{\"c_name\":\"Customer#000070477\",\"c_acctbal\":789.54,\"n_name\":\"UNITED STATES\",\"c_address\":\"DRNH,uZ ucibd0NY3b4k3JUPjVSC\",\"c_phone\":\"34-956-553-9180\",\"c_comment\":\"ter the fluffily pending deposits. bl\",\"revenue\":414994.2081}\n{\"c_name\":\"Customer#000109351\",\"c_acctbal\":346.84,\"n_name\":\"VIETNAM\",\"c_address\":\"6w8,hYAwhqNDd6H\",\"c_phone\":\"31-258-694-3356\",\"c_comment\":\" across the special accounts. carefully regular deposi\",\"revenue\":414863.68369999994}\n{\"c_name\":\"Customer#000023560\",\"c_acctbal\":1439.06,\"n_name\":\"ETHIOPIA\",\"c_address\":\"Lp1y9xsfu5Ky5F87Oyl eSoAlez9\",\"c_phone\":\"15-272-295-2601\",\"c_comment\":\" above the special asymptotes are even accounts-- even pin\",\"revenue\":414146.65890000004}\n{\"c_name\":\"Customer#000029668\",\"c_acctbal\":2559.05,\"n_name\":\"KENYA\",\"c_address\":\"j3E3MWjwhORgfXUv8gcV\",\"c_phone\":\"24-281-229-3398\",\"c_comment\":\" packages sleep across the carefully express courts. special excuses cajole blithely. fur\",\"revenue\":413130.7703999999}\n{\"c_name\":\"Customer#000085909\",\"c_acctbal\":7561.14,\"n_name\":\"ROMANIA\",\"c_address\":\"cx8pKgP2cM4P ShOCy pgO,,aJZCb\",\"c_phone\":\"29-970-448-7746\",\"c_comment\":\"p slyly silent requests. blithely special Tiresias should eat slyly a\",\"revenue\":412887.9212}\n{\"c_name\":\"Customer#000048085\",\"c_acctbal\":9660.91,\"n_name\":\"INDIA\",\"c_address\":\"uIW6 4DwFoL\",\"c_phone\":\"18-278-844-8266\",\"c_comment\":\"requests. evenly even requests was silently after the ironic gifts;\",\"revenue\":412853.9435}\n{\"c_name\":\"Customer#000076459\",\"c_acctbal\":420.8,\"n_name\":\"UNITED STATES\",\"c_address\":\"dV2K8fSZ V2UqT5H1OtzZbY2Bzhhii\",\"c_phone\":\"34-187-122-2616\",\"c_comment\":\"into beans haggle quickly. bold, regular dolphins are ir\",\"revenue\":412001.63149999996}\n{\"c_name\":\"Customer#000054685\",\"c_acctbal\":7776.62,\"n_name\":\"ALGERIA\",\"c_address\":\"YKi2K5mH93VVlsBWwv0t\",\"c_phone\":\"10-632-383-1950\",\"c_comment\":\" requests against the blithely bold pinto beans wake final foxes. carefully regular ideas integra\",\"revenue\":411974.9226}\n{\"c_name\":\"Customer#000123014\",\"c_acctbal\":-517.49,\"n_name\":\"ARGENTINA\",\"c_address\":\"8Dcx1HcWVP6w0gu7,DOYN2\",\"c_phone\":\"11-415-790-6794\",\"c_comment\":\"sh quickly even accounts. accounts wake quickly accounts. foxes grow. sly\",\"revenue\":411780.40699999995}\n{\"c_name\":\"Customer#000087637\",\"c_acctbal\":8782.51,\"n_name\":\"JORDAN\",\"c_address\":\"RSUyGEoQbr\",\"c_phone\":\"23-962-117-2691\",\"c_comment\":\"slyly even packages lose carefully. blithely pending requests use according to the flu\",\"revenue\":411305.23269999993}\n{\"c_name\":\"Customer#000132394\",\"c_acctbal\":7721.12,\"n_name\":\"JAPAN\",\"c_address\":\"tnRuuCT5nSLPiahS5nl\",\"c_phone\":\"22-851-809-1335\",\"c_comment\":\"ffix. carefully pending deposits sleep slyly regular deposits. final excuses \",\"revenue\":411303.3986}\n{\"c_name\":\"Customer#000138823\",\"c_acctbal\":9859.1,\"n_name\":\"IRAQ\",\"c_address\":\"etrvpfQizcj9mB8DCv1ezfrmFC0dcCTeqHQ\",\"c_phone\":\"21-449-198-4948\",\"c_comment\":\"ding, thin deposits at the furiously fi\",\"revenue\":410952.6291}\n{\"c_name\":\"Customer#000050515\",\"c_acctbal\":-2.16,\"n_name\":\"INDIA\",\"c_address\":\"KI6fRkVhHTU7BjPL\",\"c_phone\":\"18-338-870-6246\",\"c_comment\":\"nooze blithely ruthlessly final deposits. quickly ironic pinto beans was \",\"revenue\":410669.09249999997}\n{\"c_name\":\"Customer#000131227\",\"c_acctbal\":1415.32,\"n_name\":\"ARGENTINA\",\"c_address\":\"gGVrRQvMdtXfs1c\",\"c_phone\":\"11-194-483-8435\",\"c_comment\":\"ideas across the fluffily regular gifts wake quickly after the slyly silent packages. pinto beans grow. p\",\"revenue\":410189.66930000007}\n{\"c_name\":\"Customer#000050605\",\"c_acctbal\":5287.38,\"n_name\":\"IRAQ\",\"c_address\":\"tE9aDuayG189Cof9Lbf86pdnbn7QYWLwv7F\",\"c_phone\":\"21-462-509-4562\",\"c_comment\":\"ely against the carefully ironic acco\",\"revenue\":410114.852}\n{\"c_name\":\"Customer#000086167\",\"c_acctbal\":2561.79,\"n_name\":\"IRAQ\",\"c_address\":\"hUee6yAsE3B40iUo9RgBQ8nWhNSdUWLvMEJ\",\"c_phone\":\"21-944-163-2121\",\"c_comment\":\"round the ironic, daring asymptotes. slyly final theodolites are. slyly \",\"revenue\":409692.3759}\n{\"c_name\":\"Customer#000080662\",\"c_acctbal\":9133.85,\"n_name\":\"MOZAMBIQUE\",\"c_address\":\"5y6NbWzthi9Y2FCzk5\",\"c_phone\":\"26-381-272-6779\",\"c_comment\":\"s nag slyly along the slyly ironic pinto beans. even, special accounts wake furiously about th\",\"revenue\":409553.12779999996}\n{\"c_name\":\"Customer#000074596\",\"c_acctbal\":3110.08,\"n_name\":\"UNITED STATES\",\"c_address\":\"AFzLisVZAdm wHM4\",\"c_phone\":\"34-191-175-8225\",\"c_comment\":\" sleep about the requests. furiously pending account\",\"revenue\":409326.25289999996}\n{\"c_name\":\"Customer#000118814\",\"c_acctbal\":2139.71,\"n_name\":\"IRAN\",\"c_address\":\"ScI,Gbj9SB9V8GrF3pLtm4e4f19lat9uMQ34i\",\"c_phone\":\"20-597-734-4113\",\"c_comment\":\"hlessly final asymptotes sleep slyly quiet deposits. carefully special instructions dazzle. blithely i\",\"revenue\":408954.4594}\n{\"c_name\":\"Customer#000071059\",\"c_acctbal\":6029.94,\"n_name\":\"JAPAN\",\"c_address\":\"nOATKYWhfRaXmKBZJcMuCn17adkt\",\"c_phone\":\"22-197-403-5608\",\"c_comment\":\" final requests integrate according to the slyly special Tiresias. quickly iron\",\"revenue\":408790.17089999997}\n{\"c_name\":\"Customer#000013135\",\"c_acctbal\":6388.37,\"n_name\":\"CANADA\",\"c_address\":\"Y8wj1g7btDa7qh5kn9wubY5Wb A,ob1AvygX\",\"c_phone\":\"13-922-337-6839\",\"c_comment\":\"eodolites are furiously blithely enticing foxes. quickly regular excuses doubt against the even, iro\",\"revenue\":408663.749}\n{\"c_name\":\"Customer#000094523\",\"c_acctbal\":5708.22,\"n_name\":\"FRANCE\",\"c_address\":\"3mAR4vPZ8qeG7EHQ1Buys5CkgYm1 kLgKw,g\",\"c_phone\":\"16-123-934-8066\",\"c_comment\":\"kly above the pending packages. expr\",\"revenue\":408277.79769999994}\n{\"c_name\":\"Customer#000122140\",\"c_acctbal\":6246.63,\"n_name\":\"CHINA\",\"c_address\":\"xOe3oadU T FGFwFjQLDWaXZK6GnGUHCQ\",\"c_phone\":\"28-263-616-9941\",\"c_comment\":\"fully final notornis. regular, regular request\",\"revenue\":407458.3656}\n{\"c_name\":\"Customer#000092890\",\"c_acctbal\":3422.55,\"n_name\":\"RUSSIA\",\"c_address\":\"Rhs4p3HgutHYrLQP\",\"c_phone\":\"32-888-912-1368\",\"c_comment\":\"xcuses affix across the daringly final request\",\"revenue\":407229.86199999996}\n{\"c_name\":\"Customer#000045898\",\"c_acctbal\":9756.87,\"n_name\":\"MOROCCO\",\"c_address\":\"PySu8vgjcyL,clcYDQ7k\",\"c_phone\":\"25-528-156-8657\",\"c_comment\":\"le fluffily. special dugouts nag across the a\",\"revenue\":407037.7086}\n{\"c_name\":\"Customer#000088184\",\"c_acctbal\":7818.07,\"n_name\":\"CHINA\",\"c_address\":\"wDSvaKYFaSyKUojUFIzL4,pJNVkYET,\",\"c_phone\":\"28-596-119-8706\",\"c_comment\":\"al requests. express theodolites sleep slyly. slyly regular pinto beans across the regu\",\"revenue\":406798.941}\n{\"c_name\":\"Customer#000101534\",\"c_acctbal\":4705.49,\"n_name\":\"ARGENTINA\",\"c_address\":\"KIXyuI9bRG5vwFvJn0UjfjhgvZ4hKEP\",\"c_phone\":\"11-523-918-4403\",\"c_comment\":\"gle. regular forges sleep blithely above the even accounts. tithes detect. platelets cajole qu\",\"revenue\":406783.2057}\n{\"c_name\":\"Customer#000078658\",\"c_acctbal\":-91.97,\"n_name\":\"SAUDI ARABIA\",\"c_address\":\"iLUNk2GNs30u0,Y\",\"c_phone\":\"30-934-156-6837\",\"c_comment\":\"-- carefully ironic accounts use fluffily silent platelets. silently regular\",\"revenue\":406274.949}\n{\"c_name\":\"Customer#000066604\",\"c_acctbal\":2908.33,\"n_name\":\"IRAN\",\"c_address\":\"Imyau1ZR3xQQkoXTE39onvDuN\",\"c_phone\":\"20-908-439-6901\",\"c_comment\":\" thinly regular requests use blithely even accounts. blithely unusual accounts haggle furiously. quickly bold accoun\",\"revenue\":406171.7325}\n{\"c_name\":\"Customer#000098917\",\"c_acctbal\":3984.13,\"n_name\":\"GERMANY\",\"c_address\":\"KSs3u0iKisLPuZXLvHgX\",\"c_phone\":\"17-626-706-3710\",\"c_comment\":\"hely even deposits are quickly slyly stealthy ideas. ironic, even pinto be\",\"revenue\":406056.9614}\n{\"c_name\":\"Customer#000051910\",\"c_acctbal\":9163.26,\"n_name\":\"UNITED KINGDOM\",\"c_address\":\"io15c9MbIVDClIKYno8GnE\",\"c_phone\":\"33-406-137-9388\",\"c_comment\":\"ly carefully regular pinto beans. carefully ironic requests snooze. special, silent ideas are furiously carefully s\",\"revenue\":405798.7818}\n{\"c_name\":\"Customer#000057214\",\"c_acctbal\":1647.2,\"n_name\":\"RUSSIA\",\"c_address\":\"cQQKeZUuxQ,K6WGd\",\"c_phone\":\"32-479-663-4302\",\"c_comment\":\"sits are carefully. slyly unusual accounts use fluffily among the requests-- ironic, regular frays integrate\",\"revenue\":405646.38029999996}\n{\"c_name\":\"Customer#000100885\",\"c_acctbal\":6469.78,\"n_name\":\"INDONESIA\",\"c_address\":\"QDpmtVGIBAdm CpTt,UABCY9wQ\",\"c_phone\":\"19-402-944-6677\",\"c_comment\":\"y ironic dependencies are quickly slow, iro\",\"revenue\":405393.5352}\n{\"c_name\":\"Customer#000068794\",\"c_acctbal\":8328.17,\"n_name\":\"UNITED KINGDOM\",\"c_address\":\"idAZT z2tV S8awDdRu65aLJe\",\"c_phone\":\"33-261-685-9978\",\"c_comment\":\" pinto beans. regularly final requests above the final accounts sleep quickly pending accounts. ca\",\"revenue\":404909.16089999996}\n{\"c_name\":\"Customer#000134683\",\"c_acctbal\":4088.86,\"n_name\":\"SAUDI ARABIA\",\"c_address\":\"V7RvHmDlZunyiy4J8UM8LRujBf,Tb6y\",\"c_phone\":\"30-917-900-8822\",\"c_comment\":\"iously enticing deposits. furiously even d\",\"revenue\":404552.325}\n{\"c_name\":\"Customer#000113965\",\"c_acctbal\":415.95,\"n_name\":\"JAPAN\",\"c_address\":\"7k2n5FZFw dfGR,\",\"c_phone\":\"22-637-274-2522\",\"c_comment\":\"tions mold carefully ironic, bold d\",\"revenue\":404524.9277}\n{\"c_name\":\"Customer#000052693\",\"c_acctbal\":4125.61,\"n_name\":\"RUSSIA\",\"c_address\":\"7BlqzkV7tp7bx8KGTG,AzGHtSQyv0\",\"c_phone\":\"32-612-133-8180\",\"c_comment\":\"nic, final instructions. accounts across the slyly unusual instructions cajole pending deposits. slyly regula\",\"revenue\":404446.2843}\n{\"c_name\":\"Customer#000075784\",\"c_acctbal\":7585.42,\"n_name\":\"BRAZIL\",\"c_address\":\"hzhNDKl3vFxY,A0JvK,VMuNhU58IvJRMx\",\"c_phone\":\"12-637-496-7099\",\"c_comment\":\"o beans cajole carefully daringly unusual accounts. express, bold deposits alongside of the regular, even\",\"revenue\":404423.837}\n{\"c_name\":\"Customer#000097274\",\"c_acctbal\":7046.66,\"n_name\":\"JAPAN\",\"c_address\":\"Isg,sBAwTCHHKQD0 Y0VrH\",\"c_phone\":\"22-987-824-6415\",\"c_comment\":\"furiously regular dependencies cajole fl\",\"revenue\":404415.68610000005}\n{\"c_name\":\"Customer#000079667\",\"c_acctbal\":2939.59,\"n_name\":\"UNITED STATES\",\"c_address\":\"yVK4NaqO2YKJnaGBaKtL,t\",\"c_phone\":\"34-797-539-7172\",\"c_comment\":\"y unusual requests. fluffily unu\",\"revenue\":404326.9752}\n{\"c_name\":\"Customer#000104872\",\"c_acctbal\":5266.56,\"n_name\":\"IRAN\",\"c_address\":\"Jq49pkm3CsBlnwjAf goJ\",\"c_phone\":\"20-313-468-7399\",\"c_comment\":\"nusual accounts haggle slyly alongside of the slyly final packages. blithely even patterns according to the pending,\",\"revenue\":404270.269}\n{\"c_name\":\"Customer#000028573\",\"c_acctbal\":4495.57,\"n_name\":\"CHINA\",\"c_address\":\"ct4uqlIb e5YDZ,ID\",\"c_phone\":\"28-182-383-4574\",\"c_comment\":\"wake quickly. carefully regular packages are ruthlessly regular accounts-- slyly unusual theodolites haggle caref\",\"revenue\":403988.97000000003}\n{\"c_name\":\"Customer#000134089\",\"c_acctbal\":-884.01,\"n_name\":\"ARGENTINA\",\"c_address\":\"MhxbE3H,fgTA6uoK01l9b3 XIGoXuWESL\",\"c_phone\":\"11-428-574-8121\",\"c_comment\":\"le carefully against the deposits. carefully even theodolites cajole even deposits. sly\",\"revenue\":403975.50840000005}\n{\"c_name\":\"Customer#000064298\",\"c_acctbal\":7003.85,\"n_name\":\"PERU\",\"c_address\":\",y0LFOyyvAI8vDYhp 8jkz\",\"c_phone\":\"27-265-117-6068\",\"c_comment\":\"y final requests. ironic packages wake carefully. fi\",\"revenue\":403810.6168}\n{\"c_name\":\"Customer#000029044\",\"c_acctbal\":1749.78,\"n_name\":\"ALGERIA\",\"c_address\":\"WOg3kOLMO 0B2h\",\"c_phone\":\"10-868-267-9192\",\"c_comment\":\" accounts. fluffily regular deposits cajole carefully according to the boldly special foxes-- carefully fi\",\"revenue\":403761.6023}\n{\"c_name\":\"Customer#000020710\",\"c_acctbal\":5807.78,\"n_name\":\"MOZAMBIQUE\",\"c_address\":\"o1KtTTNfC8crQ VcxR9vXi4ckoI5XHyie,nl\",\"c_phone\":\"26-579-865-8424\",\"c_comment\":\"ns haggle carefully at the ironic, regular theodolites. furiously even warthogs are according to the blithely iron\",\"revenue\":403332.6886}\n{\"c_name\":\"Customer#000063517\",\"c_acctbal\":7058.97,\"n_name\":\"UNITED KINGDOM\",\"c_address\":\"HMg55XwBTD9YiaDAl\",\"c_phone\":\"33-804-110-3054\",\"c_comment\":\"ly even packages integrate carefully. quickly unusual requests wake. express, ironic packages\",\"revenue\":403178.1912}\n{\"c_name\":\"Customer#000011102\",\"c_acctbal\":8162.13,\"n_name\":\"GERMANY\",\"c_address\":\"unGARGLtvw Gn0CG7L\",\"c_phone\":\"17-831-699-3683\",\"c_comment\":\"y packages detect carefully according t\",\"revenue\":402885.19519999996}\n{\"c_name\":\"Customer#000005800\",\"c_acctbal\":-906.44,\"n_name\":\"FRANCE\",\"c_address\":\"Sc76d6n0d0uyHpn0xe,sTWTXv5\",\"c_phone\":\"16-447-746-3137\",\"c_comment\":\"ully silent theodolites. fluffily final deposits \",\"revenue\":402681.7481}\n{\"c_name\":\"Customer#000104192\",\"c_acctbal\":-460.31,\"n_name\":\"GERMANY\",\"c_address\":\"O4g5HW0p0nzJYDCnS9FRzyB4T55V 0D\",\"c_phone\":\"17-870-899-9701\",\"c_comment\":\"r ideas hinder furiously foxes. carefully regular waters haggle above the foxes. re\",\"revenue\":402542.27449999994}\n{\"c_name\":\"Customer#000101113\",\"c_acctbal\":6768.34,\"n_name\":\"BRAZIL\",\"c_address\":\"GpCj6RP4g9Bwfzs8fQYFKimCjimef2hiW0\",\"c_phone\":\"12-999-326-1114\",\"c_comment\":\" final platelets. fluffily silent packages are furiously alongside of the ev\",\"revenue\":402420.95900000003}\n{\"c_name\":\"Customer#000044053\",\"c_acctbal\":4669.5,\"n_name\":\"MOZAMBIQUE\",\"c_address\":\"Yl AbmnYFRZWVobRFotYI5rUK68PTgIWQ0\",\"c_phone\":\"26-746-753-1730\",\"c_comment\":\"e fluffily final foxes. special packages sleep. regular package\",\"revenue\":402353.3368}\n{\"c_name\":\"Customer#000084622\",\"c_acctbal\":5137.2,\"n_name\":\"JAPAN\",\"c_address\":\",34Q8d LYB uNs r7Sb4L8XR6JXpF\",\"c_phone\":\"22-584-703-9016\",\"c_comment\":\"ost carefully unusual, express requests? slyly silent packages along the s\",\"revenue\":401963.5774}\n{\"c_name\":\"Customer#000113740\",\"c_acctbal\":5983.45,\"n_name\":\"EGYPT\",\"c_address\":\"1KA5Ht3rTKCjC8ahTcasyG8XV3wtb6VU6LGw1eAB\",\"c_phone\":\"14-920-731-2723\",\"c_comment\":\"ainst the quickly final instructions. carefully regular pinto bean\",\"revenue\":401067.07699999993}\n{\"c_name\":\"Customer#000091630\",\"c_acctbal\":5001.36,\"n_name\":\"CANADA\",\"c_address\":\"bbiIEG4M,Nfq,K7sy\",\"c_phone\":\"13-240-685-8011\",\"c_comment\":\"ilent, regular instructions. blithely regular ideas cajole against the even gifts. carefully fluffy pack\",\"revenue\":400770.5376}\n{\"c_name\":\"Customer#000119842\",\"c_acctbal\":952.63,\"n_name\":\"UNITED STATES\",\"c_address\":\"s8j9DQX9,xr12e\",\"c_phone\":\"34-946-574-9465\",\"c_comment\":\"oss the quickly express excuses. deposits snooze carefully. fluffily regular deposits cajol\",\"revenue\":400421.7174}\n{\"c_name\":\"Customer#000015869\",\"c_acctbal\":3906.71,\"n_name\":\"MOROCCO\",\"c_address\":\",BPEzfLDRWEFi8\",\"c_phone\":\"25-309-787-5772\",\"c_comment\":\"tions impress. final, bold deposits sleep furiously after the accounts. ironic platelets alon\",\"revenue\":399993.1146}\n{\"c_name\":\"Customer#000148018\",\"c_acctbal\":7928.4,\"n_name\":\"UNITED STATES\",\"c_address\":\"4E2YlT,E0hKF3l3Ts7Re,\",\"c_phone\":\"34-768-195-3251\",\"c_comment\":\" foxes sleep after the furiously bo\",\"revenue\":399859.2739}\n{\"c_name\":\"Customer#000029233\",\"c_acctbal\":3078.7,\"n_name\":\"CHINA\",\"c_address\":\"kfIkBxofP7R\",\"c_phone\":\"28-560-431-5566\",\"c_comment\":\"ding theodolites. pinto beans use slyly regular t\",\"revenue\":399702.6789}\n{\"c_name\":\"Customer#000014203\",\"c_acctbal\":1793.35,\"n_name\":\"CANADA\",\"c_address\":\"lB7Xx8nxKNHq,xtOeRk9W2BI1Sg5yHAOdkF4\",\"c_phone\":\"13-178-765-5931\",\"c_comment\":\"s; bold instructions haggle carefully silent deposits. unusual deposits wake furiously furiously pending fox\",\"revenue\":399572.33559999993}\n{\"c_name\":\"Customer#000132607\",\"c_acctbal\":8648.7,\"n_name\":\"ETHIOPIA\",\"c_address\":\"DMUKwZWjI3NnAeL8G7T5l7aCkN29hS 6\",\"c_phone\":\"15-457-252-7199\",\"c_comment\":\"y regular requests. furiously regular requests use quickly above the furiously silent dolphins. daringly bold \",\"revenue\":399418.2208}\n{\"c_name\":\"Customer#000025594\",\"c_acctbal\":1528.53,\"n_name\":\"CANADA\",\"c_address\":\"HEIWVrnuhnVvnYI2gUAeSnvt1eHLpCMqE1ubPN\",\"c_phone\":\"13-696-210-5460\",\"c_comment\":\"unts nag enticingly regular ideas. furiously pending theodolites haggle final pinto beans. brave p\",\"revenue\":399383.0091}\n{\"c_name\":\"Customer#000070396\",\"c_acctbal\":4561.6,\"n_name\":\"CHINA\",\"c_address\":\"c2ksJ0R7hdDeNy\",\"c_phone\":\"28-762-271-5793\",\"c_comment\":\"ndencies-- furiously express foxes inside the even requests are slyly above the boldly ironic ideas. blithely e\",\"revenue\":399176.495}\n{\"c_name\":\"Customer#000035824\",\"c_acctbal\":8562.51,\"n_name\":\"UNITED KINGDOM\",\"c_address\":\"47DshD8jEP6EYv9zOJPDvUvKK\",\"c_phone\":\"33-364-777-8411\",\"c_comment\":\"arefully alongside of the fluffily bold packa\",\"revenue\":399062.61199999996}\n{\"c_name\":\"Customer#000110488\",\"c_acctbal\":7237.38,\"n_name\":\"MOROCCO\",\"c_address\":\"2LYkWEjg ZLIjRy9pgOzEgUlEddZK\",\"c_phone\":\"25-585-399-1685\",\"c_comment\":\"sual asymptotes sublate always unusu\",\"revenue\":399032.0558}\n{\"c_name\":\"Customer#000004184\",\"c_acctbal\":1134.27,\"n_name\":\"IRAQ\",\"c_address\":\"PQHhATOBmbP7Y\",\"c_phone\":\"21-892-460-2659\",\"c_comment\":\"carefully fluffily even deposits. slyly silent requests\",\"revenue\":398677.34400000004}\n{\"c_name\":\"Customer#000090373\",\"c_acctbal\":6493.47,\"n_name\":\"INDIA\",\"c_address\":\"WAZKvvzluL32pJJ6WAKoPgZfVUWL\",\"c_phone\":\"18-363-209-4409\",\"c_comment\":\"theodolites impress along the slyly bold accounts. regular, regular deposits maintain. \",\"revenue\":398257.803}\n{\"c_name\":\"Customer#000055756\",\"c_acctbal\":8296.77,\"n_name\":\"PERU\",\"c_address\":\"RxtpLVbypJX4ywOEbXk V,h8Sa6AJvBBLf171z h\",\"c_phone\":\"27-285-705-6748\",\"c_comment\":\"ain closely according to the blithely quiet somas. final accounts affix carefully; silent, final instructions lose f\",\"revenue\":397980.8382}\n{\"c_name\":\"Customer#000035354\",\"c_acctbal\":7331.71,\"n_name\":\"INDIA\",\"c_address\":\"eEEfAE 61MgH, oTcXhrO\",\"c_phone\":\"18-511-798-2939\",\"c_comment\":\"efully furiously ironic excuses. furiously ironic deposits affix furiously slyly express pinto beans. fluffily \",\"revenue\":397783.2007}\n{\"c_name\":\"Customer#000113479\",\"c_acctbal\":2102.69,\"n_name\":\"ETHIOPIA\",\"c_address\":\"oQD70hGkPlQBHxvoy\",\"c_phone\":\"15-911-728-8853\",\"c_comment\":\" blithely unusual platelets bo\",\"revenue\":397773.35620000004}\n{\"c_name\":\"Customer#000118426\",\"c_acctbal\":5165.93,\"n_name\":\"JORDAN\",\"c_address\":\"NSn2dC,QaF,IiE5G3DNu5drQ0uq5\",\"c_phone\":\"23-869-799-9362\",\"c_comment\":\"busy accounts are carefully foxes. excuses are blithely\",\"revenue\":397522.8708}\n{\"c_name\":\"Customer#000019681\",\"c_acctbal\":3898.01,\"n_name\":\"CANADA\",\"c_address\":\"J7hv,,,19HFg9HSg\",\"c_phone\":\"13-814-757-2835\",\"c_comment\":\"thily even accounts run alongside of the dinos. slyly even gifts above the regular, regular requests hinder f\",\"revenue\":396886.9756}\n{\"c_name\":\"Customer#000066734\",\"c_acctbal\":4993.26,\"n_name\":\"INDIA\",\"c_address\":\"7ZaqfAXVRxJ\",\"c_phone\":\"18-287-894-2584\",\"c_comment\":\"usual ideas hang after the special, final deposi\",\"revenue\":396179.58400000003}\n{\"c_name\":\"Customer#000034591\",\"c_acctbal\":729.81,\"n_name\":\"IRAQ\",\"c_address\":\"pwRuLqAOWQURxCH,alH0dxOGUZfkBuhuHfw\",\"c_phone\":\"21-959-792-1355\",\"c_comment\":\"ers are fluffily. enticing accounts cajole above the even foxes? special attainments\",\"revenue\":396153.65669999993}\n{\"c_name\":\"Customer#000125605\",\"c_acctbal\":9686.34,\"n_name\":\"IRAN\",\"c_address\":\"JOwjxMNFcbfNQUGCkory7hbg4p7\",\"c_phone\":\"20-775-592-5571\",\"c_comment\":\"ajole slyly special deposits. even ideas c\",\"revenue\":395899.0568}\n{\"c_name\":\"Customer#000105058\",\"c_acctbal\":8606.57,\"n_name\":\"VIETNAM\",\"c_address\":\"qjKEfFIf5qPytxnmKtlkQwVPg\",\"c_phone\":\"31-647-332-5159\",\"c_comment\":\"totes. regular deposits along the carefully regular foxes maintain blithely regular, even packages. \",\"revenue\":395561.6555}\n{\"c_name\":\"Customer#000133855\",\"c_acctbal\":3220.6,\"n_name\":\"VIETNAM\",\"c_address\":\"6prADD6qXXPD,FrSxOISeuZRtwDLf\",\"c_phone\":\"31-284-884-6118\",\"c_comment\":\"thely final foxes. slyly bold depths affix along the carefully careful instructio\",\"revenue\":395139.008}\n{\"c_name\":\"Customer#000124777\",\"c_acctbal\":3221.27,\"n_name\":\"JORDAN\",\"c_address\":\"kQdtqbaFrJnCisxlatsc\",\"c_phone\":\"23-158-241-2727\",\"c_comment\":\"nod carefully against the regular requests. ironic instructions affix fluffily afte\",\"revenue\":395098.346}\n{\"c_name\":\"Customer#000045133\",\"c_acctbal\":2398.8,\"n_name\":\"MOZAMBIQUE\",\"c_address\":\"8ysIiF22wsM\",\"c_phone\":\"26-216-183-6426\",\"c_comment\":\"y final requests are. blithely even pinto be\",\"revenue\":395062.0808}\n{\"c_name\":\"Customer#000011797\",\"c_acctbal\":1345.48,\"n_name\":\"CHINA\",\"c_address\":\"kTsoO0K58qkrTp2xv8MqK6bIs\",\"c_phone\":\"28-896-923-1479\",\"c_comment\":\" special pearls unwind carefully above the blithely ironic depo\",\"revenue\":395020.16370000003}\n{\"c_name\":\"Customer#000028615\",\"c_acctbal\":6837.26,\"n_name\":\"BRAZIL\",\"c_address\":\"RwQvQnK3uWKS9DigS7TJ\",\"c_phone\":\"12-617-444-9915\",\"c_comment\":\"nts. regular requests affix quickly. slyly final epitaphs cajole carefully unusual accoun\",\"revenue\":394458.0544}\n{\"c_name\":\"Customer#000018391\",\"c_acctbal\":9607.05,\"n_name\":\"SAUDI ARABIA\",\"c_address\":\"cjn9JpcI5tk\",\"c_phone\":\"30-782-230-6763\",\"c_comment\":\"ns are after the carefully special courts. furiously pending a\",\"revenue\":394116.90599999996}\n{\"c_name\":\"Customer#000044287\",\"c_acctbal\":770.42,\"n_name\":\"INDONESIA\",\"c_address\":\"VDarNwWW6Xe54\",\"c_phone\":\"19-703-224-6202\",\"c_comment\":\"ss packages on the final ideas are \",\"revenue\":393845.3382}\n{\"c_name\":\"Customer#000134260\",\"c_acctbal\":3954.8,\"n_name\":\"ROMANIA\",\"c_address\":\"H2RAp1yVixDQU8JsOJc K13nbmJTrhTOgdNQqBUT\",\"c_phone\":\"29-608-203-4783\",\"c_comment\":\" slyly according to the carefully regular pearls-- slowly regular court\",\"revenue\":392453.2793}\n{\"c_name\":\"Customer#000088876\",\"c_acctbal\":9128.54,\"n_name\":\"UNITED STATES\",\"c_address\":\"qXrNIvFj8o6xTzIQ8VeFEEz5MpKblFNx9ZwPh5\",\"c_phone\":\"34-396-129-9997\",\"c_comment\":\"gular, regular asymptotes wake foxes.\",\"revenue\":392429.5387}\n{\"c_name\":\"Customer#000004960\",\"c_acctbal\":1933.99,\"n_name\":\"EGYPT\",\"c_address\":\"HQPRaO8YI37a\",\"c_phone\":\"14-804-427-4888\",\"c_comment\":\" even deposits engage according to the furiously even dependencies. regular package\",\"revenue\":392427.784}\n{\"c_name\":\"Customer#000115996\",\"c_acctbal\":2429.57,\"n_name\":\"BRAZIL\",\"c_address\":\"boujYcGte5swPipn6KqtMSG6o1j0G3RK,qiq\",\"c_phone\":\"12-957-505-3183\",\"c_comment\":\" final accounts are at the regular pinto beans. slyly bold braids sleep special asympt\",\"revenue\":392168.448}\n{\"c_name\":\"Customer#000022895\",\"c_acctbal\":5052.57,\"n_name\":\"MOROCCO\",\"c_address\":\"vyjdS A267Uoih39 4PLloJqVnCR9\",\"c_phone\":\"25-973-962-3307\",\"c_comment\":\"es. slyly even accounts haggle blithe\",\"revenue\":392116.7783}\n{\"c_name\":\"Customer#000089926\",\"c_acctbal\":423.98,\"n_name\":\"SAUDI ARABIA\",\"c_address\":\"UtWBxpAAaRMLWjm2W,NcbxAL QnEcj50I4utrJ5A\",\"c_phone\":\"30-445-482-4025\",\"c_comment\":\"ect along the blithely regular frets. slyly ironic accounts sleep furiously above the furiously bold pi\",\"revenue\":392071.5736}\n{\"c_name\":\"Customer#000076825\",\"c_acctbal\":6881.95,\"n_name\":\"PERU\",\"c_address\":\"2Z06DTavD3iXuhY\",\"c_phone\":\"27-200-344-6148\",\"c_comment\":\"iously pending deposits cajol\",\"revenue\":391794.5739}\n{\"c_name\":\"Customer#000136279\",\"c_acctbal\":3510.94,\"n_name\":\"ALGERIA\",\"c_address\":\"tH5mZ,HqMqJ4orClmXe6\",\"c_phone\":\"10-616-238-6849\",\"c_comment\":\"sometimes unusual notornis. pinto beans cajole blithely. deposits sleep carefully by the pending accounts. final d\",\"revenue\":391720.8293}\n{\"c_name\":\"Customer#000127909\",\"c_acctbal\":3937.45,\"n_name\":\"JORDAN\",\"c_address\":\"bN9HuoylYss1OyK0WW4rgM1kIrVGsBKgTfSphL,F\",\"c_phone\":\"23-840-205-7690\",\"c_comment\":\"ly against the slyly ironic packages. special, ironic the\",\"revenue\":391704.67499999993}\n{\"c_name\":\"Customer#000148537\",\"c_acctbal\":2268.93,\"n_name\":\"JORDAN\",\"c_address\":\"IHd42nukEwIEK,2ZCHVMBF\",\"c_phone\":\"23-575-929-4166\",\"c_comment\":\"slyly special theodolites. sl\",\"revenue\":391645.9277}\n{\"c_name\":\"Customer#000048790\",\"c_acctbal\":-185.07,\"n_name\":\"ETHIOPIA\",\"c_address\":\"H6VovC6K26SPJvT88W1lJkheHujnCn8lRo\",\"c_phone\":\"15-775-825-5021\",\"c_comment\":\"nusual pinto beans nag furiously always ironic req\",\"revenue\":391560.2303}\n{\"c_name\":\"Customer#000075109\",\"c_acctbal\":3121.31,\"n_name\":\"BRAZIL\",\"c_address\":\"7thm7KxK1F g\",\"c_phone\":\"12-769-805-4887\",\"c_comment\":\"ily after the carefully even instructions. carefully even pinto beans among the regular deposits boost quickly acro\",\"revenue\":391458.9937}\n{\"c_name\":\"Customer#000135586\",\"c_acctbal\":5715.25,\"n_name\":\"SAUDI ARABIA\",\"c_address\":\"zC5Znd6jQMSy1\",\"c_phone\":\"30-436-620-8099\",\"c_comment\":\"odolites are fluffily regular theodolites. asymptotes sleep slyly carefully express foxes. regular packages are. \",\"revenue\":390996.73360000004}\n{\"c_name\":\"Customer#000011827\",\"c_acctbal\":4860.09,\"n_name\":\"INDIA\",\"c_address\":\"6L9rUTBNt9X8WkJkwCRTfik0flUXes8IKpqs\",\"c_phone\":\"18-951-740-7092\",\"c_comment\":\" slyly. ironic packages cajole. final accounts kindle abov\",\"revenue\":390793.08330000006}\n{\"c_name\":\"Customer#000019195\",\"c_acctbal\":8398.71,\"n_name\":\"INDIA\",\"c_address\":\"9,9T0Hfw6rPsPY8NFToyJO\",\"c_phone\":\"18-584-507-7340\",\"c_comment\":\"ts would are slyly final, pending foxes. furiously iron\",\"revenue\":390684.73750000005}\n{\"c_name\":\"Customer#000035392\",\"c_acctbal\":9485.81,\"n_name\":\"IRAN\",\"c_address\":\"5Dmw2ASNlZaixxdflzGtKf\",\"c_phone\":\"20-371-269-5024\",\"c_comment\":\"y bold accounts boost ironic account\",\"revenue\":390558.87179999996}\n{\"c_name\":\"Customer#000115429\",\"c_acctbal\":6688.37,\"n_name\":\"CANADA\",\"c_address\":\"c8L9 TaOYXVMH89O5 CbkAFR2LEFDxFVRoZ, z\",\"c_phone\":\"13-973-811-2660\",\"c_comment\":\"eposits use. furiously even ideas alon\",\"revenue\":390531.2242}\n{\"c_name\":\"Customer#000095407\",\"c_acctbal\":578.83,\"n_name\":\"ETHIOPIA\",\"c_address\":\"8Bhn4y4MdXFMqh31g ejtnBhm5GnNC\",\"c_phone\":\"15-570-959-9899\",\"c_comment\":\"olites cajole about the ironic a\",\"revenue\":390253.22049999994}\n{\"c_name\":\"Customer#000105379\",\"c_acctbal\":1422.74,\"n_name\":\"RUSSIA\",\"c_address\":\"1k1xUk5KveDxq5LKJOTtnKNoM\",\"c_phone\":\"32-268-285-8006\",\"c_comment\":\"ix across the instructions. carefully special ideas detect furiously furiously even escapades. slyly express request\",\"revenue\":390239.38910000003}\n{\"c_name\":\"Customer#000103834\",\"c_acctbal\":5003.9,\"n_name\":\"IRAQ\",\"c_address\":\"M1C vmD,47lMSxLMuTXeXIjkmLe16KhU5I\",\"c_phone\":\"21-672-567-3247\",\"c_comment\":\"ter the carefully bold epitaphs haggle above the quickly express multipliers. even depths among the q\",\"revenue\":389967.8961}\n{\"c_name\":\"Customer#000110683\",\"c_acctbal\":6618.27,\"n_name\":\"BRAZIL\",\"c_address\":\"oiCQ2Rr6wdkq\",\"c_phone\":\"12-320-890-1864\",\"c_comment\":\"refully special theodolites detect according to the furiously express deposits. pinto beans are regula\",\"revenue\":389851.2606}\n{\"c_name\":\"Customer#000074657\",\"c_acctbal\":-776.23,\"n_name\":\"KENYA\",\"c_address\":\"kT15pmXELSdxzmaSJy9EEZZ,8agNOqwyIhlzBW\",\"c_phone\":\"24-259-661-8266\",\"c_comment\":\" finally ironic packages cajole furiously express, regular requests. fluffily ironic requests acco\",\"revenue\":389805.72310000006}\n{\"c_name\":\"Customer#000060334\",\"c_acctbal\":8512.68,\"n_name\":\"PERU\",\"c_address\":\"gtKUbTEDtDyY9vZDDYLCnGP9GYRzDw\",\"c_phone\":\"27-257-969-4976\",\"c_comment\":\"ng to the blithely unusual theodolites; closely regular instructions along the blit\",\"revenue\":389782.64420000004}\n{\"c_name\":\"Customer#000101074\",\"c_acctbal\":1358.28,\"n_name\":\"GERMANY\",\"c_address\":\"JxnuBn,kPLThaPYm1qScwfliFYKo8PQzor6cYBe\",\"c_phone\":\"17-435-891-9174\",\"c_comment\":\"oost unusual theodolites. regular, final packages are blithely regular packages. even requests are enticingly sly\",\"revenue\":389541.2697}\n{\"c_name\":\"Customer#000011731\",\"c_acctbal\":1073.66,\"n_name\":\"ETHIOPIA\",\"c_address\":\"qam16VV4zbsB5xDBfJ5\",\"c_phone\":\"15-699-235-2307\",\"c_comment\":\". furiously regular packages nag furiously fluffily bold ideas. quickly express packages haggle \",\"revenue\":389281.1595}\n{\"c_name\":\"Customer#000101039\",\"c_acctbal\":4218.46,\"n_name\":\"IRAQ\",\"c_address\":\"rRB,qftqOQWQLDgOSuN06Ia\",\"c_phone\":\"21-931-720-4753\",\"c_comment\":\"haggle furiously. carefully unusual asymptotes boost. bold requ\",\"revenue\":388780.1426}\n{\"c_name\":\"Customer#000052315\",\"c_acctbal\":-317.53,\"n_name\":\"CANADA\",\"c_address\":\"ako7QuPi2AFSdsYmMiZXd2sOaOR47\",\"c_phone\":\"13-961-560-6138\",\"c_comment\":\" deposits are slyly fluffy ideas. furiously special theodolites wake slyly blithely final \",\"revenue\":388614.33030000003}\n{\"c_name\":\"Customer#000130598\",\"c_acctbal\":2918.66,\"n_name\":\"VIETNAM\",\"c_address\":\"8rsKtj8khmGsbYs1lj96\",\"c_phone\":\"31-132-147-9602\",\"c_comment\":\"gular deposits cajole slyly. slyly even packages cajole slowly. express i\",\"revenue\":388243.48199999996}\n{\"c_name\":\"Customer#000071966\",\"c_acctbal\":4802.28,\"n_name\":\"FRANCE\",\"c_address\":\"PKpNIlrq7fx3Y\",\"c_phone\":\"16-442-725-1874\",\"c_comment\":\"luffily silent packages wake along the furio\",\"revenue\":387446.3801}\n{\"c_name\":\"Customer#000038932\",\"c_acctbal\":4939.46,\"n_name\":\"JORDAN\",\"c_address\":\"HL5afCeOJyJC0fLH0ZGQFdBEIYFbN6O3Wm 4av\",\"c_phone\":\"23-569-608-6874\",\"c_comment\":\"yly regular pinto beans boost slyly ir\",\"revenue\":387378.22899999993}\n{\"c_name\":\"Customer#000142099\",\"c_acctbal\":4373.55,\"n_name\":\"ALGERIA\",\"c_address\":\"9W54k3rFKZYFyImu XG\",\"c_phone\":\"10-226-186-5572\",\"c_comment\":\"iously express, pending accounts. quickly pending foxes use quickly. b\",\"revenue\":387083.4292}\n{\"c_name\":\"Customer#000102637\",\"c_acctbal\":-227.19,\"n_name\":\"MOROCCO\",\"c_address\":\"J1FmOOUBR2l,fyiy6Zkws6y0zBC7Ww7EGd5nMP,\",\"c_phone\":\"25-418-411-8564\",\"c_comment\":\"ickly even requests haggle around the closely eve\",\"revenue\":386860.4742}\n{\"c_name\":\"Customer#000011539\",\"c_acctbal\":4304.43,\"n_name\":\"JAPAN\",\"c_address\":\"Jd,XTAsGXnoB\",\"c_phone\":\"22-688-720-4744\",\"c_comment\":\" pinto beans cajole carefully against the deposits. regular accounts cajole quickly about the even, regular id\",\"revenue\":386696.3618}\n{\"c_name\":\"Customer#000122144\",\"c_acctbal\":5072.22,\"n_name\":\"JAPAN\",\"c_address\":\"zz5LSqGU2QoyQTcMzkOxVqWrHedmhqQ6B\",\"c_phone\":\"22-341-681-3299\",\"c_comment\":\"d accounts wake blithe, regular theodolites. express platelets cajole about the blithely express theodoli\",\"revenue\":386209.0649}\n{\"c_name\":\"Customer#000052130\",\"c_acctbal\":8257.29,\"n_name\":\"VIETNAM\",\"c_address\":\"0X0Qk8899Jg8PWyQyvR9VpKl50mVjgbTAZsz5\",\"c_phone\":\"31-745-343-5768\",\"c_comment\":\"er the ironic requests boost slyly after th\",\"revenue\":386125.3986000001}\n{\"c_name\":\"Customer#000045515\",\"c_acctbal\":6064.41,\"n_name\":\"INDONESIA\",\"c_address\":\"kF85r9rsAx6qqbLVUS358N3eXQ7u3gD9mr,dBU\",\"c_phone\":\"19-891-549-7886\",\"c_comment\":\"counts. ironic, regular requests are carefully according to the ideas. \",\"revenue\":386106.3524}\n{\"c_name\":\"Customer#000000988\",\"c_acctbal\":7746.97,\"n_name\":\"CANADA\",\"c_address\":\"3BNYKEUyMbzfb40SEr 8OTb\",\"c_phone\":\"13-862-722-3298\",\"c_comment\":\"he courts. carefully silent courts impress. carefully close ideas run slyly pinto beans. even, ironic accounts are a\",\"revenue\":386027.103}\n{\"c_name\":\"Customer#000046351\",\"c_acctbal\":5100.11,\"n_name\":\"JAPAN\",\"c_address\":\"h0,wzWQt1GWIV3ewVKLBKQ\",\"c_phone\":\"22-139-452-9575\",\"c_comment\":\"e fluffily unusual excuses wake quickly pearls. quickly regular accounts cajole quickly. bold theodolites na\",\"revenue\":385786.7424}\n{\"c_name\":\"Customer#000054131\",\"c_acctbal\":-357.45,\"n_name\":\"KENYA\",\"c_address\":\"9zMhNmP2GpuGXLRm0WeLMI\",\"c_phone\":\"24-407-392-1821\",\"c_comment\":\" after the ruthless requests. enticingly pending accounts wake carefully\",\"revenue\":385734.0926}\n{\"c_name\":\"Customer#000108232\",\"c_acctbal\":7302.64,\"n_name\":\"IRAN\",\"c_address\":\"wApwX2H4vwA0680dJYxdpLJnilkySl4Y4lGK\",\"c_phone\":\"20-486-547-5537\",\"c_comment\":\"eas. furiously even packages haggle quickly packages. slyly silent excuses are furiously. bo\",\"revenue\":385067.03079999995}\n{\"c_name\":\"Customer#000026209\",\"c_acctbal\":8368.47,\"n_name\":\"IRAQ\",\"c_address\":\"Vq4UtoKPSQzK2Wm4XidGvgoDL4qeVWL4st\",\"c_phone\":\"21-538-618-2718\",\"c_comment\":\"uickly regular accounts integrate blith\",\"revenue\":384505.7013}\n{\"c_name\":\"Customer#000094511\",\"c_acctbal\":-826.55,\"n_name\":\"KENYA\",\"c_address\":\"F5pD 9tpkG4XNDU6JTo8hPcn,LnKBA785y\",\"c_phone\":\"24-940-495-4983\",\"c_comment\":\"e carefully-- quickly regular deposits haggle across the slyly \",\"revenue\":383745.6927}\n{\"c_name\":\"Customer#000091960\",\"c_acctbal\":-763.13,\"n_name\":\"IRAN\",\"c_address\":\"iIvbxsfEOhjzjj\",\"c_phone\":\"20-845-180-3872\",\"c_comment\":\"inal pinto beans. closely ironic packages wak\",\"revenue\":383321.8594}\n{\"c_name\":\"Customer#000087796\",\"c_acctbal\":2766.36,\"n_name\":\"ROMANIA\",\"c_address\":\"BTXknqHJ0,Qtf\",\"c_phone\":\"29-482-550-8513\",\"c_comment\":\"sly regular accounts across the furiously bold deposits haggle blithely ironic accoun\",\"revenue\":383186.42579999997}\n{\"c_name\":\"Customer#000033112\",\"c_acctbal\":8404.75,\"n_name\":\"RUSSIA\",\"c_address\":\"5rENgUp2s cfsWZ8moPGbynA815d7dexuWup\",\"c_phone\":\"32-664-591-6812\",\"c_comment\":\"ang above the slyly pending platelets. fluffily regular asymptotes among the pinto beans haggle furiously\",\"revenue\":383056.4381}\n{\"c_name\":\"Customer#000137464\",\"c_acctbal\":-161.76,\"n_name\":\"IRAN\",\"c_address\":\"gFY7J5GxhIE7Sxlz5PhK28s5KevZsY1dRt4b4g5\",\"c_phone\":\"20-709-867-8496\",\"c_comment\":\"arls. instructions sleep blithely. blithely regular asymptotes haggle. slyly special ideas are blit\",\"revenue\":383044.1405}\n{\"c_name\":\"Customer#000085174\",\"c_acctbal\":9490.17,\"n_name\":\"JORDAN\",\"c_address\":\"Pej4LIlkmU\",\"c_phone\":\"23-853-709-9621\",\"c_comment\":\"sts are fluffily after the carefully regular packages. slyly final pinto bea\",\"revenue\":382696.86289999995}\n{\"c_name\":\"Customer#000098377\",\"c_acctbal\":7427.69,\"n_name\":\"INDIA\",\"c_address\":\"UPIlnlhrQ7hGvcv4Vpiag2thCJ\",\"c_phone\":\"18-993-429-7628\",\"c_comment\":\"ays. quickly ironic accounts lose\",\"revenue\":382668.3824}\n{\"c_name\":\"Customer#000126079\",\"c_acctbal\":6016.47,\"n_name\":\"SAUDI ARABIA\",\"c_address\":\"2HHoRdFs,f8mb,\",\"c_phone\":\"30-736-858-6783\",\"c_comment\":\"lly bold packages breach quietly. quickly regular pinto beans cajole slyly amon\",\"revenue\":382537.2067}\n{\"c_name\":\"Customer#000027775\",\"c_acctbal\":1246.77,\"n_name\":\"IRAQ\",\"c_address\":\"bCjv2dTfnGBOKaBS7jgg qOdDaO3U0l2Gk\",\"c_phone\":\"21-915-718-2822\",\"c_comment\":\"s nod slyly according to the special foxes. special, pending requests about the slyly ironic pac\",\"revenue\":382178.39509999997}\n{\"c_name\":\"Customer#000057118\",\"c_acctbal\":541.88,\"n_name\":\"JAPAN\",\"c_address\":\"BySjKW6tuaa23J38hCu\",\"c_phone\":\"22-255-721-4093\",\"c_comment\":\" slyly above the pending accounts! slyly even dolphins haggle final deposits. care\",\"revenue\":382123.5466}\n{\"c_name\":\"Customer#000108938\",\"c_acctbal\":2440.08,\"n_name\":\"JAPAN\",\"c_address\":\"HGEX kTeBOLNAdYfiL,WDl2xzX0XHT\",\"c_phone\":\"22-601-472-4823\",\"c_comment\":\"ully even requests are blithely slyly regular packages? blithely ironic pearl\",\"revenue\":382073.551}\n{\"c_name\":\"Customer#000135352\",\"c_acctbal\":9523.87,\"n_name\":\"CHINA\",\"c_address\":\",76rSwsoAHoHxRcpB8a3rNno\",\"c_phone\":\"28-618-680-8495\",\"c_comment\":\"its. regular, unusual dolphins\",\"revenue\":381619.6085}\n{\"c_name\":\"Customer#000077332\",\"c_acctbal\":8852.99,\"n_name\":\"KENYA\",\"c_address\":\"MiMbkZCQYu17id1OmJe7kOwKGls0fawwdYF\",\"c_phone\":\"24-972-542-2260\",\"c_comment\":\"ously regular packages. ironic, express realms cajole alongside of the fluffily even sheaves: express, bold reque\",\"revenue\":381279.376}\n{\"c_name\":\"Customer#000057395\",\"c_acctbal\":6214.6,\"n_name\":\"INDIA\",\"c_address\":\"VX3ecPQGK0WDZxFCJE81O2d67mFnbJzfJNGA3N\",\"c_phone\":\"18-397-758-4870\",\"c_comment\":\"uests against the pending foxes are quickly regular dependencies. carefully regul\",\"revenue\":380818.7578}\n{\"c_name\":\"Customer#000144935\",\"c_acctbal\":9154.38,\"n_name\":\"ROMANIA\",\"c_address\":\"5srocaWDdzK04Ri0qrnO6s8udH06VzcE\",\"c_phone\":\"29-792-323-5916\",\"c_comment\":\"aggle carefully? regular excuses are slyly slyly pending excuses-- carefull\",\"revenue\":380349.2339}\n{\"c_name\":\"Customer#000121360\",\"c_acctbal\":6068.86,\"n_name\":\"GERMANY\",\"c_address\":\"bSFvMYbZLONzNq\",\"c_phone\":\"17-537-946-7227\",\"c_comment\":\"e the carefully careful requests. fluffily ironic accounts cajo\",\"revenue\":379934.21679999994}\n{\"c_name\":\"Customer#000083057\",\"c_acctbal\":1087.92,\"n_name\":\"VIETNAM\",\"c_address\":\"L4pbpj6GAZH 2pnwbKNLkxP3saZkl\",\"c_phone\":\"31-235-159-9662\",\"c_comment\":\"fully against the carefully pending accounts. final, regular platelets according to the fluffily unusual pa\",\"revenue\":379924.5006}\n{\"c_name\":\"Customer#000071182\",\"c_acctbal\":2205.81,\"n_name\":\"GERMANY\",\"c_address\":\"DRQTDFfp6CxGtf0k cWsWPgxYTHU9F1RPfefnhZt\",\"c_phone\":\"17-445-549-1718\",\"c_comment\":\"egular pinto beans. furiously regular r\",\"revenue\":379636.3103}\n{\"c_name\":\"Customer#000108115\",\"c_acctbal\":9909.01,\"n_name\":\"BRAZIL\",\"c_address\":\"4ub3y0K2ULI62Yj4UHO0O7Wh9QMVX1IiKK dH\",\"c_phone\":\"12-227-708-6477\",\"c_comment\":\"al packages sleep fluffily aft\",\"revenue\":379525.7445}\n{\"c_name\":\"Customer#000147505\",\"c_acctbal\":-183.86,\"n_name\":\"IRAN\",\"c_address\":\"c2a77jA0sDgL1tj4rySGRaJL58Lt\",\"c_phone\":\"20-831-144-1243\",\"c_comment\":\"wake furiously express pinto beans. furiously regular deposits beyond the slyly ironic excuses wake according t\",\"revenue\":379465.98079999996}\n{\"c_name\":\"Customer#000037759\",\"c_acctbal\":5919.6,\"n_name\":\"UNITED KINGDOM\",\"c_address\":\"wSTisgGQj YYKPlm4OwfX9T2Jr3SDQd\",\"c_phone\":\"33-611-722-8819\",\"c_comment\":\"lent pinto beans. slyly final accounts cajole furiously fluffily special \",\"revenue\":379295.29}\n{\"c_name\":\"Customer#000089395\",\"c_acctbal\":7586.19,\"n_name\":\"IRAN\",\"c_address\":\"iSCB0CiyJudT1KeSTcmwiK i\",\"c_phone\":\"20-284-688-4285\",\"c_comment\":\"ged excuses across the pending, final pl\",\"revenue\":379148.492}\n{\"c_name\":\"Customer#000143656\",\"c_acctbal\":6670.13,\"n_name\":\"RUSSIA\",\"c_address\":\"4nPnB zhST\",\"c_phone\":\"32-576-258-3383\",\"c_comment\":\"yers cajole. carefully even a\",\"revenue\":378847.941}\n{\"c_name\":\"Customer#000080335\",\"c_acctbal\":9618.91,\"n_name\":\"PERU\",\"c_address\":\"ozl7ByZWHgpJuV\",\"c_phone\":\"27-652-988-8534\",\"c_comment\":\"en Tiresias. bold requests at\",\"revenue\":378773.966}\n{\"c_name\":\"Customer#000138440\",\"c_acctbal\":3766.49,\"n_name\":\"BRAZIL\",\"c_address\":\"CZQwtJE9,rRxC, wPCAZCXbX9SRnAsSs6squy3y9\",\"c_phone\":\"12-192-505-1977\",\"c_comment\":\"es. regularly regular foxes wake slyly bravely ironic accounts. quickly regul\",\"revenue\":378694.4757}\n{\"c_name\":\"Customer#000022597\",\"c_acctbal\":-379.06,\"n_name\":\"JAPAN\",\"c_address\":\"nKHUu8Y7k21Z0QNBtth0rz4gEvlKrWeOLGMb4qs\",\"c_phone\":\"22-755-410-3832\",\"c_comment\":\"ronic courts. carefully bold dependencies are carefully ironic instructions. ironic depe\",\"revenue\":378470.75299999997}\n{\"c_name\":\"Customer#000143788\",\"c_acctbal\":-668.04,\"n_name\":\"INDIA\",\"c_address\":\"jjEFFxO74Az B\",\"c_phone\":\"18-750-622-6127\",\"c_comment\":\"nt requests. carefully bold instructions nag blithely permanently final requests. carefully ironic pinto \",\"revenue\":378443.40890000004}\n{\"c_name\":\"Customer#000145523\",\"c_acctbal\":8528.6,\"n_name\":\"MOROCCO\",\"c_address\":\"znk37wOMpTC59BU\",\"c_phone\":\"25-893-270-4880\",\"c_comment\":\"wake slyly pending foxes. packages behind the blithely ironic dependencies use around the slyly unusual\",\"revenue\":378096.2401}\n{\"c_name\":\"Customer#000070126\",\"c_acctbal\":3181.87,\"n_name\":\"RUSSIA\",\"c_address\":\"YQ2gWssBqNUtOACFMIJTHY\",\"c_phone\":\"32-883-578-5579\",\"c_comment\":\"pending foxes nag atop the express asymptotes. carefully bold foxes \",\"revenue\":377989.75}\n{\"c_name\":\"Customer#000103828\",\"c_acctbal\":2715.08,\"n_name\":\"BRAZIL\",\"c_address\":\"VGRsavu2tv8siQ2pWlYSset\",\"c_phone\":\"12-499-836-1171\",\"c_comment\":\"fully? furiously dogged accounts believe furiously. express accounts are slyly. even requests around\",\"revenue\":377837.9108}\n{\"c_name\":\"Customer#000075160\",\"c_acctbal\":5410.25,\"n_name\":\"IRAN\",\"c_address\":\"QeW1,1WLEiizmJlXM7 ,\",\"c_phone\":\"20-551-677-5893\",\"c_comment\":\"counts. fluffily ironic foxes about the blithely regular dolphins haggle against the furiously bold ins\",\"revenue\":377476.9371}\n{\"c_name\":\"Customer#000031738\",\"c_acctbal\":7576.71,\"n_name\":\"ETHIOPIA\",\"c_address\":\"4f887MJEFCEgQPMCuyeELxh\",\"c_phone\":\"15-922-582-9818\",\"c_comment\":\". accounts are slyly. regular, dar\",\"revenue\":377336.22770000005}\n{\"c_name\":\"Customer#000140531\",\"c_acctbal\":6128.03,\"n_name\":\"IRAN\",\"c_address\":\"P9BN882n1vWWG7u9V1zP0Vaar8\",\"c_phone\":\"20-478-117-2170\",\"c_comment\":\"uctions. fluffily final packages haggle\",\"revenue\":376843.1522}\n{\"c_name\":\"Customer#000100403\",\"c_acctbal\":6085.06,\"n_name\":\"INDIA\",\"c_address\":\"Vp6WoTVUe8Jlic2f 3 DMGt ktPcKOxiyfLNSG\",\"c_phone\":\"18-821-261-5204\",\"c_comment\":\" across the slyly even foxes. slyly ironic deposits according to the account\",\"revenue\":376790.4076}\n{\"c_name\":\"Customer#000015160\",\"c_acctbal\":3157.82,\"n_name\":\"IRAQ\",\"c_address\":\"kvfNBu9C1kM7 fOpSLmXtWvVYqTQ\",\"c_phone\":\"21-698-423-5306\",\"c_comment\":\" ideas. slyly final pinto beans cajole furiously along the unusual excuse\",\"revenue\":376741.3212}\n{\"c_name\":\"Customer#000063889\",\"c_acctbal\":4554.42,\"n_name\":\"VIETNAM\",\"c_address\":\"Ilvt18sVgCQ2IyaDZ,yvOSlfwWLJTsWdL0Ra\",\"c_phone\":\"31-878-603-8612\",\"c_comment\":\"posits thrash around the blithely bold instructions. furiously final theodolit\",\"revenue\":376521.2982}\n{\"c_name\":\"Customer#000054736\",\"c_acctbal\":-601.44,\"n_name\":\"FRANCE\",\"c_address\":\"QDticecbA4lOMtZm9s1ZnH\",\"c_phone\":\"16-209-903-4341\",\"c_comment\":\" foxes alongside of the courts shall are carefully final requests. special courts detect quickly blithely unusu\",\"revenue\":376469.9277}\n{\"c_name\":\"Customer#000106141\",\"c_acctbal\":2017.38,\"n_name\":\"FRANCE\",\"c_address\":\"PZMYuC2zgNA\",\"c_phone\":\"16-958-929-2607\",\"c_comment\":\"out the blithely unusual package\",\"revenue\":375957.5314}\n{\"c_name\":\"Customer#000123001\",\"c_acctbal\":8100.02,\"n_name\":\"IRAQ\",\"c_address\":\"4eu6dJgWEulow9kylhmcLEGyHmkwQ7TBVUOkzRdJ\",\"c_phone\":\"21-868-468-6950\",\"c_comment\":\"r packages run. slyly final pinto beans wake. requests against the caref\",\"revenue\":375670.7853}\n{\"c_name\":\"Customer#000062591\",\"c_acctbal\":3278.08,\"n_name\":\"BRAZIL\",\"c_address\":\"XZ2dSyHta3CklXLAGk3PKAYG\",\"c_phone\":\"12-620-608-7429\",\"c_comment\":\" instructions. silent foxes haggle along the even, special packages. special packages wake acro\",\"revenue\":375479.5707}\n{\"c_name\":\"Customer#000125540\",\"c_acctbal\":6426.55,\"n_name\":\"KENYA\",\"c_address\":\"OEEjIKEuv3wUvF,P1Qu\",\"c_phone\":\"24-749-162-4709\",\"c_comment\":\"special dependencies sleep slyly. blithely unusual waters sleep bold br\",\"revenue\":375348.8757}\n{\"c_name\":\"Customer#000000976\",\"c_acctbal\":7772.85,\"n_name\":\"ROMANIA\",\"c_address\":\"I78UJ2ks3sbcd0c2NQ7aH\",\"c_phone\":\"29-436-660-4732\",\"c_comment\":\"special requests wake carefully regular somas. special theodolites wake regular, unusual pinto beans. furi\",\"revenue\":375044.1338}\n{\"c_name\":\"Customer#000112198\",\"c_acctbal\":8006.39,\"n_name\":\"ARGENTINA\",\"c_address\":\"oJs09wHiSk1Kye4HM 37HxLJWLts9PXf8isjcgP\",\"c_phone\":\"11-691-392-2685\",\"c_comment\":\"cial, regular deposits. express excuses cajole carefully quickly even mu\",\"revenue\":374938.67130000005}\n{\"c_name\":\"Customer#000124243\",\"c_acctbal\":3553.99,\"n_name\":\"UNITED KINGDOM\",\"c_address\":\"C3qiU0EETgmu\",\"c_phone\":\"33-709-895-3181\",\"c_comment\":\"s. blithely express theodolites sleep blithely \",\"revenue\":374844.7156}\n{\"c_name\":\"Customer#000135892\",\"c_acctbal\":7553.79,\"n_name\":\"INDONESIA\",\"c_address\":\"zqVz7fBd1D\",\"c_phone\":\"19-439-266-6964\",\"c_comment\":\" deposits wake along the slyly even instructions. slyly ironic deposits sleep silently fur\",\"revenue\":373895.92779999995}\n{\"c_name\":\"Customer#000073001\",\"c_acctbal\":660.88,\"n_name\":\"PERU\",\"c_address\":\"C1E5w0 yoEjapsGqpujIwkxjlC4bjUJcA0q6RID\",\"c_phone\":\"27-520-821-2172\",\"c_comment\":\". quickly bold theodolites sleep carefully. finally thin foxes integrate s\",\"revenue\":373796.8611}\n{\"c_name\":\"Customer#000123041\",\"c_acctbal\":7223.33,\"n_name\":\"PERU\",\"c_address\":\"1v0RnWEdUCwjWLxuVXAS3buvf1q\",\"c_phone\":\"27-729-326-3412\",\"c_comment\":\"theodolites sleep fluffily quickly regular packages. ironic, express depos\",\"revenue\":373792.3095}\n{\"c_name\":\"Customer#000107099\",\"c_acctbal\":2792.18,\"n_name\":\"MOZAMBIQUE\",\"c_address\":\"OgFh5C8vMw\",\"c_phone\":\"26-567-504-1612\",\"c_comment\":\" ironically even deposits are. carefully \",\"revenue\":373648.1945}\n{\"c_name\":\"Customer#000044122\",\"c_acctbal\":5901.76,\"n_name\":\"VIETNAM\",\"c_address\":\"4OuxsFmNusKBqUo8IJUdOA8o\",\"c_phone\":\"31-483-326-8198\",\"c_comment\":\"es final platelets nag about the final dependencies. carefully regular courts cajole furiously among the unusual, ex\",\"revenue\":373400.21669999993}\n{\"c_name\":\"Customer#000053119\",\"c_acctbal\":4517.72,\"n_name\":\"UNITED STATES\",\"c_address\":\"ED4DF9Wbp13TlaYIiKRBROnYLL7IS4YkcF0Wpeb\",\"c_phone\":\"34-803-414-8389\",\"c_comment\":\"inal, unusual instructions kindle. blithely silen\",\"revenue\":373375.752}\n{\"c_name\":\"Customer#000084769\",\"c_acctbal\":9299.76,\"n_name\":\"FRANCE\",\"c_address\":\"7Z,bRR8dc9aE9e 78m60bzEs\",\"c_phone\":\"16-117-340-6177\",\"c_comment\":\" the silent asymptotes-- slyly regular accounts wake. fluffily blithe instructions a\",\"revenue\":372988.0689}\n{\"c_name\":\"Customer#000140809\",\"c_acctbal\":4729.53,\"n_name\":\"MOROCCO\",\"c_address\":\"Nr0BAjMZWvPN2x\",\"c_phone\":\"25-872-226-8387\",\"c_comment\":\"e of the ideas. final, ironic instructions w\",\"revenue\":372817.9079}\n{\"c_name\":\"Customer#000117136\",\"c_acctbal\":6431.61,\"n_name\":\"VIETNAM\",\"c_address\":\"qiDu8XSSAziO1PJJo\",\"c_phone\":\"31-174-942-9597\",\"c_comment\":\" ironic packages solve quickly express, pending depend\",\"revenue\":372614.122}\n{\"c_name\":\"Customer#000019933\",\"c_acctbal\":3688.89,\"n_name\":\"BRAZIL\",\"c_address\":\"MoycENUiqr7G0qmEyQB838oReHzAUEvaZQhULK\",\"c_phone\":\"12-498-376-3762\",\"c_comment\":\" requests sleep regular platele\",\"revenue\":372488.5049}\n{\"c_name\":\"Customer#000137347\",\"c_acctbal\":-145.66,\"n_name\":\"ROMANIA\",\"c_address\":\"3eHUluvrbxLXxw00vmOuBMzl,wIN\",\"c_phone\":\"29-958-649-4637\",\"c_comment\":\"blithely. furiously bold platelets are after the carefully ironic packages. iron\",\"revenue\":372464.0488}\n{\"c_name\":\"Customer#000146203\",\"c_acctbal\":4405.6,\"n_name\":\"ROMANIA\",\"c_address\":\"528BwkGm7Xe98k\",\"c_phone\":\"29-409-591-2769\",\"c_comment\":\"es affix quickly across the silent, regular deposits: deposit\",\"revenue\":372401.1903}\n{\"c_name\":\"Customer#000014255\",\"c_acctbal\":9213.06,\"n_name\":\"UNITED STATES\",\"c_address\":\"NDz4JpVCFJokknWPtLoDgi vYkvNMHtiV17\",\"c_phone\":\"34-662-573-9342\",\"c_comment\":\"areful dependencies. blithely regular sentiments breach after the slyly e\",\"revenue\":372397.17409999995}\n{\"c_name\":\"Customer#000026576\",\"c_acctbal\":8213.58,\"n_name\":\"ROMANIA\",\"c_address\":\"htg5G9IN MUTG,PbFDu05Em7IkUXaBVVG\",\"c_phone\":\"29-897-429-1376\",\"c_comment\":\"round the even warthogs. fluffily \",\"revenue\":372357.05549999996}\n{\"c_name\":\"Customer#000083701\",\"c_acctbal\":3759.36,\"n_name\":\"INDIA\",\"c_address\":\"vOR5IOC7Ws8Vy\",\"c_phone\":\"18-739-217-2821\",\"c_comment\":\"ending excuses wake slyly among the furiously regular deposits. unusual foxes cajole about \",\"revenue\":371881.172}\n{\"c_name\":\"Customer#000003913\",\"c_acctbal\":5572.0,\"n_name\":\"SAUDI ARABIA\",\"c_address\":\"FWEW,afK0bpuOPJIgKU\",\"c_phone\":\"30-696-323-1702\",\"c_comment\":\"nic foxes cajole furiously. silent foxes boost carefully carefully e\",\"revenue\":371541.2953}\n{\"c_name\":\"Customer#000076951\",\"c_acctbal\":3072.59,\"n_name\":\"ALGERIA\",\"c_address\":\"YJXL9VActl4bQlB\",\"c_phone\":\"10-973-809-9562\",\"c_comment\":\"ously even packages around the blithely unusual courts hang slyly about the deposits. quickly regular foxes haggle f\",\"revenue\":371247.42329999997}\n{\"c_name\":\"Customer#000026251\",\"c_acctbal\":3429.33,\"n_name\":\"IRAQ\",\"c_address\":\"dJUjVhckr0EZsj5\",\"c_phone\":\"21-636-414-7885\",\"c_comment\":\"le furiously regular warhorses! ironic deposits at the even pains wake around the quickly even accounts. blithe\",\"revenue\":371242.0879}\n{\"c_name\":\"Customer#000065963\",\"c_acctbal\":4771.79,\"n_name\":\"UNITED STATES\",\"c_address\":\"TLcicJkOl,HV5pROxPwSG6n2cCrn10dofLB9asm6\",\"c_phone\":\"34-419-665-5873\",\"c_comment\":\"manent, express theodolites nag against the carefully final notorni\",\"revenue\":371159.3511}\n{\"c_name\":\"Customer#000118792\",\"c_acctbal\":8799.99,\"n_name\":\"MOROCCO\",\"c_address\":\"Il2tdKPfh4\",\"c_phone\":\"25-932-605-7624\",\"c_comment\":\"s. express requests sleep fluffily. packages cajole beneath the ironic accounts. furiou\",\"revenue\":370983.60559999995}\n{\"c_name\":\"Customer#000073738\",\"c_acctbal\":4004.5,\"n_name\":\"SAUDI ARABIA\",\"c_address\":\"6X iwCawyJEw,HB6Wjq\",\"c_phone\":\"30-580-294-2575\",\"c_comment\":\"en foxes are carefully blithely final requests. carefully special the\",\"revenue\":370962.92329999997}\n{\"c_name\":\"Customer#000010337\",\"c_acctbal\":5523.75,\"n_name\":\"INDIA\",\"c_address\":\"YMsdb qZ0UClM6K7ix\",\"c_phone\":\"18-870-698-9546\",\"c_comment\":\"equests. quickly ironic deposits cajole slowly al\",\"revenue\":370951.63509999996}\n{\"c_name\":\"Customer#000079114\",\"c_acctbal\":1159.39,\"n_name\":\"RUSSIA\",\"c_address\":\"FIKQ6lWX4citZrDlJTJaxvcNuZ\",\"c_phone\":\"32-300-544-4275\",\"c_comment\":\"ven foxes. carefully final theodolites wake behind \",\"revenue\":370940.45889999997}\n{\"c_name\":\"Customer#000112363\",\"c_acctbal\":1153.25,\"n_name\":\"MOROCCO\",\"c_address\":\"2K4FyJRn1nZlxvEkrdIk45XwHuQ\",\"c_phone\":\"25-576-776-4685\",\"c_comment\":\"nag across the final deposits. asymptotes about the silent, silent deposits integrate silently after th\",\"revenue\":370261.0223}\n{\"c_name\":\"Customer#000147379\",\"c_acctbal\":5923.69,\"n_name\":\"JORDAN\",\"c_address\":\"N8kfTzNdMYM0ls7ycThwmLvXRybeS8CsPHt6X11\",\"c_phone\":\"23-762-189-2799\",\"c_comment\":\"ns cajole slyly slyly bold theodolites. furiously regular theodolites \",\"revenue\":370180.25049999997}"
+          },
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"result-alert alert-warning\" role\u003d\"alert\"\u003e\u003cbutton type\u003d\"button\" class\u003d\"close\" data-dismiss\u003d\"alert\" aria-label\u003d\"Close\"\u003e\u003cspan aria-hidden\u003d\"true\"\u003e\u0026times;\u003c/span\u003e\u003c/button\u003e\u003cstrong\u003eOutput is truncated\u003c/strong\u003e to 102400 bytes. Learn more about \u003cstrong\u003eZEPPELIN_INTERPRETER_OUTPUT_LIMIT\u003c/strong\u003e\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734193_-184385123",
+      "id": "20190704-100554_71428110",
+      "dateCreated": "2019-07-12 05:35:34.193",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### 7. delete the pipeline, views and sources created",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:35:34.196",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e7. delete the pipeline, views and sources created\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734196_-434710076",
+      "id": "20190705-045842_2037903632",
+      "dateCreated": "2019-07-12 05:35:34.196",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n#delete the exported table\nresp \u003d exported_table_api.delete_exported_table(\"custorderlineitem_sink\")\nprint(resp)\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 06:53:17.237",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Dropped exported table \u0027custorderlineitem_sink\u0027\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734196_1870919720",
+      "id": "20190705-050126_1695760136",
+      "dateCreated": "2019-07-12 05:35:34.196",
+      "dateStarted": "2019-07-29 06:53:17.304",
+      "dateFinished": "2019-07-29 06:53:18.271",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n#delete/drop the pipeline\nresp \u003d pipeline_api.delete_pipeline(\"tpchpipeline\")\nprint(resp)\ntime.sleep(40)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 06:53:21.651",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \u0027Started pipeline deletion for tpchpipeline.\u0027, \u0027status\u0027: \u0027SUCCESS\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734196_1947394165",
+      "id": "20190705-050850_2017761885",
+      "dateCreated": "2019-07-12 05:35:34.196",
+      "dateStarted": "2019-07-29 06:53:21.715",
+      "dateFinished": "2019-07-29 06:54:01.761",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n# delete views created from pipelines\nresp \u003d exported_table_api.delete_exported_table(\"lineitem\")\nprint(resp)\nresp \u003d exported_table_api.delete_exported_table(\"nation\")\nprint(resp)\nresp \u003d exported_table_api.delete_exported_table(\"orders\")\nprint(resp)\nresp \u003d exported_table_api.delete_exported_table(\"part\")\nprint(resp)\nresp \u003d exported_table_api.delete_exported_table(\"partsupp\")\nprint(resp)\nresp \u003d exported_table_api.delete_exported_table(\"region\")\nprint(resp)\nresp \u003d exported_table_api.delete_exported_table(\"supplier\")\nprint(resp)\ntime.sleep(30)\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 06:55:04.225",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Dropped exported table \u0027lineitem\u0027\nDropped exported table \u0027nation\u0027\nDropped exported table \u0027orders\u0027\nDropped exported table \u0027part\u0027\nDropped exported table \u0027partsupp\u0027\nDropped exported table \u0027region\u0027\nDropped exported table \u0027supplier\u0027\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734197_-1363195369",
+      "id": "20190705-050914_527556322",
+      "dateCreated": "2019-07-12 05:35:34.197",
+      "dateStarted": "2019-07-29 06:55:04.308",
+      "dateFinished": "2019-07-29 06:55:35.973",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n#delete sources\nresp \u003d source_api.delete_source(\"lineitem\")\nprint(resp)\nresp \u003d source_api.delete_source(\"nation\")\nprint(resp)\nresp \u003d source_api.delete_source(\"orders\")\nprint(resp)\nresp \u003d source_api.delete_source(\"part\")\nprint(resp)\nresp \u003d source_api.delete_source(\"partsupp\")\nprint(resp)\nresp \u003d source_api.delete_source(\"region\")\nprint(resp)\nresp \u003d source_api.delete_source(\"supplier\")\nprint(resp)\nresp \u003d source_api.delete_source(\"customer\")\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 06:55:48.807",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \u0027lineitem\u0027}\n{\u0027result\u0027: \u0027nation\u0027}\n{\u0027result\u0027: \u0027orders\u0027}\n{\u0027result\u0027: \u0027part\u0027}\n{\u0027result\u0027: \u0027partsupp\u0027}\n{\u0027result\u0027: \u0027region\u0027}\n{\u0027result\u0027: \u0027supplier\u0027}\n{\u0027result\u0027: \u0027customer\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734197_34666240",
+      "id": "20190705-051021_1589329183",
+      "dateCreated": "2019-07-12 05:35:34.197",
+      "dateStarted": "2019-07-29 06:55:48.885",
+      "dateFinished": "2019-07-29 06:55:49.181",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### 8. delete the data files generated at the begining",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:35:34.197",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e8. delete the data files generated at the begining\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734197_443573636",
+      "id": "20190705-051148_768191769",
+      "dateCreated": "2019-07-12 05:35:34.197",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sh\nrm -rf /ovs_data/user/root/tpch",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 06:55:54.685",
+      "config": {
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sh",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909734197_1441030803",
+      "id": "20190705-051055_219157689",
+      "dateCreated": "2019-07-12 05:35:34.197",
+      "dateStarted": "2019-07-29 06:55:54.749",
+      "dateFinished": "2019-07-29 06:55:54.926",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "FluirEngine / TPCH Data Analysis",
+  "id": "2EJ4QVXNC",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "md:shared_process": [],
+    "python:shared_process": [],
+    "sh:shared_process": [],
+    "jdbc:shared_process": [],
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

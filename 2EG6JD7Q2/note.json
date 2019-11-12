@@ -1,0 +1,1102 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md \n# This is a sample Zeppelin notebook to create a pipeline using fluirdb-python-sdk\n### Introduction\n\nIn this tutorial we are going to analyze a network intrusion events dataset with Python in a Zeppelin Notebook. The Zeppelin Notebook provides an easy and interactive surface for data scientists to explore data through Fluirdb.\n\nfollow this link in order to get to know more: https://bit.ly/2J6Y4mY\n\n### Follow inline instructions to know your ways around this notebook and fluirdb-sdk\n\n#### 1. Download the data file",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 07:01:46.917",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003eThis is a sample Zeppelin notebook to create a pipeline using fluirdb-python-sdk\u003c/h1\u003e\n\u003ch3\u003eIntroduction\u003c/h3\u003e\n\u003cp\u003eIn this tutorial we are going to analyze a network intrusion events dataset with Python in a Zeppelin Notebook. The Zeppelin Notebook provides an easy and interactive surface for data scientists to explore data through Fluirdb.\u003c/p\u003e\n\u003cp\u003efollow this link in order to get to know more: \u003ca href\u003d\"https://bit.ly/2J6Y4mY\"\u003ehttps://bit.ly/2J6Y4mY\u003c/a\u003e\u003c/p\u003e\n\u003ch3\u003eFollow inline instructions to know your ways around this notebook and fluirdb-sdk\u003c/h3\u003e\n\u003ch4\u003e1. Download the data file\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773084_995318419",
+      "id": "20190702-120955_2081605018",
+      "dateCreated": "2019-07-12 05:36:13.084",
+      "dateStarted": "2019-07-29 07:01:46.918",
+      "dateFinished": "2019-07-29 07:01:46.935",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sh\nwget http://kdd.ics.uci.edu/databases/kddcup99/kddcup.data_10_percent.gz\nmkdir -p /tmp/upload\nmv kddcup.data_10_percent.gz /tmp/upload/",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 07:01:56.990",
+      "config": {
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sh",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "--2019-07-29 07:01:57--  http://kdd.ics.uci.edu/databases/kddcup99/kddcup.data_10_percent.gz\nResolving kdd.ics.uci.edu (kdd.ics.uci.edu)... 128.195.1.86\nConnecting to kdd.ics.uci.edu (kdd.ics.uci.edu)|128.195.1.86|:80... connected.\nHTTP request sent, awaiting response... 200 OK\nLength: 2144903 (2.0M) [application/x-gzip]\nSaving to: \u0027kddcup.data_10_percent.gz\u0027\n\n     0K .......... .......... .......... .......... ..........  2%  207K 10s\n    50K .......... .......... .......... .......... ..........  4%  355K 8s\n   100K .......... .......... .......... .......... ..........  7%  131M 5s\n   150K .......... .......... .......... .......... ..........  9%  543K 4s\n   200K .......... .......... .......... .......... .......... 11%  726K 4s\n   250K .......... .......... .......... .......... .......... 14% 1.54M 3s\n   300K .......... .......... .......... .......... .......... 16%  490K 3s\n   350K .......... .......... .......... .......... .......... 19% 1.59M 3s\n   400K .......... .......... .......... .......... .......... 21%  366K 3s\n   450K .......... .......... .......... .......... .......... 23%  479K 3s\n   500K .......... .......... .......... .......... .......... 26%  880K 3s\n   550K .......... .......... .......... .......... .......... 28%  613K 3s\n   600K .......... .......... .......... .......... .......... 31%  830K 3s\n   650K .......... .......... .......... .......... .......... 33% 1.42M 2s\n   700K .......... .......... .......... .......... .......... 35% 1.07M 2s\n   750K .......... .......... .......... .......... .......... 38% 1.11M 2s\n   800K .......... .......... .......... .......... .......... 40%  325K 2s\n   850K .......... .......... .......... .......... .......... 42%  545K 2s\n   900K .......... .......... .......... .......... .......... 45%  386K 2s\n   950K .......... .......... .......... .......... .......... 47%  323K 2s\n  1000K .......... .......... .......... .......... .......... 50%  111M 2s\n  1050K .......... .......... .......... .......... .......... 52%  870K 2s\n  1100K .......... .......... .......... .......... .......... 54%  146K 2s\n  1150K .......... .......... .......... .......... .......... 57%  805K 2s\n  1200K .......... .......... .......... .......... .......... 59% 94.3M 2s\n  1250K .......... .......... .......... .......... .......... 62% 73.7M 1s\n  1300K .......... .......... .......... .......... .......... 64%  822K 1s\n  1350K .......... .......... .......... .......... .......... 66% 31.0M 1s\n  1400K .......... .......... .......... .......... .......... 69% 39.0M 1s\n  1450K .......... .......... .......... .......... .......... 71%  847K 1s\n  1500K .......... .......... .......... .......... .......... 73% 33.4M 1s\n  1550K .......... .......... .......... .......... .......... 76%  853K 1s\n  1600K .......... .......... .......... .......... .......... 78% 35.6M 1s\n  1650K .......... .......... .......... .......... .......... 81% 32.2M 1s\n  1700K .......... .......... .......... .......... .......... 83%  859K 0s\n  1750K .......... .......... .......... .......... .......... 85% 34.0M 0s\n  1800K .......... .......... .......... .......... .......... 88% 34.2M 0s\n  1850K .......... .......... .......... .......... .......... 90% 48.6M 0s\n  1900K .......... .......... .......... .......... .......... 93%  850K 0s\n  1950K .......... .......... .......... .......... .......... 95% 39.9M 0s\n  2000K .......... .......... .......... .......... .......... 97% 54.4M 0s\n  2050K .......... .......... .......... .......... ....      100%  764K\u003d2.6s\n\n2019-07-29 07:01:59 (796 KB/s) - \u0027kddcup.data_10_percent.gz\u0027 saved [2144903/2144903]\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773091_-1686010360",
+      "id": "20190702-121029_263542713",
+      "dateCreated": "2019-07-12 05:36:13.091",
+      "dateStarted": "2019-07-29 07:01:57.049",
+      "dateFinished": "2019-07-29 07:01:59.997",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n\n#### 2. Use fluirdb-sdk to upload a file in fluir setup",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:36:13.092",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e2. Use fluirdb-sdk to upload a file in fluir setup\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773092_-1288761934",
+      "id": "20190703-084831_64580332",
+      "dateCreated": "2019-07-12 05:36:13.092",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\nimport openapi_client\nfrom openapi_client.rest import ApiException\nimport time\n\n#Initialization\nconfiguration \u003d openapi_client.configuration.Configuration()\nconfiguration.host \u003d \"http://server:8090\"\napi_instance \u003d openapi_client.ApiClient(configuration)\nsource_api \u003d openapi_client.SourceApi(api_instance)\npipeline_api \u003d openapi_client.PipelineApi(api_instance)\nnormal_run_api \u003d openapi_client.PipelineNormalRunApi(api_instance)\nexported_table_api \u003d openapi_client.ExportedTablesApi(api_instance)\nupload_api \u003d openapi_client.UploadApi(api_instance)\n\n#upload file\nresp \u003d upload_api.upload_file(\"/tmp/upload/kddcup.data_10_percent.gz\", \"kddcup.data_10_percent.gz\")\nprint(resp)\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 07:02:14.927",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true,
+          "completionKey": "TAB"
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": " File kddcup.data_10_percent.gz with Name kddcup_347c8faf-75b0-47dc-ad14-378a956bd2d3.data_10_percent.gz uploaded successfully.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773092_-1793235529",
+      "id": "20190703-085347_143869717",
+      "dateCreated": "2019-07-12 05:36:13.092",
+      "dateStarted": "2019-07-29 07:02:15.004",
+      "dateFinished": "2019-07-29 07:02:16.111",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n# get the path of uploaded file\nresp \u003d upload_api.get_uploaded_files_list()\nprint(resp)\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 07:03:37.769",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{u\u0027result\u0027: [{u\u0027files\u0027: [], u\u0027uploadTime\u0027: u\u00272019-07-29T07:02:15.241Z\u0027, u\u0027name\u0027: u\u0027kddcup_347c8faf-75b0-47dc-ad14-378a956bd2d3.data_10_percent.gz\u0027, u\u0027path\u0027: u\u0027uploads/347c8faf-75b0-47dc-ad14-378a956bd2d3/\u0027, u\u0027type\u0027: u\u0027csv\u0027, u\u0027size\u0027: 2144903}]}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773092_200732094",
+      "id": "20190703-090810_2057257153",
+      "dateCreated": "2019-07-12 05:36:13.092",
+      "dateStarted": "2019-07-29 07:03:37.826",
+      "dateFinished": "2019-07-29 07:03:37.881",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### 3. Create a source using the file uploaded\n\nCopy file name from list api response above and use the same for fluir.spark.path",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 07:04:59.887",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e3. Create a source using the file uploaded\u003c/h4\u003e\n\u003cp\u003eCopy file name from list api response above and use the same for fluir.spark.path\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773092_1030231169",
+      "id": "20190703-111740_1663240552",
+      "dateCreated": "2019-07-12 05:36:13.092",
+      "dateStarted": "2019-07-29 07:04:59.887",
+      "dateFinished": "2019-07-29 07:04:59.900",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n# now you can infer the schema of the source file using inline api. while specifying the path add \u0027/user/root\u0027 at the begining which is relative dcefs path\nsrc \u003d openapi_client.Body()\nsrc.source_type \u003d \"SPARKDATASOURCE\"\nsrc.metadata \u003d {\"fluir.spark.format\":\"csv\", \"fluir.spark.header\": False, \"fluir.spark.path\":\"/user/root/uploads/*/kddcup_347c8faf-75b0-47dc-ad14-378a956bd2d3.data_10_percent.gz\"}\nresp \u003d source_api.infer_schema(src)\nschema \u003d resp.result\nprint(schema)\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 07:06:29.219",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\"type\":\"struct\",\"fields\":[{\"name\":\"_c0\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c1\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c2\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c3\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c4\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c5\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c6\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c7\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c8\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c9\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c10\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c11\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c12\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c13\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c14\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c15\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c16\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c17\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c18\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c19\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c20\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c21\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c22\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c23\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c24\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c25\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c26\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c27\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c28\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c29\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c30\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c31\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c32\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c33\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c34\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c35\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c36\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c37\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c38\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c39\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c40\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c41\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}}]}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773092_796096287",
+      "id": "20190703-091358_1676046145",
+      "dateCreated": "2019-07-12 05:36:13.092",
+      "dateStarted": "2019-07-29 07:06:29.273",
+      "dateFinished": "2019-07-29 07:06:34.806",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n# create a source named \u0027kddcup\u0027 using this file. In file taken into cosideration doesn\u0027t have any headers, so you can add your own headers to it while adding the source\n\nkddcup_source \u003d openapi_client.Source()\nkddcup_source.source_name \u003d \"kddcup\"\nkddcup_source.metadata \u003d {\"fluir.spark.format\":\"csv\", \"fluir.spark.header\": False, \"fluir.spark.path\":\"/user/root/uploads/*/kddcup_347c8faf-75b0-47dc-ad14-378a956bd2d3.data_10_percent.gz\"}\n# provide your own schema in inline format\nschema \u003d \u0027{\\\"type\\\":\\\"struct\\\",\\\"fields\\\":[{\\\"name\\\":\\\"duration\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"protocol_type\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"service\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"flag\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"src_bytes\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"dst_bytes\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"land\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"wrong_fragment\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"urgent\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"hot\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"num_failed_logins\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"logged_in\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"num_compromised\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"root_shell\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"su_attempted\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"num_root\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"num_file_creations\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"num_shells\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"num_access_files\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"num_outbound_cmds\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"is_host_login\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"is_guest_login\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"count\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"srv_count\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"serror_rate\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"srv_serror_rate\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"rerror_rate\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"srv_rerror_rate\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"same_srv_rate\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"diff_srv_rate\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"srv_diff_host_rate\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"dst_host_count\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"dst_host_srv_count\\\",\\\"type\\\":\\\"integer\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"dst_host_same_srv_rate\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"dst_host_diff_srv_rate\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"dst_host_same_src_port_rate\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"dst_host_srv_diff_host_rate\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"dst_host_serror_rate\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"dst_host_srv_serror_rate\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"dst_host_rerror_rate\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"dst_host_srv_rerror_rate\\\",\\\"type\\\":\\\"double\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}},{\\\"name\\\":\\\"normal_check\\\",\\\"type\\\":\\\"string\\\",\\\"nullable\\\":true,\\\"metadata\\\":{}}]}\u0027\nkddcup_source.data_schema \u003d schema\nkddcup_source.source_type \u003d \"SPARKDATASOURCE\"\nresp \u003d source_api.create_source(\"kddcup\", kddcup_source)\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 07:08:08.386",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \u0027kddcup\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773093_-728118820",
+      "id": "20190703-095736_1729030327",
+      "dateCreated": "2019-07-12 05:36:13.093",
+      "dateStarted": "2019-07-29 07:08:08.442",
+      "dateFinished": "2019-07-29 07:08:08.537",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nCheck the source kddcup and its schema from the \u0027sources\u0027 section of the fluirdb UI\n\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/btbj9837r6ouxs1/intrusion_detection1.png\" width\u003d\"1500\"\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-07 08:38:30.418",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eCheck the source kddcup and its schema from the \u0026lsquo;sources\u0026rsquo; section of the fluirdb UI\u003c/p\u003e\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/btbj9837r6ouxs1/intrusion_detection1.png\" width\u003d\"1500\"\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564384227748_-1402363642",
+      "id": "20190729-071027_121677455",
+      "dateCreated": "2019-07-29 07:10:27.749",
+      "dateStarted": "2019-08-07 08:38:30.420",
+      "dateFinished": "2019-08-07 08:38:30.429",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### 4. Create a pipeline and add source which we created in previous steps to this pipeline",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:36:13.093",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e4. Create a pipeline and add source which we created in previous steps to this pipeline\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773093_-1575577835",
+      "id": "20190703-111913_1410988061",
+      "dateCreated": "2019-07-12 05:36:13.093",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n#create a pipeline\npipelineBody \u003d openapi_client.PipelineMetadata()\npipelineBody.auto_schema_refresh \u003d \"true\"\npipelineBody.description \u003d \"kddcup data application\"\nresp \u003d pipeline_api.create_pipeline(\"kddcup_pipeline\", pipelineBody)\nprint(resp)\n\n#add source node in pipeline\nsource_node \u003d openapi_client.SourceNode(source\u003d\"kddcup\", configuration\u003dconfiguration)\nresp \u003d pipeline_api.add_source_node(\"kddcup_pipeline\", \"kddcup\", source_node)\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 07:12:34.565",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \u0027Pipeline kddcup_pipeline created successfully.\u0027,\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Source Node\u0027. PipelineName: \u0027kddcup_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773093_411626226",
+      "id": "20190703-100103_1083940884",
+      "dateCreated": "2019-07-12 05:36:13.093",
+      "dateStarted": "2019-07-29 07:12:34.626",
+      "dateFinished": "2019-07-29 07:12:35.056",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nCheck the pipeline from the \u0027ETL Pipelines\u0027 section of the fluirdb pipeline\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/22h0od3d95mri7u/intrusion_detection2.png\" width\u003d\"1500\"\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-07 08:38:43.652",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eCheck the pipeline from the \u0026lsquo;ETL Pipelines\u0026rsquo; section of the fluirdb pipeline\u003cbr/\u003e\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/22h0od3d95mri7u/intrusion_detection2.png\" width\u003d\"1500\"\u003e\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564384399108_489594598",
+      "id": "20190729-071319_2039685913",
+      "dateCreated": "2019-07-29 07:13:19.108",
+      "dateStarted": "2019-08-07 08:38:43.653",
+      "dateFinished": "2019-08-07 08:38:43.658",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### 5. Add transform nodes and sink node based on the data processing you want to do on this data\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:36:13.094",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e5. Add transform nodes and sink node based on the data processing you want to do on this data\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773094_503027135",
+      "id": "20190703-112031_719998147",
+      "dateCreated": "2019-07-12 05:36:13.094",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n# filter out the normal data\nquery \u003d \"select * from kddcup where normal_check\u003d\u0027normal.\u0027\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"kddcup_pipeline\", \"normal_data\", processor_node)\nprint(resp)\n\n#sink normal data \nsink_node \u003d openapi_client.SinkNode()\nsink_node.prev_node_name \u003d \"normal_data\"\nsink_node.metadata \u003d {\"fluir.sink.terminal\": \"false\"}\nsink_node.sink_type \u003d \"PARQUET\"\nresp \u003d pipeline_api.add_sink_node(\"kddcup_pipeline\", \"normal_sink\", sink_node)\nprint(resp)\n\n# filter out the attacked data\nquery \u003d \"select * from kddcup where normal_check!\u003d\u0027normal.\u0027\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"kddcup_pipeline\", \"attacked_data\", processor_node)\nprint(resp)\n#sink attacked data \nsink_node \u003d openapi_client.SinkNode()\nsink_node.prev_node_name \u003d \"normal_data\"\nsink_node.metadata \u003d {\"fluir.sink.terminal\": \"false\"}\nsink_node.sink_type \u003d \"PARQUET\"\nresp \u003d pipeline_api.add_sink_node(\"kddcup_pipeline\", \"attacked_data_sink\", sink_node)\nprint(resp)\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 07:14:44.737",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027kddcup_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Sink Node\u0027. PipelineName: \u0027kddcup_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027kddcup_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Sink Node\u0027. PipelineName: \u0027kddcup_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773095_-1724834043",
+      "id": "20190703-100712_2000279336",
+      "dateCreated": "2019-07-12 05:36:13.095",
+      "dateStarted": "2019-07-29 07:14:44.797",
+      "dateFinished": "2019-07-29 07:14:46.047",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/1zclgi1ykaaep3p/intrusion_detection3.png\" width\u003d\"1500\"\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-07 08:38:57.507",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/1zclgi1ykaaep3p/intrusion_detection3.png\" width\u003d\"1500\"\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564384524022_-1230830141",
+      "id": "20190729-071524_371882532",
+      "dateCreated": "2019-07-29 07:15:24.023",
+      "dateStarted": "2019-08-07 08:38:57.508",
+      "dateFinished": "2019-08-07 08:38:57.512",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n#select distict protocol types from the data which hasn\u0027t been attacked\nquery \u003d \"select distinct(protocol_type) from normal_data\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"kddcup_pipeline\", \"disctinctProtocols\", processor_node)\nprint(resp)\n\n#select distinct service types from the source\nquery \u003d \"select distinct(service) from kddcup\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"kddcup_pipeline\", \"distinct_services\", processor_node)\nprint(resp)\n\n#cartesian product of distinct_protocols and distinct_services\nquery \u003d \"select disctinctProtocols.*, distinct_services.* from disctinctProtocols cross join distinct_services\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"kddcup_pipeline\", \"cartesian_product\", processor_node)\nprint(resp)\n\n#sink cartesian product output\nsink_node \u003d openapi_client.SinkNode()\nsink_node.prev_node_name \u003d \"cartesian_product\"\nsink_node.metadata \u003d {\"fluir.sink.terminal\": \"false\"}\nsink_node.sink_type \u003d \"PARQUET\"\nresp \u003d pipeline_api.add_sink_node(\"kddcup_pipeline\", \"cartesian_product_sink\", sink_node)\nprint(resp)\n\n#calculate total normal duration and average normal duration where there was no attack\nquery \u003d \"select sum(duration) as total_normal_duration, avg(duration) as avg_normal_duration from normal_data\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"kddcup_pipeline\", \"total_normal_duration_data\", processor_node)\nprint(resp)\n\nsink_node \u003d openapi_client.SinkNode()\nsink_node.prev_node_name \u003d \"total_normal_duration_data\"\nsink_node.metadata \u003d {\"fluir.sink.terminal\": \"false\"}\nsink_node.sink_type \u003d \"PARQUET\"\nresp \u003d pipeline_api.add_sink_node(\"kddcup_pipeline\", \"total_normal_duration_data_sink\", sink_node)\nprint(resp)\n\n#calculate total attacked duration and average attacked duration where there was an attack\nquery \u003d \"select sum(duration) as total_attacked_duration, avg(duration) as avg_attack_duration from attacked_data\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"kddcup_pipeline\", \"total_attacked_duration_data\", processor_node)\nprint(resp)\n\nsink_node \u003d openapi_client.SinkNode()\nsink_node.prev_node_name \u003d \"total_attacked_duration_data\"\nsink_node.metadata \u003d {\"fluir.sink.terminal\": \"false\"}\nsink_node.sink_type \u003d \"PARQUET\"\nresp \u003d pipeline_api.add_sink_node(\"kddcup_pipeline\", \"total_attacked_duration_data_sink\", sink_node)\nprint(resp)\n\n\n#create temp df by filterering\nquery \u003d \"select duration, protocol_type, service, flag, src_bytes, dst_bytes from kddcup\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"kddcup_pipeline\", \"row_data\", processor_node)\nprint(resp)\n\n#printing schema\nresp \u003d pipeline_api.get_node_properties(\"kddcup_pipeline\", \"row_data\")\nprint(resp.result.schema)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 07:16:26.589",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027kddcup_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027kddcup_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027kddcup_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Sink Node\u0027. PipelineName: \u0027kddcup_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027kddcup_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Sink Node\u0027. PipelineName: \u0027kddcup_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027kddcup_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Sink Node\u0027. PipelineName: \u0027kddcup_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027kddcup_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\nhere\n{\"type\":\"struct\",\"fields\":[{\"name\":\"duration\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"protocol_type\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"service\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"flag\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"src_bytes\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"dst_bytes\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}}]}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773095_106927000",
+      "id": "20190703-101208_1466897501",
+      "dateCreated": "2019-07-12 05:36:13.095",
+      "dateStarted": "2019-07-29 07:16:26.651",
+      "dateFinished": "2019-07-29 07:16:28.558",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/f768ltocc7dcoug/intrusion_detection4.png\" width\u003d\"1500\"\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-07 08:39:12.413",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/f768ltocc7dcoug/intrusion_detection4.png\" width\u003d\"1500\"\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564384639064_1609668165",
+      "id": "20190729-071719_620200210",
+      "dateCreated": "2019-07-29 07:17:19.065",
+      "dateStarted": "2019-08-07 08:39:12.414",
+      "dateFinished": "2019-08-07 08:39:12.418",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n#query the data from previous node\nquery \u003d \"SELECT duration, dst_bytes FROM row_data WHERE protocol_type \u003d \u0027tcp\u0027 AND duration \u003e 1000 AND dst_bytes \u003d 0\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"kddcup_pipeline\", \"query_row_data\", processor_node)\nprint(resp)\n\n#sink the queried data\nsink_node \u003d openapi_client.SinkNode()\nsink_node.prev_node_name \u003d \"query_row_data\"\nsink_node.metadata \u003d {\"fluir.sink.terminal\": \"false\"}\nsink_node.sink_type \u003d \"PARQUET\"\nresp \u003d pipeline_api.add_sink_node(\"kddcup_pipeline\", \"queried_row_data\", sink_node)\nprint(resp)\n\n#try few group by queries to get the expected output\nquery \u003d \"SELECT protocol_type, count(protocol_type) as protocol_count from kddcup where duration\u003e 1000 and dst_bytes\u003d0 group by protocol_type\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"kddcup_pipeline\", \"protocol_counts\", processor_node)\nprint(resp)\n\n#sink the data\nsink_node \u003d openapi_client.SinkNode()\nsink_node.prev_node_name \u003d \"protocol_counts\"\nsink_node.metadata \u003d {\"fluir.sink.terminal\": \"false\"}\nsink_node.sink_type \u003d \"PARQUET\"\nresp \u003d pipeline_api.add_sink_node(\"kddcup_pipeline\", \"protocol_count_sink\", sink_node)\nprint(resp)\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 07:17:46.217",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027kddcup_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Sink Node\u0027. PipelineName: \u0027kddcup_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027kddcup_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Sink Node\u0027. PipelineName: \u0027kddcup_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773095_584666970",
+      "id": "20190703-102258_913409685",
+      "dateCreated": "2019-07-12 05:36:13.095",
+      "dateStarted": "2019-07-29 07:17:46.282",
+      "dateFinished": "2019-07-29 07:17:47.436",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/787oxh8fi3i1k54/intrusion_detection5.png\" width\u003d\"1500\"\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-07 08:39:24.246",
+      "config": {
+        "colWidth": 12.0,
+        "fontSize": 9.0,
+        "enabled": true,
+        "results": {},
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/787oxh8fi3i1k54/intrusion_detection5.png\" width\u003d\"1500\"\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1564384740156_672411691",
+      "id": "20190729-071900_1967247230",
+      "dateCreated": "2019-07-29 07:19:00.156",
+      "dateStarted": "2019-08-07 08:39:24.248",
+      "dateFinished": "2019-08-07 08:39:24.253",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n#start the pipeline\nresp \u003d normal_run_api.start_pipeline(\"kddcup_pipeline\")\nprint(resp)\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 07:19:23.987",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \"Success: OpType \u0027 Start Pipeline\u0027. PipelineName: \u0027kddcup_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773095_607133782",
+      "id": "20190703-102845_1971798741",
+      "dateCreated": "2019-07-12 05:36:13.095",
+      "dateStarted": "2019-07-29 07:19:24.058",
+      "dateFinished": "2019-07-29 07:19:24.079",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n#check the status of the pipeline if the execution has been completed\nprint(pipeline_api.get_pipeline_state(\"kddcup_pipeline\"))\ntime.sleep(5)\nwhile pipeline_api.get_pipeline_state(\"kddcup_pipeline\").result !\u003d \"NotRunning\":\n    print(\"pipeline execution in progress\")\n    time.sleep(5)\n\nprint(\"pipeline execution completed, you can now check the sink data\")",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 07:19:30.292",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \u0027NormalModeRunning\u0027, \u0027status\u0027: \u0027SUCCESS\u0027}\npipeline execution in progress\npipeline execution in progress\npipeline execution completed, you can now check the sink data\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773096_-599711604",
+      "id": "20190703-102929_1641196396",
+      "dateCreated": "2019-07-12 05:36:13.096",
+      "dateStarted": "2019-07-29 07:19:30.341",
+      "dateFinished": "2019-07-29 07:19:45.397",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n\n# Now that the pipeline has finished its execution, you can query the sink data\n#check the count of records after cartesian product\nresp \u003d normal_run_api.analyze_sink_data(\"kddcup_pipeline\", \"select count(*) as cnt from cartesian_product_sink\")\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:36:13.096",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{u\u0027cnt\u0027: 198}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773096_-833599790",
+      "id": "20190703-105355_1858886235",
+      "dateCreated": "2019-07-12 05:36:13.096",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n#check total attacked duration and average attacked duration\nresp \u003d normal_run_api.analyze_sink_data(\"kddcup_pipeline\", \"select * from total_attacked_duration_data_sink\")\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:36:13.096",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{u\u0027total_attacked_duration\u0027: 2626792, u\u0027avg_attack_duration\u0027: 6.620890601724542}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773096_-1720960111",
+      "id": "20190703-105641_45647584",
+      "dateCreated": "2019-07-12 05:36:13.096",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n\n#check total normal duration and average normal duration\nresp \u003d normal_run_api.analyze_sink_data(\"kddcup_pipeline\", \"select * from total_normal_duration_data_sink\")\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:36:13.096",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{u\u0027total_normal_duration\u0027: 21075991, u\u0027avg_normal_duration\u0027: 216.65732231336992}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773096_-217284785",
+      "id": "20190703-105844_1657402516",
+      "dateCreated": "2019-07-12 05:36:13.096",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n#get data from queried_row_data which has duration\u003e1000 and protocol\u003dtcp and dst_bytes\u003d0\nresp \u003d normal_run_api.analyze_sink_data(\"kddcup_pipeline\", \"select * from queried_row_data\")\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:36:13.097",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\"duration\":5057,\"dst_bytes\":0}\n{\"duration\":5059,\"dst_bytes\":0}\n{\"duration\":5051,\"dst_bytes\":0}\n{\"duration\":5056,\"dst_bytes\":0}\n{\"duration\":5051,\"dst_bytes\":0}\n{\"duration\":5039,\"dst_bytes\":0}\n{\"duration\":5062,\"dst_bytes\":0}\n{\"duration\":5041,\"dst_bytes\":0}\n{\"duration\":5056,\"dst_bytes\":0}\n{\"duration\":5064,\"dst_bytes\":0}\n{\"duration\":5043,\"dst_bytes\":0}\n{\"duration\":5061,\"dst_bytes\":0}\n{\"duration\":5049,\"dst_bytes\":0}\n{\"duration\":5061,\"dst_bytes\":0}\n{\"duration\":5048,\"dst_bytes\":0}\n{\"duration\":5047,\"dst_bytes\":0}\n{\"duration\":5044,\"dst_bytes\":0}\n{\"duration\":5063,\"dst_bytes\":0}\n{\"duration\":5068,\"dst_bytes\":0}\n{\"duration\":5062,\"dst_bytes\":0}\n{\"duration\":5046,\"dst_bytes\":0}\n{\"duration\":5052,\"dst_bytes\":0}\n{\"duration\":5044,\"dst_bytes\":0}\n{\"duration\":5054,\"dst_bytes\":0}\n{\"duration\":5039,\"dst_bytes\":0}\n{\"duration\":5058,\"dst_bytes\":0}\n{\"duration\":5051,\"dst_bytes\":0}\n{\"duration\":5032,\"dst_bytes\":0}\n{\"duration\":5063,\"dst_bytes\":0}\n{\"duration\":5040,\"dst_bytes\":0}\n{\"duration\":5051,\"dst_bytes\":0}\n{\"duration\":5066,\"dst_bytes\":0}\n{\"duration\":5044,\"dst_bytes\":0}\n{\"duration\":5051,\"dst_bytes\":0}\n{\"duration\":5036,\"dst_bytes\":0}\n{\"duration\":5055,\"dst_bytes\":0}\n{\"duration\":2426,\"dst_bytes\":0}\n{\"duration\":5047,\"dst_bytes\":0}\n{\"duration\":5057,\"dst_bytes\":0}\n{\"duration\":5037,\"dst_bytes\":0}\n{\"duration\":5057,\"dst_bytes\":0}\n{\"duration\":5062,\"dst_bytes\":0}\n{\"duration\":5051,\"dst_bytes\":0}\n{\"duration\":5051,\"dst_bytes\":0}\n{\"duration\":5053,\"dst_bytes\":0}\n{\"duration\":5064,\"dst_bytes\":0}\n{\"duration\":5044,\"dst_bytes\":0}\n{\"duration\":5051,\"dst_bytes\":0}\n{\"duration\":5033,\"dst_bytes\":0}\n{\"duration\":5066,\"dst_bytes\":0}\n{\"duration\":5063,\"dst_bytes\":0}\n{\"duration\":5056,\"dst_bytes\":0}\n{\"duration\":5042,\"dst_bytes\":0}\n{\"duration\":5063,\"dst_bytes\":0}\n{\"duration\":5060,\"dst_bytes\":0}\n{\"duration\":5056,\"dst_bytes\":0}\n{\"duration\":5049,\"dst_bytes\":0}\n{\"duration\":5043,\"dst_bytes\":0}\n{\"duration\":5039,\"dst_bytes\":0}\n{\"duration\":5041,\"dst_bytes\":0}\n{\"duration\":42448,\"dst_bytes\":0}\n{\"duration\":42088,\"dst_bytes\":0}\n{\"duration\":41065,\"dst_bytes\":0}\n{\"duration\":40929,\"dst_bytes\":0}\n{\"duration\":40806,\"dst_bytes\":0}\n{\"duration\":40682,\"dst_bytes\":0}\n{\"duration\":40571,\"dst_bytes\":0}\n{\"duration\":40448,\"dst_bytes\":0}\n{\"duration\":40339,\"dst_bytes\":0}\n{\"duration\":40232,\"dst_bytes\":0}\n{\"duration\":40121,\"dst_bytes\":0}\n{\"duration\":36783,\"dst_bytes\":0}\n{\"duration\":36674,\"dst_bytes\":0}\n{\"duration\":36570,\"dst_bytes\":0}\n{\"duration\":36467,\"dst_bytes\":0}\n{\"duration\":36323,\"dst_bytes\":0}\n{\"duration\":36204,\"dst_bytes\":0}\n{\"duration\":32038,\"dst_bytes\":0}\n{\"duration\":31925,\"dst_bytes\":0}\n{\"duration\":31809,\"dst_bytes\":0}\n{\"duration\":31709,\"dst_bytes\":0}\n{\"duration\":31601,\"dst_bytes\":0}\n{\"duration\":31501,\"dst_bytes\":0}\n{\"duration\":31401,\"dst_bytes\":0}\n{\"duration\":31301,\"dst_bytes\":0}\n{\"duration\":31194,\"dst_bytes\":0}\n{\"duration\":31061,\"dst_bytes\":0}\n{\"duration\":30935,\"dst_bytes\":0}\n{\"duration\":30835,\"dst_bytes\":0}\n{\"duration\":30735,\"dst_bytes\":0}\n{\"duration\":30619,\"dst_bytes\":0}\n{\"duration\":30518,\"dst_bytes\":0}\n{\"duration\":30418,\"dst_bytes\":0}\n{\"duration\":30317,\"dst_bytes\":0}\n{\"duration\":30217,\"dst_bytes\":0}\n{\"duration\":30077,\"dst_bytes\":0}\n{\"duration\":25420,\"dst_bytes\":0}\n{\"duration\":22921,\"dst_bytes\":0}\n{\"duration\":22821,\"dst_bytes\":0}\n{\"duration\":22721,\"dst_bytes\":0}\n{\"duration\":22616,\"dst_bytes\":0}\n{\"duration\":22516,\"dst_bytes\":0}\n{\"duration\":22416,\"dst_bytes\":0}\n{\"duration\":22316,\"dst_bytes\":0}\n{\"duration\":22216,\"dst_bytes\":0}\n{\"duration\":21987,\"dst_bytes\":0}\n{\"duration\":21887,\"dst_bytes\":0}\n{\"duration\":21767,\"dst_bytes\":0}\n{\"duration\":21661,\"dst_bytes\":0}\n{\"duration\":21561,\"dst_bytes\":0}\n{\"duration\":21455,\"dst_bytes\":0}\n{\"duration\":21334,\"dst_bytes\":0}\n{\"duration\":21223,\"dst_bytes\":0}\n{\"duration\":21123,\"dst_bytes\":0}\n{\"duration\":20983,\"dst_bytes\":0}\n{\"duration\":14682,\"dst_bytes\":0}\n{\"duration\":14420,\"dst_bytes\":0}\n{\"duration\":14319,\"dst_bytes\":0}\n{\"duration\":14198,\"dst_bytes\":0}\n{\"duration\":14098,\"dst_bytes\":0}\n{\"duration\":13998,\"dst_bytes\":0}\n{\"duration\":13898,\"dst_bytes\":0}\n{\"duration\":13796,\"dst_bytes\":0}\n{\"duration\":13678,\"dst_bytes\":0}\n{\"duration\":13578,\"dst_bytes\":0}\n{\"duration\":13448,\"dst_bytes\":0}\n{\"duration\":13348,\"dst_bytes\":0}\n{\"duration\":13241,\"dst_bytes\":0}\n{\"duration\":13141,\"dst_bytes\":0}\n{\"duration\":13033,\"dst_bytes\":0}\n{\"duration\":12933,\"dst_bytes\":0}\n{\"duration\":12833,\"dst_bytes\":0}\n{\"duration\":12733,\"dst_bytes\":0}\n{\"duration\":12001,\"dst_bytes\":0}\n{\"duration\":5678,\"dst_bytes\":0}\n{\"duration\":5010,\"dst_bytes\":0}\n{\"duration\":1298,\"dst_bytes\":0}\n{\"duration\":1031,\"dst_bytes\":0}\n{\"duration\":36438,\"dst_bytes\":0}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773097_-1699406163",
+      "id": "20190703-105954_280681592",
+      "dateCreated": "2019-07-12 05:36:13.097",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n\n#get data from queried_row_data which has duration\u003e1000 and protocol\u003dtcp and dst_bytes\u003d0\nresp \u003d normal_run_api.analyze_sink_data(\"kddcup_pipeline\", \"select * from protocol_count_sink\")\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:36:13.097",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{u\u0027protocol_count\u0027: 139, u\u0027protocol_type\u0027: u\u0027tcp\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773097_-1407661926",
+      "id": "20190703-110114_1632663817",
+      "dateCreated": "2019-07-12 05:36:13.097",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### 6. Delete the pipeline and source node\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-12 05:36:13.097",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e6. Delete the pipeline and source node\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773097_-1958079030",
+      "id": "20190703-110413_217009482",
+      "dateCreated": "2019-07-12 05:36:13.097",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\nresp \u003d pipeline_api.delete_pipeline(\"kddcup_pipeline\")\nprint(resp)\ntime.sleep(30)\nresp \u003d source_api.delete_source(\"kddcup\")\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-07-29 07:22:02.861",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \u0027Started pipeline deletion for kddcup_pipeline.\u0027,\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \u0027kddcup\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1562909773097_525173465",
+      "id": "20190703-110618_1535320692",
+      "dateCreated": "2019-07-12 05:36:13.097",
+      "dateStarted": "2019-07-29 07:22:02.939",
+      "dateFinished": "2019-07-29 07:22:33.050",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "FluirEngine / Network Intrusion Detection",
+  "id": "2EG6JD7Q2",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "md:shared_process": [],
+    "python:shared_process": [],
+    "sh:shared_process": [],
+    "jdbc:shared_process": [],
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

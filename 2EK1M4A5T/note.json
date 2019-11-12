@@ -1,0 +1,1970 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md\n## This is a example zeppelin notebook to predict the FIFA winners using Machine Kearning Algorithms.\n\n#### This is a solid example to display how fluirdb can be used in ETL jobs which is a precursor before actually applying any machine learning algorithm on the data \n\n\nPlease follow the steps to get to know this notebook",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-09 05:57:07.793",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch2\u003eThis is a example zeppelin notebook to predict the FIFA winners using Machine Kearning Algorithms.\u003c/h2\u003e\n\u003ch4\u003eThis is a solid example to display how fluirdb can be used in ETL jobs which is a precursor before actually applying any machine learning algorithm on the data\u003c/h4\u003e\n\u003cp\u003ePlease follow the steps to get to know this notebook\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041104_839205159",
+      "id": "20190726-123127_943515956",
+      "dateCreated": "2019-08-08 12:57:21.104",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n\nyou can download the tar file of the data from dropbox using inline:\n\nwget https://www.dropbox.com/s/53atvp8wst1hap4/fifa_winner_prediction.tar.gz\n\nun-tar this in scp folder, for this notebooks purpose we\u0027ve kept it in minio(s3 emulator)\n\n#### Understanding the data:\n1. results.csv file contains the information about the football sample football mataches which happened in the history.\n2. fifa_rankins.csv file contains the information about the teams and their respective current world rankings\n3. fixtures.csv file contains the maches which are scheduled in upcoming world cup; winners of which we are going to predict using machine learning algorithm\n4. \u0027WorldCup_2018Dataset.csv\u0027 contains teams which are qualified for the current world cup\n\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/rh5364nmowlo9ta/fifa0.png\" width\u003d\"1500\"\u003e\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-09 06:02:13.293",
+      "config": {
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true,
+        "tableHide": false
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eyou can download the tar file of the data from dropbox using inline:\u003c/p\u003e\n\u003cp\u003ewget \u003ca href\u003d\"https://www.dropbox.com/s/53atvp8wst1hap4/fifa_winner_prediction.tar.gz\"\u003ehttps://www.dropbox.com/s/53atvp8wst1hap4/fifa_winner_prediction.tar.gz\u003c/a\u003e\u003c/p\u003e\n\u003cp\u003eun-tar this in scp folder, for this notebooks purpose we\u0026rsquo;ve kept it in minio(s3 emulator)\u003c/p\u003e\n\u003ch4\u003eUnderstanding the data:\u003c/h4\u003e\n\u003col\u003e\n  \u003cli\u003eresults.csv file contains the information about the football sample football mataches which happened in the history.\u003c/li\u003e\n  \u003cli\u003efifa_rankins.csv file contains the information about the teams and their respective current world rankings\u003c/li\u003e\n  \u003cli\u003efixtures.csv file contains the maches which are scheduled in upcoming world cup; winners of which we are going to predict using machine learning algorithm\u003c/li\u003e\n  \u003cli\u003e\u0026lsquo;WorldCup_2018Dataset.csv\u0026rsquo; contains teams which are qualified for the current world cup\u003c/li\u003e\n\u003c/ol\u003e\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/rh5364nmowlo9ta/fifa0.png\" width\u003d\"1500\"\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041127_-1261919642",
+      "id": "20190808-070318_688277743",
+      "dateCreated": "2019-08-08 12:57:21.127",
+      "dateStarted": "2019-08-09 06:02:13.294",
+      "dateFinished": "2019-08-09 06:02:13.307",
+      "status": "FINISHED",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### Use fluirdb-python sdk to:",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.130",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003eUse fluirdb-python sdk to:\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041129_198101444",
+      "id": "20190808-062441_2019510367",
+      "dateCreated": "2019-08-08 12:57:21.129",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nA. Create a source using results.csv file. Please note that for any s3 type of source(minio in this case which is a s3 emulator) you need to provide following properties:\nendpoint: http://172.21.75.162:9100\nbucket name: fifa\nfilename: results.csv\naccesskey: minio\nsecretkey: minio123\n\nB. Create pipeline for ETL and data cleanup operations(mentioned in comments iinline)",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.132",
+      "config": {
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eA. create a source using results.csv file. Please note that for any s3 type of source(minio in this case which is a s3 emulator) you need to provide following properties:\u003cbr/\u003eendpoint: \u003ca href\u003d\"http://172.21.75.162:9100\"\u003ehttp://172.21.75.162:9100\u003c/a\u003e\u003cbr/\u003ebucket name: fifa\u003cbr/\u003efilename: results.csv\u003cbr/\u003eaccesskey: minio\u003cbr/\u003esecretkey: minio123\u003c/p\u003e\n\u003cp\u003eB. Create pipeline for ETL and data cleanup operations(mentioned in comments iinline)\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041131_-67633023",
+      "id": "20190808-061637_1554455801",
+      "dateCreated": "2019-08-08 12:57:21.131",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\nimport openapi_client\nfrom openapi_client.rest import ApiException\nimport time\n\n#Initialization\nconfiguration \u003d openapi_client.configuration.Configuration()\nconfiguration.host \u003d \"http://server:8090\"\napi_instance \u003d openapi_client.ApiClient(configuration)\nsource_api \u003d openapi_client.SourceApi(api_instance)\npipeline_api \u003d openapi_client.PipelineApi(api_instance)\nnormal_run_api \u003d openapi_client.PipelineNormalRunApi(api_instance)\nexported_table_api \u003d openapi_client.ExportedTablesApi(api_instance)\nupload_api \u003d openapi_client.UploadApi(api_instance)\n\n\nsrc \u003d openapi_client.Body()\nsrc.source_type \u003d \"SPARKDATASOURCE\"\nsrc.metadata \u003d {\"fluir.spark.format\":\"csv\", \"fluir.spark.header\": True, \"fluir.spark.fs.s3a.endpoint\":\"http://172.21.75.162:9100\",\"fluir.spark.path\":\"s3a://minio:minio123@fifa/WorldCup_2018Dataset.csv\"}\nresp \u003d source_api.infer_schema(src)\nschema \u003d resp.result\nprint(schema)\n\nqualified_teams \u003d openapi_client.Source()\nqualified_teams.source_name \u003d \"results\"\nqualified_teams.metadata \u003d {\"fluir.spark.format\":\"csv\", \"fluir.spark.header\": True, \"fluir.spark.fs.s3a.endpoint\":\"http://172.21.75.162:9100\",\"fluir.spark.path\":\"s3a://minio:minio123@fifa/WorldCup_2018Dataset.csv\"}\nqualified_teams.data_schema \u003d schema\nqualified_teams.source_type \u003d \"SPARKDATASOURCE\"\nresp \u003d source_api.create_source(\"qualified_teams\", qualified_teams)\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.133",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\"type\":\"struct\",\"fields\":[{\"name\":\"Team\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"Group\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"PreviousAppearances\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"PreviousTitles\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"PreviousFinals\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"PreviousSemifinals\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"CurrentFIFArank\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"FirstMatchAgainst\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"MatchIndex1\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"historyWithFirstOpponentWL\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"historyWithFirstOpponentGoals\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"SecondMatchAgainst\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"MatchIndex2\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"historyWithSecondOpponentWL\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"historyWithSecondOpponentGoals\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"ThirdMatchAgainst\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"MatchIndex3\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"historyWithThirdOpponentWL\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"historyWithThirdOpponentGoals\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"_c19\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}}]}\n{\u0027result\u0027: \u0027qualified_teams\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041133_-1580102864",
+      "id": "20190808-071154_215736883",
+      "dateCreated": "2019-08-08 12:57:21.133",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### Source details:\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/brmbd40uk0av68e/fifa1.png\" width\u003d\"1500\"\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.134",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003eSource details:\u003c/h4\u003e\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/brmbd40uk0av68e/fifa1.png\" width\u003d\"1500\"\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041134_-1040840924",
+      "id": "20190808-103301_1850921115",
+      "dateCreated": "2019-08-08 12:57:21.134",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nIn schema of file \u0027WorldCup_2018Dataset.csv\u0027, there are lot of columns(check above schema inference). But we only need world cup qualified teams from this file.\nSo, lets create a fluirdb pipeline and add tranform node to just select the \u0027Team\u0027 column from it.\n\n\n#### Pipeline structure:\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/qv844jqhc0lexyb/fifa2.png\" width\u003d\"1500\"\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.135",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eIn schema of file \u0026lsquo;WorldCup_2018Dataset.csv\u0026rsquo;, there are lot of columns(check above schema inference). But we only need world cup qualified teams from this file.\u003cbr/\u003eSo, lets create a fluirdb pipeline and add tranform node to just select the \u0026lsquo;Team\u0026rsquo; column from it.\u003c/p\u003e\n\u003ch4\u003ePipeline structure:\u003c/h4\u003e\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/qv844jqhc0lexyb/fifa2.png\" width\u003d\"1500\"\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041134_1870659176",
+      "id": "20190808-072839_1488356267",
+      "dateCreated": "2019-08-08 12:57:21.134",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\npipelineBody \u003d openapi_client.PipelineMetadata()\npipelineBody.auto_schema_refresh \u003d \"true\"\npipelineBody.description \u003d \"\"\nresp \u003d pipeline_api.create_pipeline(\"qualified_teams_pipeline\", pipelineBody)\nprint(resp)\n\n#add source node in pipeline\nsource_node \u003d openapi_client.SourceNode(source\u003d\"qualified_teams\", configuration\u003dconfiguration)\nresp \u003d pipeline_api.add_source_node(\"qualified_teams_pipeline\", \"qualified_teams\", source_node)\nprint(resp)\n\n#add trasform node to just select team column from source\nquery \u003d \"select Team from qualified_teams\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"qualified_teams_pipeline\", \"teams_q\", processor_node)\nprint(resp)\n\n# addd sink node in pipeline and  export the sink node\nsink_node \u003d openapi_client.SinkNode()\nsink_node.prev_node_name \u003d \"teams_q\"\nsink_node.metadata \u003d {\"fluir.sink.terminal\": \"false\"}\nsink_node.sink_type \u003d \"PARQUET\"\nresp \u003d pipeline_api.add_sink_node(\"qualified_teams_pipeline\", \"teams_qualified\", sink_node)\nprint(resp)\n\n#export the sink node\nresp \u003d pipeline_api.export_table(\"qualified_teams_pipeline\", \"teams_qualified\", \"teams_qualified\")\nprint(resp)\n\n#run the pipeline and wait for its comppletion\nresp \u003d normal_run_api.start_pipeline(\"qualified_teams_pipeline\")\nprint(resp)\n\n###check every 30 sec if pipeline execution has completed\ntime.sleep(30)\nwhile pipeline_api.get_pipeline_state(\"qualified_teams_pipeline\").result !\u003d \"NotRunning\":\n    print(\"pipeline execution in progress\")\n    time.sleep(30)\nprint(\"pipeline run completed\")",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.136",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \u0027Pipeline qualified_teams_pipeline created successfully.\u0027,\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Source Node\u0027. PipelineName: \u0027qualified_teams_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027qualified_teams_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Sink Node\u0027. PipelineName: \u0027qualified_teams_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Exported table \u0027teams_qualified\u0027 successfully.\",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027 Start Pipeline\u0027. PipelineName: \u0027qualified_teams_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\npipeline run completed\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041135_-199809432",
+      "id": "20190808-075054_1704859168",
+      "dateCreated": "2019-08-08 12:57:21.135",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nSchema of the exported sink \u0027teams_qualified\u0027 can be viewed from \u0027Exported Sinks\u0027 section of the fluirdb UI\n\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/ivoms7tcp8qbey4/fifa3.png\" width\u003d\"1500\"\u003e\n\n\n\n\n#### Now create a source using the results.csv file",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.137",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eSchema of the exported sink \u0026lsquo;teams_qualified\u0026rsquo; can be viewed from \u0026lsquo;Exported Sinks\u0026rsquo; section of the fluirdb UI\u003c/p\u003e\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/ivoms7tcp8qbey4/fifa3.png\" width\u003d\"1500\"\u003e\n\u003ch4\u003eNow create a source using the results.csv file\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041136_-1583113431",
+      "id": "20190808-112315_1555658481",
+      "dateCreated": "2019-08-08 12:57:21.136",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n# infer the schema of results.csv file \nsrc \u003d openapi_client.Body()\nsrc.source_type \u003d \"SPARKDATASOURCE\"\nsrc.metadata \u003d {\"fluir.spark.format\":\"csv\", \"fluir.spark.header\": True, \"fluir.spark.fs.s3a.endpoint\":\"http://172.21.75.162:9100\",\"fluir.spark.path\":\"s3a://minio:minio123@fifa/results.csv\"}\nresp \u003d source_api.infer_schema(src)\nschema \u003d resp.result\nprint(schema)\n\n#create a source from results.csv file using above schema\nresults_source \u003d openapi_client.Source()\nresults_source.source_name \u003d \"results\"\nresults_source.metadata \u003d {\"fluir.spark.format\":\"csv\", \"fluir.spark.header\": True, \"fluir.spark.fs.s3a.endpoint\":\"http://172.21.75.162:9100\",\"fluir.spark.path\":\"s3a://minio:minio123@fifa/results.csv\"}\nresults_source.data_schema \u003d schema\nresults_source.source_type \u003d \"SPARKDATASOURCE\"\nresp \u003d source_api.create_source(\"results\", results_source)\nprint(resp)\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.138",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\"type\":\"struct\",\"fields\":[{\"name\":\"date\",\"type\":\"timestamp\",\"nullable\":true,\"metadata\":{}},{\"name\":\"home_team\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"away_team\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"home_score\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"away_score\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"tournament\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"city\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"country\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}}]}\n{\u0027result\u0027: \u0027results\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041137_856999796",
+      "id": "20190808-113441_1021840191",
+      "dateCreated": "2019-08-08 12:57:21.137",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n\n#### Details of source which we added:\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/z24b3uqcawp4x1r/fifa4.png\" width\u003d\"1500\"\u003e\n\u003cbr/\u003e\u003cbr/\u003e\n#### Now create the pipeline using results.csv and perform data transform operation using fluirdb. Use teams_qualified exported sink in this pipeline to narrow down the teams to only those who are qualified for world cup.",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.139",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003eDetails of source which we added:\u003c/h4\u003e\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/z24b3uqcawp4x1r/fifa4.png\" width\u003d\"1500\"\u003e\n\u003cp\u003e\u003cbr/\u003e\u003cbr/\u003e\u003c/p\u003e\n\u003ch4\u003eNow create the pipeline using results.csv and perform data transform operation using fluirdb. Use teams_qualified exported sink in this pipeline to narrow down the teams to only those who are qualified for world cup.\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041138_-932803098",
+      "id": "20190808-095049_1585026198",
+      "dateCreated": "2019-08-08 12:57:21.138",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\n\npipelineBody \u003d openapi_client.PipelineMetadata()\npipelineBody.auto_schema_refresh \u003d \"true\"\npipelineBody.description \u003d \"data cleanup for fifa dataset\"\nresp \u003d pipeline_api.create_pipeline(\"fifa_pipeline\", pipelineBody)\nprint(resp)\n\n#add source node in pipeline\nsource_node \u003d openapi_client.SourceNode(source\u003d\"results\", configuration\u003dconfiguration)\nresp \u003d pipeline_api.add_source_node(\"fifa_pipeline\", \"results\", source_node)\nprint(resp)\n\n#Adding goal difference and establishing who is the winner and also add a colume \u0027goal_difference\u0027\n# to find out by how many goals they won\nquery \u003d \"select *, (home_score-away_score) as goal_difference, case when home_score \u003e away_score then home_team when home_score \u003c away_score then away_team else \u0027Draw\u0027 end as winner_team from results\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"fifa_pipeline\", \"winner_team\", processor_node)\nprint(resp)\n\n#narrowing to team patcipating in the world cup\n# calculate home teams who are qualified for world cup\nquery \u003d \"select * from winner_team where home_team in (select * from teams_qualified)\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"fifa_pipeline\", \"wc_qualified_home_teams\", processor_node)\nprint(resp)\n\n#calculate away teams qualified for world cup\nquery \u003d \"select * from winner_team where away_team in (select * from teams_qualified)\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"fifa_pipeline\", \"wc_qualified_away_teams\", processor_node)\nprint(resp)\n\n#combine the results and drop the duplicate rows(here union operation automatically drops duplicate rows)\nquery \u003d \"select * from wc_qualified_away_teams union select * from wc_qualified_home_teams\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"fifa_pipeline\", \"combine\", processor_node)\nprint(resp)\n\n#drop the results before 1930 and drop columns which will not affect the outcome of the match\n# only selected columns are- home_team, away_team, winner_team\nquery \u003d \"select home_team, away_team,winner_team from combine where year(date)\u003e1930\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"fifa_pipeline\", \"dropResultsBefore1930andUnimportantColumns\", processor_node)\nprint(resp)\n\n##categorize wining team to numerical category if home team wins : 2, draw : 1, away team wins : 0\nquery \u003d \"select home_team,away_team, case when winner_team \u003d home_team then 2 when \" \\\n        \"winner_team\u003d away_team then 0 else 1 end as winning_team \" \\\n        \"from dropResultsBefore1930andUnimportantColumns\"\nprocessor_node \u003d openapi_client.ProcessorNode(metadata\u003d{}, query\u003dquery)\nresp \u003d pipeline_api.add_processor_node(\"fifa_pipeline\", \"categorize_winners\", processor_node)\nprint(resp)\n# addd sink node in pipeline and  export the sink node\nsink_node \u003d openapi_client.SinkNode()\nsink_node.prev_node_name \u003d \"categorize_winners\"\nsink_node.metadata \u003d {\"fluir.sink.terminal\": \"false\"}\nsink_node.sink_type \u003d \"PARQUET\"\nresp \u003d pipeline_api.add_sink_node(\"fifa_pipeline\", \"teams_df\", sink_node)\nprint(resp)\n\n#export the sink node\nresp \u003d pipeline_api.export_table(\"fifa_pipeline\", \"teams_df\", \"teams_df\")\nprint(resp)\n\n# start the pipeline\nresp \u003d normal_run_api.start_pipeline(\"fifa_pipeline\")\nprint(resp)\n\n###check every 1 minute if pipeline execution has completed\ntime.sleep(60)\nwhile pipeline_api.get_pipeline_state(\"fifa_pipeline\").result !\u003d \"NotRunning\":\n    print(\"pipeline execution in progress\")\n    time.sleep(60)\nprint(\"pipeline run completed\")\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.140",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \u0027Pipeline fifa_pipeline created successfully.\u0027, \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Source Node\u0027. PipelineName: \u0027fifa_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027fifa_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027fifa_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027fifa_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027fifa_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027fifa_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Processor Node\u0027. PipelineName: \u0027fifa_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Sink Node\u0027. PipelineName: \u0027fifa_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Exported table \u0027teams_df\u0027 successfully.\", \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027 Start Pipeline\u0027. PipelineName: \u0027fifa_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\npipeline execution in progress\npipeline run completed\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041139_477524111",
+      "id": "20190729-110224_1709201841",
+      "dateCreated": "2019-08-08 12:57:21.139",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### Pipeline structure:\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/b05b13bysoye0e6/fifa5.png\" width\u003d\"1500\"\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.141",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003ePipeline structure:\u003c/h4\u003e\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/b05b13bysoye0e6/fifa5.png\" width\u003d\"1500\"\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041140_-1919712577",
+      "id": "20190808-113555_772220689",
+      "dateCreated": "2019-08-08 12:57:21.140",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\ndf_teams \u003d spark.sql(\"select * from fluir.teams_df\")\ndf_teams.show(10)",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.142",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "/tmp/hadoop-root/nm-local-dir/usercache/root/appcache/application_1565157263743_0005/container_1565157263743_0005_01_000001/tmp/zeppelin_pyspark-3064893472306773826.py:179: UserWarning: Unable to load inline matplotlib backend, falling back to Agg\n  warnings.warn(\"Unable to load inline matplotlib backend, \"\n+-----------+-----------+------------+\n|  home_team|  away_team|winning_team|\n+-----------+-----------+------------+\n|      Italy|     France|           2|\n|  Argentina|    Uruguay|           2|\n|     France|    Belgium|           2|\n|      Italy|Switzerland|           2|\n|    Finland|    Denmark|           0|\n|   Zimbabwe|  Australia|           0|\n|     Norway|     Sweden|           0|\n|Netherlands|    Belgium|           0|\n|     Turkey|    Belgium|           1|\n|      Chile|       Peru|           1|\n+-----------+-----------+------------+\nonly showing top 10 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041141_-207456084",
+      "id": "20190726-122918_250620447",
+      "dateCreated": "2019-08-08 12:57:21.141",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### Create sources and pipelines for fifa_rankings.csv and fixtures.csv as well",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.142",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003eCreate sources and pipelines for fifa_rankings.csv and fixtures.csv as well\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041142_-1229736478",
+      "id": "20190808-114244_1923755469",
+      "dateCreated": "2019-08-08 12:57:21.142",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\nsrc \u003d openapi_client.Body()\nsrc.source_type \u003d \"SPARKDATASOURCE\"\nsrc.metadata \u003d {\"fluir.spark.format\":\"csv\", \"fluir.spark.header\": True, \"fluir.spark.fs.s3a.endpoint\":\"http://172.21.75.162:9100\",\"fluir.spark.path\":\"s3a://minio:minio123@fifa/fixtures.csv\"}\nresp \u003d source_api.infer_schema(src)\nschema \u003d resp.result\nprint(schema)\n\nsrc \u003d openapi_client.Source()\nsrc.source_name \u003d \"results\"\nsrc.metadata \u003d {\"fluir.spark.format\":\"csv\", \"fluir.spark.header\": True, \"fluir.spark.fs.s3a.endpoint\":\"http://172.21.75.162:9100\",\"fluir.spark.path\":\"s3a://minio:minio123@fifa/fixtures.csv\"}\nsrc.data_schema \u003d schema\nsrc.source_type \u003d \"SPARKDATASOURCE\"\nresp \u003d source_api.create_source(\"fixtures\", src)\nprint(resp)\n\npipelineBody \u003d openapi_client.PipelineMetadata()\npipelineBody.auto_schema_refresh \u003d \"true\"\npipelineBody.description \u003d \"\"\nresp \u003d pipeline_api.create_pipeline(\"fixtures_pipeline\", pipelineBody)\nprint(resp)\n\n#add source node in pipeline\nsource_node \u003d openapi_client.SourceNode(source\u003d\"fixtures\", configuration\u003dconfiguration)\nresp \u003d pipeline_api.add_source_node(\"fixtures_pipeline\", \"fixtures\", source_node)\nprint(resp)\n\n# addd sink node in pipeline and  export the sink node\nsink_node \u003d openapi_client.SinkNode()\nsink_node.prev_node_name \u003d \"fixtures\"\nsink_node.metadata \u003d {\"fluir.sink.terminal\": \"false\"}\nsink_node.sink_type \u003d \"PARQUET\"\nresp \u003d pipeline_api.add_sink_node(\"fixtures_pipeline\", \"fixtures_sink\", sink_node)\nprint(resp)\n\n#export the sink node\nresp \u003d pipeline_api.export_table(\"fixtures_pipeline\", \"fixtures_sink\", \"fixtures_sink\")\nprint(resp)\n\n# start the pipeline\nresp \u003d normal_run_api.start_pipeline(\"fixtures_pipeline\")\nprint(resp)\n\n###check every 1 minute if pipeline execution has completed\ntime.sleep(60)\nwhile pipeline_api.get_pipeline_state(\"fixtures_pipeline\").result !\u003d \"NotRunning\":\n    print(\"pipeline execution in progress\")\n    time.sleep(60)\nprint(\"pipeline run completed\")",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.143",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\"type\":\"struct\",\"fields\":[{\"name\":\"Round_Number\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"Date\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"Location\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"Home_Team\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"Away_Team\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"Group\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"Result\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}}]}\n{\u0027result\u0027: \u0027fixtures\u0027}\n{\u0027result\u0027: \u0027Pipeline fixtures_pipeline created successfully.\u0027,\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Source Node\u0027. PipelineName: \u0027fixtures_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Sink Node\u0027. PipelineName: \u0027fixtures_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Exported table \u0027fixtures_sink\u0027 successfully.\", \u0027status\u0027: \u0027SUCCESS\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041143_-644927795",
+      "id": "20190808-114422_103408935",
+      "dateCreated": "2019-08-08 12:57:21.143",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### \u0027fixtures_pipeline\u0027- Pipeline created from above code:\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/v3sovphql94zngd/fifa6.png\" width\u003d\"1500\"\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.144",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e\u0026lsquo;fixtures_pipeline\u0026rsquo;- Pipeline created from above code:\u003c/h4\u003e\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/v3sovphql94zngd/fifa6.png\" width\u003d\"1500\"\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041143_728723867",
+      "id": "20190808-114920_1135786543",
+      "dateCreated": "2019-08-08 12:57:21.143",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\nsrc \u003d openapi_client.Body()\nsrc.source_type \u003d \"SPARKDATASOURCE\"\nsrc.metadata \u003d {\"fluir.spark.format\":\"csv\", \"fluir.spark.header\": True, \"fluir.spark.fs.s3a.endpoint\":\"http://172.21.75.162:9100\",\"fluir.spark.path\":\"s3a://minio:minio123@fifa/fifa_rankings.csv\"}\nresp \u003d source_api.infer_schema(src)\nschema \u003d resp.result\nprint(schema)\n\nsrc \u003d openapi_client.Source()\nsrc.source_name \u003d \"results\"\nsrc.metadata \u003d {\"fluir.spark.format\":\"csv\", \"fluir.spark.header\": True, \"fluir.spark.fs.s3a.endpoint\":\"http://172.21.75.162:9100\",\"fluir.spark.path\":\"s3a://minio:minio123@fifa/fifa_rankings.csv\"}\nsrc.data_schema \u003d schema\nsrc.source_type \u003d \"SPARKDATASOURCE\"\nresp \u003d source_api.create_source(\"rankings\", src)\nprint(resp)\n\npipelineBody \u003d openapi_client.PipelineMetadata()\npipelineBody.auto_schema_refresh \u003d \"true\"\npipelineBody.description \u003d \"\"\nresp \u003d pipeline_api.create_pipeline(\"rankings_pipeline\", pipelineBody)\nprint(resp)\n\n#add source node in pipeline\nsource_node \u003d openapi_client.SourceNode(source\u003d\"rankings\", configuration\u003dconfiguration)\nresp \u003d pipeline_api.add_source_node(\"rankings_pipeline\", \"rankings\", source_node)\nprint(resp)\n\n# addd sink node in pipeline and  export the sink node\nsink_node \u003d openapi_client.SinkNode()\nsink_node.prev_node_name \u003d \"rankings\"\nsink_node.metadata \u003d {\"fluir.sink.terminal\": \"false\"}\nsink_node.sink_type \u003d \"PARQUET\"\nresp \u003d pipeline_api.add_sink_node(\"rankings_pipeline\", \"rankings_sink\", sink_node)\nprint(resp)\n\n#export the sink node\nresp \u003d pipeline_api.export_table(\"rankings_pipeline\", \"rankings_sink\", \"rankings_sink\")\nprint(resp)\n\n# start the pipeline\nresp \u003d normal_run_api.start_pipeline(\"rankings_pipeline\")\nprint(resp)\n\n###check every 1 minute if pipeline execution has completed\ntime.sleep(60)\nwhile pipeline_api.get_pipeline_state(\"rankings_pipeline\").result !\u003d \"NotRunning\":\n    print(\"pipeline execution in progress\")\n    time.sleep(60)\nprint(\"pipeline run completed\")",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.145",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\"type\":\"struct\",\"fields\":[{\"name\":\"Position\",\"type\":\"integer\",\"nullable\":true,\"metadata\":{}},{\"name\":\"Team\",\"type\":\"string\",\"nullable\":true,\"metadata\":{}},{\"name\":\"Points\",\"type\":\"double\",\"nullable\":true,\"metadata\":{}}]}\n{\u0027result\u0027: \u0027rankings\u0027}\n{\u0027result\u0027: \u0027Pipeline rankings_pipeline created successfully.\u0027,\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Source Node\u0027. PipelineName: \u0027rankings_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027Add Sink Node\u0027. PipelineName: \u0027rankings_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Exported table \u0027rankings_sink\u0027 successfully.\", \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \"Success: OpType \u0027 Start Pipeline\u0027. PipelineName: \u0027rankings_pipeline\u0027 \",\n \u0027status\u0027: \u0027SUCCESS\u0027}\npipeline run completed\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041144_1093995620",
+      "id": "20190808-115322_1674795705",
+      "dateCreated": "2019-08-08 12:57:21.144",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### \u0027rankings_pipeline\u0027- Pipeline created from above code:\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/0v4k1vrxym1r86x/fifa7.png\" width\u003d\"1500\"\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.146",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003e\u0026lsquo;rankings_pipeline\u0026rsquo;- Pipeline created from above code:\u003c/h4\u003e\n\u003cimg src\u003d\"https://dl.dropboxusercontent.com/s/0v4k1vrxym1r86x/fifa7.png\" width\u003d\"1500\"\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041145_-1523934069",
+      "id": "20190808-115930_210194843",
+      "dateCreated": "2019-08-08 12:57:21.145",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### Install required machine learning packages\n\nPlease run spark interpreter in client mode from here on",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.147",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003eInstall required machine learning packages\u003c/h4\u003e\n\u003cp\u003ePlease run spark interpreter in client mode from here on\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041146_711462734",
+      "id": "20190726-123255_1125881196",
+      "dateCreated": "2019-08-08 12:57:21.146",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sh\npip install pandas\npip install seaborn\npip install sklearn",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.147",
+      "config": {
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sh",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041147_-1564549111",
+      "id": "20190726-123311_1619533317",
+      "dateCreated": "2019-08-08 12:57:21.147",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nimport pandas as pd\nimport numpy as np\nimport matplotlib.pyplot as plt\nimport seaborn as sns\nimport matplotlib.ticker as ticker\nimport matplotlib.ticker as plticker\nfrom sklearn.model_selection import train_test_split\nfrom sklearn.linear_model import LogisticRegression\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.149",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041148_1638902699",
+      "id": "20190726-123033_1088735309",
+      "dateCreated": "2019-08-08 12:57:21.148",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n# convert spark df to spark df\ndf_teams \u003d spark.sql(\"select * from fluir.teams_df\").toPandas()\ntype(df_teams)",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.150",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u003cclass \u0027pandas.core.frame.DataFrame\u0027\u003e\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041149_-20916266",
+      "id": "20190729-094050_1098581839",
+      "dateCreated": "2019-08-08 12:57:21.149",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\ndf_teams.head()",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.150",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "   home_team    away_team  winning_team\n0      Italy       France             2\n1  Argentina      Uruguay             2\n2     France      Belgium             2\n3      Italy  Switzerland             2\n4    Finland      Denmark             0\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041150_-376813998",
+      "id": "20190808-120536_962915253",
+      "dateCreated": "2019-08-08 12:57:21.150",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n#convert teams from categorical variables to continous inputs\nfinal \u003d pd.get_dummies(df_teams, prefix\u003d[\u0027home_team\u0027, \u0027away_team\u0027], columns\u003d[\u0027home_team\u0027, \u0027away_team\u0027])\nfinal.info()",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.151",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u003cclass \u0027pandas.core.frame.DataFrame\u0027\u003e\nRangeIndex: 14164 entries, 0 to 14163\nColumns: 407 entries, winning_team to away_team_Zimbabwe\ndtypes: int32(1), uint8(406)\nmemory usage: 5.5 MB\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041151_417231599",
+      "id": "20190726-123232_335419849",
+      "dateCreated": "2019-08-08 12:57:21.151",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nX \u003d final.drop([\u0027winning_team\u0027], axis\u003d1)\ny \u003d final[\"winning_team\"]\ny \u003d y.astype(\u0027int\u0027)\n\n# Separate train and test sets\nX_train, X_test, y_train, y_test \u003d train_test_split(X, y, test_size\u003d0.20, random_state\u003d50)\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.152",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041152_1977349284",
+      "id": "20190726-123819_1541130079",
+      "dateCreated": "2019-08-08 12:57:21.152",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### Apply ML algorithm",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.154",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003eApply ML algorithm\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041153_1546804320",
+      "id": "20190729-094616_808948014",
+      "dateCreated": "2019-08-08 12:57:21.153",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n\nlogreg \u003d LogisticRegression()\nlogreg.fit(X_train, y_train)\nscore \u003d logreg.score(X_train, y_train)\nscore2 \u003d logreg.score(X_test, y_test)\n\nprint(\"Training set accuracy: \", \u0027%.3f\u0027%(score))\nprint(\"Test set accuracy: \", \u0027%.3f\u0027%(score2))",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.155",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "(\u0027Training set accuracy: \u0027, \u00270.580\u0027)\n(\u0027Test set accuracy: \u0027, \u00270.564\u0027)\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041155_-1953459355",
+      "id": "20190726-125604_249407376",
+      "dateCreated": "2019-08-08 12:57:21.155",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n#if any of team is having higher fifa ranking will be considered as home team, else away team\nfifa_rankings \u003d spark.sql(\"select * from fluir.rankings_sink\").toPandas()\nfixtures \u003d spark.sql(\"select * from fluir.fixtures_sink\").toPandas()\nfixtures.head()\npred_set \u003d []",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.156",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041155_622730431",
+      "id": "20190729-094657_507655193",
+      "dateCreated": "2019-08-08 12:57:21.155",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n# Creating ranking column for each team\nfixtures.insert(1, \u0027first_ranking\u0027, fixtures[\u0027Home_Team\u0027].map(fifa_rankings.set_index(\u0027Team\u0027)[\u0027Position\u0027]))\nfixtures.insert(2, \u0027second_ranking\u0027, fixtures[\u0027Away_Team\u0027].map(fifa_rankings.set_index(\u0027Team\u0027)[\u0027Position\u0027]))",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.157",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041156_113076427",
+      "id": "20190729-094720_173759607",
+      "dateCreated": "2019-08-08 12:57:21.156",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nfixtures.head()",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.158",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "  Round_Number  first_ranking  second_ranking  ...     Away_Team    Group Result\n0            1           66.0            70.0  ...  Saudi Arabia  Group A   None\n1            1           46.0            17.0  ...       Uruguay  Group A   None\n2            1           42.0            36.0  ...          Iran  Group B   None\n3            1            4.0             8.0  ...         Spain  Group B   None\n4            1            7.0            40.0  ...     Australia  Group C   None\n\n[5 rows x 9 columns]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041157_-967014564",
+      "id": "20190729-102644_434209196",
+      "dateCreated": "2019-08-08 12:57:21.157",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n#based on ranking of each team, mark it as home team and away team\nfor index, row in fixtures.iterrows():\n    if row[\u0027first_ranking\u0027] \u003c row[\u0027second_ranking\u0027]:\n        pred_set.append({\u0027home_team\u0027: row[\u0027Home_Team\u0027], \u0027away_team\u0027: row[\u0027Away_Team\u0027], \u0027winning_team\u0027: None})\n    else:\n        pred_set.append({\u0027home_team\u0027: row[\u0027Away_Team\u0027], \u0027away_team\u0027: row[\u0027Home_Team\u0027], \u0027winning_team\u0027: None})\n        \npred_set \u003d pd.DataFrame(pred_set)\nduplicate_pred_set \u003d pred_set\n\npred_set.head()",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.158",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "      away_team home_team winning_team\n0  Saudi Arabia    Russia         None\n1         Egypt   Uruguay         None\n2       Morocco      Iran         None\n3         Spain  Portugal         None\n4     Australia    France         None\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041158_-831892819",
+      "id": "20190729-105346_129202477",
+      "dateCreated": "2019-08-08 12:57:21.158",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n# convert home and away team to continous variable\npred_set \u003d pd.get_dummies(pred_set, prefix\u003d[\u0027home_team\u0027, \u0027away_team\u0027], columns\u003d[\u0027home_team\u0027, \u0027away_team\u0027])",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.159",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041159_-1780121426",
+      "id": "20190729-105403_647738537",
+      "dateCreated": "2019-08-08 12:57:21.159",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n# Add missing columns compared to the model\u0027s training dataset\nmissing_cols \u003d set(final.columns) - set(pred_set.columns)\nfor c in missing_cols:\n    pred_set[c] \u003d 0\npred_set \u003d pred_set[final.columns]",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.160",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041159_191795065",
+      "id": "20190729-105434_141503059",
+      "dateCreated": "2019-08-08 12:57:21.159",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n# dropping winning team column\npred_set \u003d pred_set.drop([\u0027winning_team\u0027], axis\u003d1)\n\npred_set.head()",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.161",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "   home_team_Afghanistan  ...  away_team_Zimbabwe\n0                      0  ...                   0\n1                      0  ...                   0\n2                      0  ...                   0\n3                      0  ...                   0\n4                      0  ...                   0\n\n[5 rows x 406 columns]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041160_2138724352",
+      "id": "20190729-105449_903379886",
+      "dateCreated": "2019-08-08 12:57:21.160",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n#group matches \npredictions \u003d logreg.predict(pred_set)\nfor i in range(fixtures.shape[0]):\n    print(duplicate_pred_set.iloc[i, 1] + \" and \" + duplicate_pred_set.iloc[i, 0])\n    if predictions[i] \u003d\u003d 2:\n        print(\"Winner: \" + duplicate_pred_set.iloc[i, 1])\n    elif predictions[i] \u003d\u003d 1:\n        print(\"Draw\")\n    elif predictions[i] \u003d\u003d 0:\n        print(\"Winner: \" + duplicate_pred_set.iloc[i, 0])\n    print(\u0027Probability of \u0027 + duplicate_pred_set.iloc[i, 1] + \u0027 winning: \u0027, \u0027%.3f\u0027%(logreg.predict_proba(pred_set)[i][2]))\n    print(\u0027Probability of Draw: \u0027, \u0027%.3f\u0027%(logreg.predict_proba(pred_set)[i][1]))\n    print(\u0027Probability of \u0027 + duplicate_pred_set.iloc[i, 0] + \u0027 winning: \u0027, \u0027%.3f\u0027%(logreg.predict_proba(pred_set)[i][0]))\n    print(\"\")\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.162",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Russia and Saudi Arabia\nWinner: Russia\n(u\u0027Probability of Russia winning: \u0027, \u00270.695\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.209\u0027)\n(u\u0027Probability of Saudi Arabia winning: \u0027, \u00270.095\u0027)\n\nUruguay and Egypt\nWinner: Uruguay\n(u\u0027Probability of Uruguay winning: \u0027, \u00270.589\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.329\u0027)\n(u\u0027Probability of Egypt winning: \u0027, \u00270.082\u0027)\n\nIran and Morocco\nDraw\n(u\u0027Probability of Iran winning: \u0027, \u00270.219\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.458\u0027)\n(u\u0027Probability of Morocco winning: \u0027, \u00270.322\u0027)\n\nPortugal and Spain\nWinner: Spain\n(u\u0027Probability of Portugal winning: \u0027, \u00270.291\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.341\u0027)\n(u\u0027Probability of Spain winning: \u0027, \u00270.368\u0027)\n\nFrance and Australia\nWinner: France\n(u\u0027Probability of France winning: \u0027, \u00270.636\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.199\u0027)\n(u\u0027Probability of Australia winning: \u0027, \u00270.166\u0027)\n\nArgentina and Iceland\nWinner: Argentina\n(u\u0027Probability of Argentina winning: \u0027, \u00270.813\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.148\u0027)\n(u\u0027Probability of Iceland winning: \u0027, \u00270.039\u0027)\n\nPeru and Denmark\nWinner: Peru\n(u\u0027Probability of Peru winning: \u0027, \u00270.447\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.164\u0027)\n(u\u0027Probability of Denmark winning: \u0027, \u00270.389\u0027)\n\nCroatia and Nigeria\nWinner: Croatia\n(u\u0027Probability of Croatia winning: \u0027, \u00270.554\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.328\u0027)\n(u\u0027Probability of Nigeria winning: \u0027, \u00270.117\u0027)\n\nCosta Rica and Serbia\nWinner: Serbia\n(u\u0027Probability of Costa Rica winning: \u0027, \u00270.283\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.291\u0027)\n(u\u0027Probability of Serbia winning: \u0027, \u00270.426\u0027)\n\nGermany and Mexico\nWinner: Germany\n(u\u0027Probability of Germany winning: \u0027, \u00270.629\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.223\u0027)\n(u\u0027Probability of Mexico winning: \u0027, \u00270.148\u0027)\n\nBrazil and Switzerland\nWinner: Brazil\n(u\u0027Probability of Brazil winning: \u0027, \u00270.769\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.140\u0027)\n(u\u0027Probability of Switzerland winning: \u0027, \u00270.091\u0027)\n\nSweden and Korea Republic\nWinner: Sweden\n(u\u0027Probability of Sweden winning: \u0027, \u00270.536\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.307\u0027)\n(u\u0027Probability of Korea Republic winning: \u0027, \u00270.157\u0027)\n\nBelgium and Panama\nWinner: Belgium\n(u\u0027Probability of Belgium winning: \u0027, \u00270.752\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.179\u0027)\n(u\u0027Probability of Panama winning: \u0027, \u00270.069\u0027)\n\nEngland and Tunisia\nWinner: England\n(u\u0027Probability of England winning: \u0027, \u00270.680\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.241\u0027)\n(u\u0027Probability of Tunisia winning: \u0027, \u00270.079\u0027)\n\nColombia and Japan\nWinner: Colombia\n(u\u0027Probability of Colombia winning: \u0027, \u00270.490\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.272\u0027)\n(u\u0027Probability of Japan winning: \u0027, \u00270.238\u0027)\n\nPoland and Senegal\nWinner: Poland\n(u\u0027Probability of Poland winning: \u0027, \u00270.590\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.248\u0027)\n(u\u0027Probability of Senegal winning: \u0027, \u00270.162\u0027)\n\nEgypt and Russia\nWinner: Russia\n(u\u0027Probability of Egypt winning: \u0027, \u00270.246\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.271\u0027)\n(u\u0027Probability of Russia winning: \u0027, \u00270.482\u0027)\n\nPortugal and Morocco\nWinner: Portugal\n(u\u0027Probability of Portugal winning: \u0027, \u00270.516\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.344\u0027)\n(u\u0027Probability of Morocco winning: \u0027, \u00270.140\u0027)\n\nUruguay and Saudi Arabia\nWinner: Uruguay\n(u\u0027Probability of Uruguay winning: \u0027, \u00270.677\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.253\u0027)\n(u\u0027Probability of Saudi Arabia winning: \u0027, \u00270.070\u0027)\n\nSpain and Iran\nWinner: Spain\n(u\u0027Probability of Spain winning: \u0027, \u00270.740\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.224\u0027)\n(u\u0027Probability of Iran winning: \u0027, \u00270.036\u0027)\n\nDenmark and Australia\nWinner: Denmark\n(u\u0027Probability of Denmark winning: \u0027, \u00270.522\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.211\u0027)\n(u\u0027Probability of Australia winning: \u0027, \u00270.266\u0027)\n\nFrance and Peru\nWinner: France\n(u\u0027Probability of France winning: \u0027, \u00270.649\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.231\u0027)\n(u\u0027Probability of Peru winning: \u0027, \u00270.121\u0027)\n\nArgentina and Croatia\nWinner: Argentina\n(u\u0027Probability of Argentina winning: \u0027, \u00270.607\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.247\u0027)\n(u\u0027Probability of Croatia winning: \u0027, \u00270.147\u0027)\n\nBrazil and Costa Rica\nWinner: Brazil\n(u\u0027Probability of Brazil winning: \u0027, \u00270.838\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.120\u0027)\n(u\u0027Probability of Costa Rica winning: \u0027, \u00270.042\u0027)\n\nIceland and Nigeria\nWinner: Nigeria\n(u\u0027Probability of Iceland winning: \u0027, \u00270.303\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.293\u0027)\n(u\u0027Probability of Nigeria winning: \u0027, \u00270.404\u0027)\n\nSwitzerland and Serbia\nWinner: Switzerland\n(u\u0027Probability of Switzerland winning: \u0027, \u00270.422\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.212\u0027)\n(u\u0027Probability of Serbia winning: \u0027, \u00270.366\u0027)\n\nBelgium and Tunisia\nWinner: Belgium\n(u\u0027Probability of Belgium winning: \u0027, \u00270.613\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.224\u0027)\n(u\u0027Probability of Tunisia winning: \u0027, \u00270.163\u0027)\n\nMexico and Korea Republic\nWinner: Mexico\n(u\u0027Probability of Mexico winning: \u0027, \u00270.442\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.321\u0027)\n(u\u0027Probability of Korea Republic winning: \u0027, \u00270.237\u0027)\n\nGermany and Sweden\nWinner: Germany\n(u\u0027Probability of Germany winning: \u0027, \u00270.619\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.206\u0027)\n(u\u0027Probability of Sweden winning: \u0027, \u00270.175\u0027)\n\nEngland and Panama\nWinner: England\n(u\u0027Probability of England winning: \u0027, \u00270.775\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.194\u0027)\n(u\u0027Probability of Panama winning: \u0027, \u00270.032\u0027)\n\nSenegal and Japan\nWinner: Senegal\n(u\u0027Probability of Senegal winning: \u0027, \u00270.442\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.304\u0027)\n(u\u0027Probability of Japan winning: \u0027, \u00270.254\u0027)\n\nPoland and Colombia\nDraw\n(u\u0027Probability of Poland winning: \u0027, \u00270.379\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.393\u0027)\n(u\u0027Probability of Colombia winning: \u0027, \u00270.228\u0027)\n\nUruguay and Russia\nWinner: Uruguay\n(u\u0027Probability of Uruguay winning: \u0027, \u00270.411\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.357\u0027)\n(u\u0027Probability of Russia winning: \u0027, \u00270.232\u0027)\n\nEgypt and Saudi Arabia\nWinner: Egypt\n(u\u0027Probability of Egypt winning: \u0027, \u00270.578\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.212\u0027)\n(u\u0027Probability of Saudi Arabia winning: \u0027, \u00270.209\u0027)\n\nPortugal and Iran\nWinner: Portugal\n(u\u0027Probability of Portugal winning: \u0027, \u00270.627\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.317\u0027)\n(u\u0027Probability of Iran winning: \u0027, \u00270.056\u0027)\n\nSpain and Morocco\nWinner: Spain\n(u\u0027Probability of Spain winning: \u0027, \u00270.661\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.246\u0027)\n(u\u0027Probability of Morocco winning: \u0027, \u00270.092\u0027)\n\nFrance and Denmark\nWinner: France\n(u\u0027Probability of France winning: \u0027, \u00270.623\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.178\u0027)\n(u\u0027Probability of Denmark winning: \u0027, \u00270.198\u0027)\n\nPeru and Australia\nWinner: Peru\n(u\u0027Probability of Peru winning: \u0027, \u00270.469\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.187\u0027)\n(u\u0027Probability of Australia winning: \u0027, \u00270.344\u0027)\n\nArgentina and Nigeria\nWinner: Argentina\n(u\u0027Probability of Argentina winning: \u0027, \u00270.681\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.259\u0027)\n(u\u0027Probability of Nigeria winning: \u0027, \u00270.060\u0027)\n\nCroatia and Iceland\nWinner: Croatia\n(u\u0027Probability of Croatia winning: \u0027, \u00270.733\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.191\u0027)\n(u\u0027Probability of Iceland winning: \u0027, \u00270.077\u0027)\n\nMexico and Sweden\nWinner: Mexico\n(u\u0027Probability of Mexico winning: \u0027, \u00270.428\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.258\u0027)\n(u\u0027Probability of Sweden winning: \u0027, \u00270.315\u0027)\n\nGermany and Korea Republic\nWinner: Germany\n(u\u0027Probability of Germany winning: \u0027, \u00270.620\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.256\u0027)\n(u\u0027Probability of Korea Republic winning: \u0027, \u00270.124\u0027)\n\nBrazil and Serbia\nWinner: Brazil\n(u\u0027Probability of Brazil winning: \u0027, \u00270.726\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.154\u0027)\n(u\u0027Probability of Serbia winning: \u0027, \u00270.121\u0027)\n\nSwitzerland and Costa Rica\nWinner: Switzerland\n(u\u0027Probability of Switzerland winning: \u0027, \u00270.659\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.176\u0027)\n(u\u0027Probability of Costa Rica winning: \u0027, \u00270.165\u0027)\n\nPoland and Japan\nWinner: Poland\n(u\u0027Probability of Poland winning: \u0027, \u00270.557\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.249\u0027)\n(u\u0027Probability of Japan winning: \u0027, \u00270.194\u0027)\n\nColombia and Senegal\nWinner: Colombia\n(u\u0027Probability of Colombia winning: \u0027, \u00270.527\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.272\u0027)\n(u\u0027Probability of Senegal winning: \u0027, \u00270.201\u0027)\n\nTunisia and Panama\nWinner: Tunisia\n(u\u0027Probability of Tunisia winning: \u0027, \u00270.623\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.298\u0027)\n(u\u0027Probability of Panama winning: \u0027, \u00270.079\u0027)\n\nBelgium and England\nWinner: England\n(u\u0027Probability of Belgium winning: \u0027, \u00270.262\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.235\u0027)\n(u\u0027Probability of England winning: \u0027, \u00270.504\u0027)\n\nRunner-up Group B\t and Winner Group A\nWinner: Runner-up Group B\t\n(u\u0027Probability of Runner-up Group B\\t winning: \u0027, \u00270.535\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.177\u0027)\n(u\u0027Probability of Winner Group A winning: \u0027, \u00270.288\u0027)\n\nRunner-up Group D and Winner Group C\nWinner: Runner-up Group D\n(u\u0027Probability of Runner-up Group D winning: \u0027, \u00270.535\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.177\u0027)\n(u\u0027Probability of Winner Group C winning: \u0027, \u00270.288\u0027)\n\nRunner-up Group A\t and Winner Group B\nWinner: Runner-up Group A\t\n(u\u0027Probability of Runner-up Group A\\t winning: \u0027, \u00270.535\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.177\u0027)\n(u\u0027Probability of Winner Group B winning: \u0027, \u00270.288\u0027)\n\nRunner-up Group C and Winner Group D\nWinner: Runner-up Group C\n(u\u0027Probability of Runner-up Group C winning: \u0027, \u00270.535\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.177\u0027)\n(u\u0027Probability of Winner Group D winning: \u0027, \u00270.288\u0027)\n\nRunner-up Group F and Winner Group E\nWinner: Runner-up Group F\n(u\u0027Probability of Runner-up Group F winning: \u0027, \u00270.535\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.177\u0027)\n(u\u0027Probability of Winner Group E winning: \u0027, \u00270.288\u0027)\n\nRunner-up Group H and Winner Group G\nWinner: Runner-up Group H\n(u\u0027Probability of Runner-up Group H winning: \u0027, \u00270.535\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.177\u0027)\n(u\u0027Probability of Winner Group G winning: \u0027, \u00270.288\u0027)\n\nRunner-up Group E and Winner Group F\nWinner: Runner-up Group E\n(u\u0027Probability of Runner-up Group E winning: \u0027, \u00270.535\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.177\u0027)\n(u\u0027Probability of Winner Group F winning: \u0027, \u00270.288\u0027)\n\nRunner-up Group G and Winner Group H\nWinner: Runner-up Group G\n(u\u0027Probability of Runner-up Group G winning: \u0027, \u00270.535\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.177\u0027)\n(u\u0027Probability of Winner Group H winning: \u0027, \u00270.288\u0027)\n\nTo be announced and To be announced\nWinner: To be announced\n(u\u0027Probability of To be announced winning: \u0027, \u00270.535\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.177\u0027)\n(u\u0027Probability of To be announced winning: \u0027, \u00270.288\u0027)\n\nTo be announced and To be announced\nWinner: To be announced\n(u\u0027Probability of To be announced winning: \u0027, \u00270.535\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.177\u0027)\n(u\u0027Probability of To be announced winning: \u0027, \u00270.288\u0027)\n\nTo be announced and To be announced\nWinner: To be announced\n(u\u0027Probability of To be announced winning: \u0027, \u00270.535\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.177\u0027)\n(u\u0027Probability of To be announced winning: \u0027, \u00270.288\u0027)\n\nTo be announced and To be announced\nWinner: To be announced\n(u\u0027Probability of To be announced winning: \u0027, \u00270.535\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.177\u0027)\n(u\u0027Probability of To be announced winning: \u0027, \u00270.288\u0027)\n\nTo be announced and To be announced\nWinner: To be announced\n(u\u0027Probability of To be announced winning: \u0027, \u00270.535\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.177\u0027)\n(u\u0027Probability of To be announced winning: \u0027, \u00270.288\u0027)\n\nTo be announced and To be announced\nWinner: To be announced\n(u\u0027Probability of To be announced winning: \u0027, \u00270.535\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.177\u0027)\n(u\u0027Probability of To be announced winning: \u0027, \u00270.288\u0027)\n\nTo be announced and To be announced\nWinner: To be announced\n(u\u0027Probability of To be announced winning: \u0027, \u00270.535\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.177\u0027)\n(u\u0027Probability of To be announced winning: \u0027, \u00270.288\u0027)\n\nTo be announced and To be announced\nWinner: To be announced\n(u\u0027Probability of To be announced winning: \u0027, \u00270.535\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.177\u0027)\n(u\u0027Probability of To be announced winning: \u0027, \u00270.288\u0027)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041161_-751896204",
+      "id": "20190729-105501_482203346",
+      "dateCreated": "2019-08-08 12:57:21.161",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n# List of tuples before \nteams_16 \u003d [(\u0027Uruguay\u0027, \u0027Portugal\u0027),\n            (\u0027France\u0027, \u0027Croatia\u0027),\n            (\u0027Brazil\u0027, \u0027Mexico\u0027),\n            (\u0027England\u0027, \u0027Colombia\u0027),\n            (\u0027Spain\u0027, \u0027Russia\u0027),\n            (\u0027Argentina\u0027, \u0027Peru\u0027),\n            (\u0027Germany\u0027, \u0027Switzerland\u0027),\n            (\u0027Poland\u0027, \u0027Belgium\u0027)]",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.164",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041162_-1085066200",
+      "id": "20190729-105513_716609226",
+      "dateCreated": "2019-08-08 12:57:21.162",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\ndef  clean_and_predict (matches, ranking, final, logreg):\n\n    # Initialization of auxiliary list for data cleaning\n    positions \u003d []\n\n    # Loop to retrieve each team\u0027s position according to FIFA ranking\n    for match in matches:\n        positions.append(ranking.loc[ranking[\u0027Team\u0027] \u003d\u003d match[0],\u0027Position\u0027].iloc[0])\n        positions.append(ranking.loc[ranking[\u0027Team\u0027] \u003d\u003d match[1],\u0027Position\u0027].iloc[0])\n    \n    # Creating the DataFrame for prediction\n    pred_set \u003d []\n\n    # Initializing iterators for while loop\n    i \u003d 0\n    j \u003d 0\n\n    # \u0027i\u0027 will be the iterator for the \u0027positions\u0027 list, and \u0027j\u0027 for the list of matches (list of tuples)\n    while i \u003c len(positions):\n        dict1 \u003d {}\n\n        # If position of first team is better, he will be the \u0027home\u0027 team, and vice-versa\n        if positions[i] \u003c positions[i + 1]:\n            dict1.update({\u0027home_team\u0027: matches[j][0], \u0027away_team\u0027: matches[j][1]})\n        else:\n            dict1.update({\u0027home_team\u0027: matches[j][1], \u0027away_team\u0027: matches[j][0]})\n\n        # Append updated dictionary to the list, that will later be converted into a DataFrame\n        pred_set.append(dict1)\n        i +\u003d 2\n        j +\u003d 1\n\n    # Convert list into DataFrame\n    pred_set \u003d pd.DataFrame(pred_set)\n    backup_pred_set \u003d pred_set\n\n    # Get dummy variables and drop winning_team column\n    pred_set \u003d pd.get_dummies(pred_set, prefix\u003d[\u0027home_team\u0027, \u0027away_team\u0027], columns\u003d[\u0027home_team\u0027, \u0027away_team\u0027])\n\n    # Add missing columns compared to the model\u0027s training dataset\n    missing_cols2 \u003d set(final.columns) - set(pred_set.columns)\n    for c in missing_cols2:\n        pred_set[c] \u003d 0\n    pred_set \u003d pred_set[final.columns]\n\n    # Remove winning team column\n    pred_set \u003d pred_set.drop([\u0027winning_team\u0027], axis\u003d1)\n\n    # Predict!\n    predictions \u003d logreg.predict(pred_set)\n    for i in range(len(pred_set)):\n        print(backup_pred_set.iloc[i, 1] + \" and \" + backup_pred_set.iloc[i, 0])\n        if predictions[i] \u003d\u003d 2:\n            print(\"Winner: \" + backup_pred_set.iloc[i, 1])\n        elif predictions[i] \u003d\u003d 1:\n            print(\"Draw\")\n        elif predictions[i] \u003d\u003d 0:\n            print(\"Winner: \" + backup_pred_set.iloc[i, 0])\n        print(\u0027Probability of \u0027 + backup_pred_set.iloc[i, 1] + \u0027 winning: \u0027 , \u0027%.3f\u0027%(logreg.predict_proba(pred_set)[i][2]))\n        print(\u0027Probability of Draw: \u0027, \u0027%.3f\u0027%(logreg.predict_proba(pred_set)[i][1])) \n        print(\u0027Probability of \u0027 + backup_pred_set.iloc[i, 0] + \u0027 winning: \u0027, \u0027%.3f\u0027%(logreg.predict_proba(pred_set)[i][0]))\n        print(\"\")\n",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.164",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041164_392644101",
+      "id": "20190729-105532_372323998",
+      "dateCreated": "2019-08-08 12:57:21.164",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nclean_and_predict(teams_16, fifa_rankings, final, logreg)",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.166",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Portugal and Uruguay\nWinner: Portugal\n(\u0027Probability of Portugal winning: \u0027, \u00270.456\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.267\u0027)\n(\u0027Probability of Uruguay winning: \u0027, \u00270.277\u0027)\n\nFrance and Croatia\nWinner: France\n(\u0027Probability of France winning: \u0027, \u00270.482\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.239\u0027)\n(\u0027Probability of Croatia winning: \u0027, \u00270.279\u0027)\n\nBrazil and Mexico\nWinner: Brazil\n(\u0027Probability of Brazil winning: \u0027, \u00270.692\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.189\u0027)\n(\u0027Probability of Mexico winning: \u0027, \u00270.119\u0027)\n\nEngland and Colombia\nWinner: England\n(\u0027Probability of England winning: \u0027, \u00270.549\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.322\u0027)\n(\u0027Probability of Colombia winning: \u0027, \u00270.130\u0027)\n\nSpain and Russia\nWinner: Spain\n(\u0027Probability of Spain winning: \u0027, \u00270.516\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.259\u0027)\n(\u0027Probability of Russia winning: \u0027, \u00270.225\u0027)\n\nArgentina and Peru\nWinner: Argentina\n(\u0027Probability of Argentina winning: \u0027, \u00270.716\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.228\u0027)\n(\u0027Probability of Peru winning: \u0027, \u00270.055\u0027)\n\nGermany and Switzerland\nWinner: Germany\n(\u0027Probability of Germany winning: \u0027, \u00270.719\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.166\u0027)\n(\u0027Probability of Switzerland winning: \u0027, \u00270.115\u0027)\n\nBelgium and Poland\nWinner: Belgium\n(\u0027Probability of Belgium winning: \u0027, \u00270.512\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.191\u0027)\n(\u0027Probability of Poland winning: \u0027, \u00270.296\u0027)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041165_1525514852",
+      "id": "20190729-105601_1651542984",
+      "dateCreated": "2019-08-08 12:57:21.165",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nquarters \u003d [(\u0027Portugal\u0027, \u0027France\u0027),\n            (\u0027Spain\u0027, \u0027Argentina\u0027),\n            (\u0027Brazil\u0027, \u0027England\u0027),\n            (\u0027Germany\u0027, \u0027Belgium\u0027)]\n            \nclean_and_predict (quarters, fifa_rankings, final, logreg)",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.166",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Portugal and France\nWinner: Portugal\n(\u0027Probability of Portugal winning: \u0027, \u00270.398\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.272\u0027)\n(\u0027Probability of France winning: \u0027, \u00270.330\u0027)\n\nArgentina and Spain\nWinner: Argentina\n(\u0027Probability of Argentina winning: \u0027, \u00270.515\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.283\u0027)\n(\u0027Probability of Spain winning: \u0027, \u00270.202\u0027)\n\nBrazil and England\nWinner: Brazil\n(\u0027Probability of Brazil winning: \u0027, \u00270.497\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.238\u0027)\n(\u0027Probability of England winning: \u0027, \u00270.266\u0027)\n\nGermany and Belgium\nWinner: Germany\n(\u0027Probability of Germany winning: \u0027, \u00270.655\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.200\u0027)\n(\u0027Probability of Belgium winning: \u0027, \u00270.145\u0027)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041166_-1207089749",
+      "id": "20190729-105609_1120172720",
+      "dateCreated": "2019-08-08 12:57:21.166",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n# List of matches\nsemi \u003d [(\u0027Portugal\u0027, \u0027Brazil\u0027),\n        (\u0027Argentina\u0027, \u0027Germany\u0027)]\nclean_and_predict (semi, fifa_rankings, final, logreg)",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.167",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Brazil and Portugal\nWinner: Brazil\n(\u0027Probability of Brazil winning: \u0027, \u00270.658\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.195\u0027)\n(\u0027Probability of Portugal winning: \u0027, \u00270.148\u0027)\n\nGermany and Argentina\nWinner: Germany\n(\u0027Probability of Germany winning: \u0027, \u00270.491\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.290\u0027)\n(\u0027Probability of Argentina winning: \u0027, \u00270.220\u0027)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041167_-1622011364",
+      "id": "20190729-105644_377201744",
+      "dateCreated": "2019-08-08 12:57:21.167",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\n# Finals# Finals\nfinals \u003d [(\u0027Brazil\u0027, \u0027Germany\u0027)]\nclean_and_predict(finals, fifa_rankings, final, logreg)",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.168",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Germany and Brazil\nWinner: Brazil\n(\u0027Probability of Germany winning: \u0027, \u00270.402\u0027)\n(\u0027Probability of Draw: \u0027, \u00270.185\u0027)\n(\u0027Probability of Brazil winning: \u0027, \u00270.413\u0027)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041168_-1599593713",
+      "id": "20190729-105659_206020856",
+      "dateCreated": "2019-08-08 12:57:21.168",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\ntop_16 \u003d []\ntop_16_players \u003d pd.DataFrame()\nfor team in teams_16:\n    top_16.append(team[0])\n    top_16.append(team[1])\ntop_16_players[\u002716 players\u0027] \u003d top_16\ntop_16_players.head()",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.169",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "  16 players\n0    Uruguay\n1   Portugal\n2     France\n3    Croatia\n4     Brazil\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041169_-1638304783",
+      "id": "20190729-105733_1676713550",
+      "dateCreated": "2019-08-08 12:57:21.169",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\ntop_quarters \u003d []\ntop_quarters_players \u003d pd.DataFrame()\nfor team in quarters:\n    top_quarters.append(team[0])\n    top_quarters.append(team[1])\ntop_quarters_players[\u0027quarterfinal\u0027] \u003d top_quarters\ntop_quarters_players.head()",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.170",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "  quarterfinal\n0     Portugal\n1       France\n2        Spain\n3    Argentina\n4       Brazil\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041170_-1917985835",
+      "id": "20190729-105759_1248198585",
+      "dateCreated": "2019-08-08 12:57:21.170",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\ntop_semi \u003d []\ntop_semi_players \u003d pd.DataFrame()\nfor team in semi:\n    top_semi.append(team[0])\n    top_semi.append(team[1])\ntop_semi_players[\u0027semifinal\u0027] \u003d top_semi\ntop_semi_players.head()",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.171",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "   semifinal\n0   Portugal\n1     Brazil\n2  Argentina\n3    Germany\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041171_1670229641",
+      "id": "20190729-105809_435096618",
+      "dateCreated": "2019-08-08 12:57:21.171",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\ntop_finals \u003d []\ntop_finals_players \u003d pd.DataFrame()\nfor team in finals:\n    top_finals.append(team[0])\n    top_finals.append(team[1])\ntop_finals_players[\u0027final\u0027] \u003d top_finals\ntop_finals_players.head()",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.172",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "     final\n0   Brazil\n1  Germany\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041172_-622662026",
+      "id": "20190729-105824_515826781",
+      "dateCreated": "2019-08-08 12:57:21.172",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nwinner_team\u003d[\u0027Brazil\u0027]\nwinner_df \u003d pd.DataFrame()\nwinner_df[\u0027winner\u0027] \u003d winner_team\nwinner_df.head()",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.173",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "   winner\n0  Brazil\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041172_617616496",
+      "id": "20190729-105830_977459993",
+      "dateCreated": "2019-08-08 12:57:21.172",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nfifa_result\u003dpd.DataFrame()\n\nfifa_result \u003d pd.concat([top_16_players,top_quarters_players,top_semi_players,top_finals_players,winner_df],axis \u003d 1)\nfifa_result.head(16)",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.174",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "     16 players quarterfinal  semifinal    final  winner\n0       Uruguay     Portugal   Portugal   Brazil  Brazil\n1      Portugal       France     Brazil  Germany     NaN\n2        France        Spain  Argentina      NaN     NaN\n3       Croatia    Argentina    Germany      NaN     NaN\n4        Brazil       Brazil        NaN      NaN     NaN\n5        Mexico      England        NaN      NaN     NaN\n6       England      Germany        NaN      NaN     NaN\n7      Colombia      Belgium        NaN      NaN     NaN\n8         Spain          NaN        NaN      NaN     NaN\n9        Russia          NaN        NaN      NaN     NaN\n10    Argentina          NaN        NaN      NaN     NaN\n11         Peru          NaN        NaN      NaN     NaN\n12      Germany          NaN        NaN      NaN     NaN\n13  Switzerland          NaN        NaN      NaN     NaN\n14       Poland          NaN        NaN      NaN     NaN\n15      Belgium          NaN        NaN      NaN     NaN\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041173_838085567",
+      "id": "20190729-105839_222654415",
+      "dateCreated": "2019-08-08 12:57:21.173",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%pyspark\nfifa_result.to_csv(\u0027Football_cup_submission.csv\u0027, sep\u003d\u0027,\u0027,na_rep\u003d\u0027\u0027,index\u003dFalse)",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.175",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041174_1876056233",
+      "id": "20190729-105852_104905138",
+      "dateCreated": "2019-08-08 12:57:21.174",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sh\nhead -n 5 ./Football_cup_submission.csv",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.177",
+      "config": {
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sh",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "16 players,quarterfinal,semifinal,final,winner\nUruguay,Portugal,Portugal,Brazil,Brazil\nPortugal,France,Brazil,Germany,\nFrance,Spain,Argentina,,\nCroatia,Argentina,Germany,,\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041176_-1586266213",
+      "id": "20190729-105955_1500853792",
+      "dateCreated": "2019-08-08 12:57:21.176",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n#### CleanUp operations:",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.178",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch4\u003eCleanUp operations:\u003c/h4\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041178_-973412932",
+      "id": "20190808-121455_368122902",
+      "dateCreated": "2019-08-08 12:57:21.178",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%python\nresp \u003d exported_table_api.delete_exported_table(\"fixtures_sink\")\nprint(resp)\nresp \u003d exported_table_api.delete_exported_table(\"rankings_sink\")\nprint(resp)\nresp \u003d exported_table_api.delete_exported_table(\"teams_df\")\nprint(resp)\n\nresp \u003d pipeline_api.delete_pipeline(\"fifa_pipeline\")\nprint(resp)\ntime.sleep(5)\nresp \u003d pipeline_api.delete_pipeline(\"fixtures_pipeline\")\nprint(resp)\ntime.sleep(5)\nresp \u003d pipeline_api.delete_pipeline(\"rankings_pipeline\")\nprint(resp)\ntime.sleep(20)\n\nresp \u003d exported_table_api.delete_exported_table(\"teams_qualified\")\nprint(resp)\ntime.sleep(5)\nresp \u003d pipeline_api.delete_pipeline(\"qualified_teams_pipeline\")\nprint(resp)\ntime.sleep(10)\n\nresp \u003d source_api.delete_source(\"fixtures\")\nprint(resp)\nresp \u003d source_api.delete_source(\"rankings\")\nprint(resp)\nresp \u003d source_api.delete_source(\"qualified_teams\")\nprint(resp)\nresp \u003d source_api.delete_source(\"results\")\nprint(resp)",
+      "user": "anonymous",
+      "dateUpdated": "2019-08-08 12:57:21.179",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "{\u0027result\u0027: \u0027Started pipeline deletion for fifa_pipeline.\u0027, \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \u0027Started pipeline deletion for fixtures_pipeline.\u0027,\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \u0027Started pipeline deletion for rankings_pipeline.\u0027,\n \u0027status\u0027: \u0027SUCCESS\u0027}\nDropped exported table \u0027teams_qualified\u0027\n{\u0027result\u0027: \u0027Started pipeline deletion for qualified_teams_pipeline.\u0027,\n \u0027status\u0027: \u0027SUCCESS\u0027}\n{\u0027result\u0027: \u0027fixtures\u0027}\n{\u0027result\u0027: \u0027rankings\u0027}\n{\u0027result\u0027: \u0027qualified_teams\u0027}\n{\u0027result\u0027: \u0027results\u0027}\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1565269041179_-1228891527",
+      "id": "20190808-121536_472533590",
+      "dateCreated": "2019-08-08 12:57:21.179",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "FluirEngine / FIFA_Winner_Prediction",
+  "id": "2EK1M4A5T",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "md:shared_process": [],
+    "python:shared_process": [],
+    "sh:shared_process": [],
+    "jdbc:shared_process": [],
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}
