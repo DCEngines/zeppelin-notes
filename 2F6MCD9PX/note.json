@@ -1,0 +1,3063 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md\n# Sentiment Analysis\n## Spark Machine Learning\nThis notebook is part two of a series of notebooks demonstrating an end-to-end application that combines streaming data with machine learning and fast storage.\n* Part 1 shows how to use Apache Spark’s ML pipelines with a Logistic Regression Classifier to predict Sentiment\n* Part 2 shows how to use this model with Streaming Data.\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.386",
+      "config": {
+        "tableHide": true,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch1\u003eSentiment Analysis\u003c/h1\u003e\n\u003ch2\u003eSpark Machine Learning\u003c/h2\u003e\n\u003cp\u003eThis notebook is part two of a series of notebooks demonstrating an end-to-end application that combines streaming data with machine learning and fast storage.\u003cbr/\u003e* Part 1 shows how to use Apache Spark’s ML pipelines with a Logistic Regression Classifier to predict Sentiment\u003cbr/\u003e* Part 2 shows how to use this model with Streaming Data.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065383_1640257461",
+      "id": "20190220-173254_1728425170",
+      "dateCreated": "2020-04-24 11:01:05.383",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md \n## Supervised Machine Learning Classification\nSupervised algorithms use labeled data in which both the input and target outcome, or label, are provided to the algorithm. Supervised learning is also called predictive modeling or predictive analytics, because you build a model that is capable of making predictions. \n\u003cimg src\u003d\"https://mapr.com/blog/apache-spark-machine-learning-tutorial/assets/image13.png\" width\u003d\"500\" height\u003d\"500\"\u003e\nClassification takes a set of data with known labels and predetermined features and learns how to label new records based on that information. Features are the \"if questions\" that you ask. The label is the answer to those questions. Let’s go through an example for Text Classification: \nWhat are we trying to predict?\n* Whether a Product Review is positive or negative.\n* Delayed is the Label: 1 for positive 0 for negative\n\nWhat are the properties that you can use to make predictions?\nThe review text words, are used as the features to discover similarities and categorize customer text sentiment as positive or negative.\n\n### Logistic Regression\nLogistic regression is a popular method to predict a binary response. It is a special case of Generalized Linear models that predicts the probability of the outcome. Logistic regression measures the relationship between the Y “Label” and the X “Features” by estimating probabilities using a logistic function. The model predicts a probability which is used to predict the label class.\n\n### Review Data set\nThe data set has  the following format:\n{\"reviewerID\": \"A1PUWI9RTQV19S\", \"asin\": \"B003Y5C132\", \"reviewerName\": \"kris\", \"helpful\": [0, 1], \"reviewText\": \"A little small in hind sight, but I did order a .30 cal box. Good condition, and keeps my ammo organized.\", \"overall\": 5.0, \"summary\": \"Nice ammo can\", \"unixReviewTime\": 1384905600, \"reviewTime\": \"11 20, 2013\"}\n\nwith the following schema\n\nreviewerID - ID of the reviewer, e.g. A2SUAM1J3GNN3B\nasin - ID of the product, e.g. 0000013714\nreviewerName - name of the reviewer\nhelpful - helpfulness rating of the review, e.g. 2/3\nreviewText - text of the review\noverall - rating of the product\nsummary - summary of the review\nunixReviewTime - time of the review (unix time)\nreviewTime - time of the review (raw)\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.386",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch2\u003eSupervised Machine Learning Classification\u003c/h2\u003e\n\u003cp\u003eSupervised algorithms use labeled data in which both the input and target outcome, or label, are provided to the algorithm. Supervised learning is also called predictive modeling or predictive analytics, because you build a model that is capable of making predictions.\u003cbr/\u003e\u003cimg src\u003d\"https://mapr.com/blog/apache-spark-machine-learning-tutorial/assets/image13.png\" width\u003d\"500\" height\u003d\"500\"\u003e\u003cbr/\u003eClassification takes a set of data with known labels and predetermined features and learns how to label new records based on that information. Features are the \u0026ldquo;if questions\u0026rdquo; that you ask. The label is the answer to those questions. Let’s go through an example for Text Classification:\u003cbr/\u003eWhat are we trying to predict?\u003cbr/\u003e* Whether a Product Review is positive or negative.\u003cbr/\u003e* Delayed is the Label: 1 for positive 0 for negative\u003c/p\u003e\n\u003cp\u003eWhat are the properties that you can use to make predictions?\u003cbr/\u003eThe review text words, are used as the features to discover similarities and categorize customer text sentiment as positive or negative.\u003c/p\u003e\n\u003ch3\u003eLogistic Regression\u003c/h3\u003e\n\u003cp\u003eLogistic regression is a popular method to predict a binary response. It is a special case of Generalized Linear models that predicts the probability of the outcome. Logistic regression measures the relationship between the Y “Label” and the X “Features” by estimating probabilities using a logistic function. The model predicts a probability which is used to predict the label class.\u003c/p\u003e\n\u003ch3\u003eReview Data set\u003c/h3\u003e\n\u003cp\u003eThe data set has the following format:\u003cbr/\u003e{\u0026ldquo;reviewerID\u0026rdquo;: \u0026ldquo;A1PUWI9RTQV19S\u0026rdquo;, \u0026ldquo;asin\u0026rdquo;: \u0026ldquo;B003Y5C132\u0026rdquo;, \u0026ldquo;reviewerName\u0026rdquo;: \u0026ldquo;kris\u0026rdquo;, \u0026ldquo;helpful\u0026rdquo;: [0, 1], \u0026ldquo;reviewText\u0026rdquo;: \u0026ldquo;A little small in hind sight, but I did order a .30 cal box. Good condition, and keeps my ammo organized.\u0026rdquo;, \u0026ldquo;overall\u0026rdquo;: 5.0, \u0026ldquo;summary\u0026rdquo;: \u0026ldquo;Nice ammo can\u0026rdquo;, \u0026ldquo;unixReviewTime\u0026rdquo;: 1384905600, \u0026ldquo;reviewTime\u0026rdquo;: \u0026ldquo;11 20, 2013\u0026rdquo;}\u003c/p\u003e\n\u003cp\u003ewith the following schema\u003c/p\u003e\n\u003cp\u003ereviewerID - ID of the reviewer, e.g. A2SUAM1J3GNN3B\u003cbr/\u003easin - ID of the product, e.g. 0000013714\u003cbr/\u003ereviewerName - name of the reviewer\u003cbr/\u003ehelpful - helpfulness rating of the review, e.g. 2/3\u003cbr/\u003ereviewText - text of the review\u003cbr/\u003eoverall - rating of the product\u003cbr/\u003esummary - summary of the review\u003cbr/\u003eunixReviewTime - time of the review (unix time)\u003cbr/\u003ereviewTime - time of the review (raw)\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065386_-271482763",
+      "id": "20170530-122945_1594214131",
+      "dateCreated": "2020-04-24 11:01:05.386",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Import needed packages",
+      "text": "%spark\nimport org.apache.spark._\nimport org.apache.spark.ml._\nimport org.apache.spark.ml.feature._\nimport org.apache.spark.ml.classification._\nimport org.apache.spark.ml.evaluation._\nimport org.apache.spark.ml.tuning._\nimport org.apache.spark.sql._\nimport org.apache.spark.sql.functions._\nimport org.apache.spark.sql.types._",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.390",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import org.apache.spark._\nimport org.apache.spark.ml._\nimport org.apache.spark.ml.feature._\nimport org.apache.spark.ml.classification._\nimport org.apache.spark.ml.evaluation._\nimport org.apache.spark.ml.tuning._\nimport org.apache.spark.sql._\nimport org.apache.spark.sql.functions._\nimport org.apache.spark.sql.types._\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065390_538324366",
+      "id": "20170508-144514_403247535",
+      "dateCreated": "2020-04-24 11:01:05.390",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Read the data from JSON file into a Dataset of type Flight",
+      "text": "import spark.implicits._\n\n// file path location\n//var file \u003d\"Sports_and_Outdoors.json.gz\"\nval file \u003d \"reviews_Sports_and_Outdoors_Train.json.gz\"\n// With the SparkSession read method, read data from a file into a Dataset\nval df0  \u003d spark.read.format(\"json\").option(\"inferSchema\", \"true\").load(file) \n\n// add column combining summary and review text, drop some others \nval df \u003d df0.withColumn(\"reviewTS\", concat($\"summary\",lit(\" \"),$\"reviewText\" )).drop(\"helpful\").drop(\"reviewerID\").drop(\"reviewerName\").drop(\"reviewTime\")\n\ndf.show(5)\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.390",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+----------+-------+--------------------+--------------------+--------------+--------------------+\n|      asin|overall|          reviewText|             summary|unixReviewTime|            reviewTS|\n+----------+-------+--------------------+--------------------+--------------+--------------------+\n|1881509818|    5.0|This came in on t...|      Woks very good|    1390694400|Woks very good Th...|\n|1881509818|    5.0|I had a factory G...|Works as well as ...|    1328140800|Works as well as ...|\n|1881509818|    4.0|If you don\u0027t have...|It\u0027s a punch, tha...|    1330387200|It\u0027s a punch, tha...|\n|1881509818|    4.0|This works no bet...|It\u0027s a punch with...|    1328400000|It\u0027s a punch with...|\n|1881509818|    4.0|I purchased this ...|Ok,tool does what...|    1366675200|Ok,tool does what...|\n+----------+-------+--------------------+--------------------+--------------+--------------------+\nonly showing top 5 rows\n\nimport spark.implicits._\nfile: String \u003d reviews_Sports_and_Outdoors_Train.json.gz\ndf0: org.apache.spark.sql.DataFrame \u003d [asin: string, helpful: array\u003cbigint\u003e ... 7 more fields]\ndf: org.apache.spark.sql.DataFrame \u003d [asin: string, overall: double ... 4 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065390_1169967730",
+      "id": "20170508-150131_378637203",
+      "dateCreated": "2020-04-24 11:01:05.390",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Print the schema",
+      "text": "df.printSchema",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.390",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "root\n |-- asin: string (nullable \u003d true)\n |-- overall: double (nullable \u003d true)\n |-- reviewText: string (nullable \u003d true)\n |-- summary: string (nullable \u003d true)\n |-- unixReviewTime: long (nullable \u003d true)\n |-- reviewTS: string (nullable \u003d true)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065390_257084248",
+      "id": "20190321-173712_1018367148",
+      "dateCreated": "2020-04-24 11:01:05.390",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nThe describe() function performs summary statistics calculations on  numeric columns ",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.390",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eThe describe() function performs summary statistics calculations on numeric columns\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065390_-1023478915",
+      "id": "20170524-214640_973339640",
+      "dateCreated": "2020-04-24 11:01:05.390",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "get Rating counts",
+      "text": "df.describe(\"overall\").show\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.391",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------+------------------+\n|summary|           overall|\n+-------+------------------+\n|  count|            296337|\n|   mean| 4.393450699710128|\n| stddev|0.9869053992908551|\n|    min|               1.0|\n|    max|               5.0|\n+-------+------------------+\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065391_1981614922",
+      "id": "20190321-173801_272187174",
+      "dateCreated": "2020-04-24 11:01:05.391",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Filter to remove neutral product ratings ",
+      "text": "val df1 \u003d df.filter(\"overall !\u003d3\")\ndf1.show\ndf1.describe(\"overall\").show\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.391",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+----------+-------+--------------------+--------------------+--------------+--------------------+\n|      asin|overall|          reviewText|             summary|unixReviewTime|            reviewTS|\n+----------+-------+--------------------+--------------------+--------------+--------------------+\n|1881509818|    5.0|This came in on t...|      Woks very good|    1390694400|Woks very good Th...|\n|1881509818|    5.0|I had a factory G...|Works as well as ...|    1328140800|Works as well as ...|\n|1881509818|    4.0|If you don\u0027t have...|It\u0027s a punch, tha...|    1330387200|It\u0027s a punch, tha...|\n|1881509818|    4.0|This works no bet...|It\u0027s a punch with...|    1328400000|It\u0027s a punch with...|\n|1881509818|    4.0|I purchased this ...|Ok,tool does what...|    1366675200|Ok,tool does what...|\n|1881509818|    5.0|Needed this tool ...|Glock punch tool ...|    1351814400|Glock punch tool ...|\n|1881509818|    5.0|If u don\u0027t have i...|          Great tool|    1402358400|Great tool If u d...|\n|2094869245|    4.0|This light will n...|             Bright!|    1377907200|Bright! This ligh...|\n|2094869245|    5.0|Light and laser t...|             Be seen|    1369612800|Be seen Light and...|\n|2094869245|    5.0|Does everything i...|Bicycle rear tail...|    1383350400|Bicycle rear tail...|\n|2094869245|    4.0|Very bright.  I w...|          Great lite|    1399420800|Great lite Very b...|\n|2094869245|    5.0|Mine arrived with...|For $11, it\u0027s a b...|    1389657600|For $11, it\u0027s a b...|\n|2094869245|    4.0|It works great it...|               Bulky|    1387497600|Bulky It works gr...|\n|2094869245|    5.0|I love this light...|            Love it!|    1379462400|Love it! I love t...|\n|2094869245|    5.0|Bit bulky. One bu...|       Bulky but....|    1389830400|Bulky but.... Bit...|\n|2094869245|    5.0|it is bright and ...|     rear bike light|    1386374400|rear bike light i...|\n|2094869245|    4.0|A mice bright lig...|Needed a little m...|    1383523200|Needed a little m...|\n|2094869245|    4.0|Had one ride on t...|Good light for th...|    1384214400|Good light for th...|\n|7245456259|    2.0|So it worked well...|resistance was go...|    1395964800|resistance was go...|\n|7245456259|    5.0|My girlfriend is ...|Girlfriend loves ...|    1378339200|Girlfriend loves ...|\n+----------+-------+--------------------+--------------------+--------------+--------------------+\nonly showing top 20 rows\n\n+-------+-----------------+\n|summary|          overall|\n+-------+-----------------+\n|  count|           272266|\n|   mean| 4.51664548639933|\n| stddev|0.934477779110061|\n|    min|              1.0|\n|    max|              5.0|\n+-------+-----------------+\n\ndf1: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] \u003d [asin: string, overall: double ... 4 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065391_1213992540",
+      "id": "20171129-221736_959969733",
+      "dateCreated": "2020-04-24 11:01:05.391",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "get rating counts after filtering",
+      "text": "df.groupBy(\"overall\").count.show\ndf1.groupBy(\"overall\").count.show\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.391",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------+------+\n|overall| count|\n+-------+------+\n|    1.0|  9045|\n|    4.0| 64809|\n|    3.0| 24071|\n|    2.0| 10204|\n|    5.0|188208|\n+-------+------+\n\n+-------+------+\n|overall| count|\n+-------+------+\n|    1.0|  9045|\n|    4.0| 64809|\n|    2.0| 10204|\n|    5.0|188208|\n+-------+------+\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065391_152834168",
+      "id": "20190321-173941_1496948865",
+      "dateCreated": "2020-04-24 11:01:05.391",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nIn the code below a Spark Bucketizer is used to split the dataset into positive and negative reviews (where positive \u003e\u003d 4 ) \nwith a label 0/1 column. Then the resulting total counts are displayed. ",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.391",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eIn the code below a Spark Bucketizer is used to split the dataset into positive and negative reviews (where positive \u0026gt;\u003d 4 )\u003cbr/\u003ewith a label 0/1 column. Then the resulting total counts are displayed.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065391_1107928108",
+      "id": "20190305-221927_113621865",
+      "dateCreated": "2020-04-24 11:01:05.391",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Bucket Reviews into positive and negative ",
+      "text": "val bucketizer \u003d new Bucketizer().setInputCol(\"overall\").setOutputCol(\"label\").setSplits(Array(Double.NegativeInfinity,4.0,Double.PositiveInfinity))\n\nval df2\u003d bucketizer.transform(df1)\ndf2.cache\ndf2.groupBy(\"overall\",\"label\").count.show\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.391",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------+-----+------+\n|overall|label| count|\n+-------+-----+------+\n|    2.0|  0.0| 10204|\n|    5.0|  1.0|188208|\n|    1.0|  0.0|  9045|\n|    4.0|  1.0| 64809|\n+-------+-----+------+\n\nbucketizer: org.apache.spark.ml.feature.Bucketizer \u003d bucketizer_fe9878a0f55c\ndf2: org.apache.spark.sql.DataFrame \u003d [asin: string, overall: double ... 5 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065391_-29942424",
+      "id": "20171123-050717_1328190278",
+      "dateCreated": "2020-04-24 11:01:05.391",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n## Stratified Sampling\nIn order to ensure that our model is sensitive to the negative samples we can put the two sample types on the same footing using stratified sampling. \n\nThe the DataFrames sampleBy() function is used to stratify, by providing the fractions of each sample type to be returned.\nHere, we\u0027re keeping all instances of negative, but downsampling the positive instances to 10%, then displaying the results\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.392",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch2\u003eStratified Sampling\u003c/h2\u003e\n\u003cp\u003eIn order to ensure that our model is sensitive to the negative samples we can put the two sample types on the same footing using stratified sampling. \u003c/p\u003e\n\u003cp\u003eThe the DataFrames sampleBy() function is used to stratify, by providing the fractions of each sample type to be returned.\u003cbr/\u003eHere, we\u0026rsquo;re keeping all instances of negative, but downsampling the positive instances to 10%, then displaying the results\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065391_-1637342276",
+      "id": "20190305-223154_803200822",
+      "dateCreated": "2020-04-24 11:01:05.392",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val fractions \u003d Map(1.0 -\u003e .1, 0.0 -\u003e 1.0)\nval df3 \u003d df2.stat.sampleBy(\"label\", fractions, 36L)\ndf3.groupBy(\"label\").count.show\n    \n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.392",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-----+-----+\n|label|count|\n+-----+-----+\n|  0.0|19249|\n|  1.0|25287|\n+-----+-----+\n\nfractions: scala.collection.immutable.Map[Double,Double] \u003d Map(1.0 -\u003e 0.1, 0.0 -\u003e 1.0)\ndf3: org.apache.spark.sql.DataFrame \u003d [asin: string, overall: double ... 5 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065392_59760195",
+      "id": "20190321-175152_2103989778",
+      "dateCreated": "2020-04-24 11:01:05.392",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nThere are typically two phases in machine learning:\n* Data Discovery: The first phase involves analysis on historical data to build and train the machine learning model.\n* Analytics Using the Model: The second phase uses the model in production on new data.\n\nIn production, models need to be continuously monitored and updated with new models when needed.\n\u003cimg src\u003d\"https://mapr.com/blog/apache-spark-machine-learning-tutorial/assets/image21.png\"\u003e\nIn this lab the process has been simplified due to time and memory constraints(one node per student). We will split out dataset into a training and test set and evaluate the results on the test set. In the real world more data and iterations of training and evaluation with k-fold cross validation is recommended. ",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.392",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eThere are typically two phases in machine learning:\u003cbr/\u003e* Data Discovery: The first phase involves analysis on historical data to build and train the machine learning model.\u003cbr/\u003e* Analytics Using the Model: The second phase uses the model in production on new data.\u003c/p\u003e\n\u003cp\u003eIn production, models need to be continuously monitored and updated with new models when needed.\u003cbr/\u003e\u003cimg src\u003d\"https://mapr.com/blog/apache-spark-machine-learning-tutorial/assets/image21.png\"\u003e\u003cbr/\u003eIn this lab the process has been simplified due to time and memory constraints(one node per student). We will split out dataset into a training and test set and evaluate the results on the test set. In the real world more data and iterations of training and evaluation with k-fold cross validation is recommended.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065392_195572004",
+      "id": "20190308-210308_1297732685",
+      "dateCreated": "2020-04-24 11:01:05.392",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Split Into Training and Test set",
+      "text": "val splitSeed \u003d 5043\nval Array(trainingData, testData) \u003d df3.randomSplit(Array(0.8, 0.2), splitSeed)\n\n\ntrainingData.cache\ntrainingData.groupBy(\"label\").count.show",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.392",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-----+-----+\n|label|count|\n+-----+-----+\n|  0.0|15327|\n|  1.0|20296|\n+-----+-----+\n\nsplitSeed: Int \u003d 5043\ntrainingData: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] \u003d [asin: string, overall: double ... 5 more fields]\ntestData: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] \u003d [asin: string, overall: double ... 5 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065392_-162763044",
+      "id": "20190305-223741_1028691135",
+      "dateCreated": "2020-04-24 11:01:05.392",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n## Feature Extraction and Pipelining\nIn order for the features to be used by a machine learning algorithm, they must be transformed and put into Feature Vectors, which are vectors of numbers \nrepresenting the value for each feature.\n\u003cimg src\u003d\"https://mapr.com/blog/fast-data-processing-pipeline-predicting-flight-delays-using-apache-apis-pt-1/assets/reference-learning-spark.png\" width\u003d\"600\" height\u003d\"600\"\u003e\nSpark ML provides a uniform set of high-level APIs built on top of DataFrames. We will use an ML Pipeline to pass the data through transformers in order to extract the features and an estimator to produce the model.\n\u003cimg src\u003d\"https://mapr.com/blog/apache-spark-machine-learning-tutorial/assets/image8.png\" width\u003d\"600\" height\u003d\"600\"\u003e\nTransformer: A Transformer is an algorithm which transforms one DataFrame into another DataFrame. We will use a transformer to get a DataFrame with a features vector column.\nEstimator: An Estimator is an algorithm which can be fit on a DataFrame to produce a Transformer. We will use a a Random Forest estimator to train a model which can transform data to get predictions.\nPipeline: A Pipeline chains multiple Transformers and Estimators together to specify a ML workflow. \nWe will use a Spark ML Pipeline to pass our data through transformers in order to extract the features, an estimator to produce a model.\nThe we will use an evaluator to evaluate the model on the test data. \n\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.392",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch2\u003eFeature Extraction and Pipelining\u003c/h2\u003e\n\u003cp\u003eIn order for the features to be used by a machine learning algorithm, they must be transformed and put into Feature Vectors, which are vectors of numbers\u003cbr/\u003erepresenting the value for each feature.\u003cbr/\u003e\u003cimg src\u003d\"https://mapr.com/blog/fast-data-processing-pipeline-predicting-flight-delays-using-apache-apis-pt-1/assets/reference-learning-spark.png\" width\u003d\"600\" height\u003d\"600\"\u003e\u003cbr/\u003eSpark ML provides a uniform set of high-level APIs built on top of DataFrames. We will use an ML Pipeline to pass the data through transformers in order to extract the features and an estimator to produce the model.\u003cbr/\u003e\u003cimg src\u003d\"https://mapr.com/blog/apache-spark-machine-learning-tutorial/assets/image8.png\" width\u003d\"600\" height\u003d\"600\"\u003e\u003cbr/\u003eTransformer: A Transformer is an algorithm which transforms one DataFrame into another DataFrame. We will use a transformer to get a DataFrame with a features vector column.\u003cbr/\u003eEstimator: An Estimator is an algorithm which can be fit on a DataFrame to produce a Transformer. We will use a a Random Forest estimator to train a model which can transform data to get predictions.\u003cbr/\u003ePipeline: A Pipeline chains multiple Transformers and Estimators together to specify a ML workflow.\u003cbr/\u003eWe will use a Spark ML Pipeline to pass our data through transformers in order to extract the features, an estimator to produce a model.\u003cbr/\u003eThe we will use an evaluator to evaluate the model on the test data.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065392_-1876462339",
+      "id": "20190305-223449_516878384",
+      "dateCreated": "2020-04-24 11:01:05.392",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nThe ML package needs the label and feature vector to be added as columns to a dataframe. \nBelow we set up a pipeline to pass the data through transformers in order to extract the features and label. \nWe use the RegexTokenizer to split each document into tokens. See: http://spark.apache.org/docs/latest/ml-features.html#tokenizer\nWe remove stopwords using the StopWordsRemover(). See: http://spark.apache.org/docs/latest/ml-features.html#stopwordsremover\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.393",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eThe ML package needs the label and feature vector to be added as columns to a dataframe.\u003cbr/\u003eBelow we set up a pipeline to pass the data through transformers in order to extract the features and label.\u003cbr/\u003eWe use the RegexTokenizer to split each document into tokens. See: \u003ca href\u003d\"http://spark.apache.org/docs/latest/ml-features.html#tokenizer\"\u003ehttp://spark.apache.org/docs/latest/ml-features.html#tokenizer\u003c/a\u003e\u003cbr/\u003eWe remove stopwords using the StopWordsRemover(). See: \u003ca href\u003d\"http://spark.apache.org/docs/latest/ml-features.html#stopwordsremover\"\u003ehttp://spark.apache.org/docs/latest/ml-features.html#stopwordsremover\u003c/a\u003e\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065393_-1468152510",
+      "id": "20170603-184811_78732818",
+      "dateCreated": "2020-04-24 11:01:05.393",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Use a RegexTokenizer to split into words, then filter out unimportant words",
+      "text": "\nval tokenizer \u003d new RegexTokenizer().setInputCol(\"reviewTS\").setOutputCol(\"reviewTokensUf\").setPattern(\"\\\\s+|[,.()\\\"]\")\n\nval remover \u003d new StopWordsRemover().setStopWords(StopWordsRemover.loadDefaultStopWords(\"english\")).setInputCol(\"reviewTokensUf\").setOutputCol(\"reviewTokens\")\n \n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.393",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "tokenizer: org.apache.spark.ml.feature.RegexTokenizer \u003d regexTok_6d2f18fda0ce\nremover: org.apache.spark.ml.feature.StopWordsRemover \u003d stopWords_b12fb8a41f57\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065393_980552565",
+      "id": "20170508-150543_958647761",
+      "dateCreated": "2020-04-24 11:01:05.393",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Just to show what the tokenizer and remove will do in the pipeline",
+      "text": "val temp\u003d  tokenizer.transform(trainingData)\nval temp2\u003d remover.transform(temp)\n\nz.show(temp2.select(\"reviewTS\",  \"reviewTokens\").limit(2))",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.393",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "reviewTS": "string",
+                      "reviewTokens": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          },
+          "1": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {
+                    "columns": [
+                      {
+                        "name": "reviewTS",
+                        "visible": true,
+                        "width": 443.0,
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      },
+                      {
+                        "name": "reviewTokens",
+                        "visible": true,
+                        "width": "*",
+                        "sort": {},
+                        "filters": [
+                          {}
+                        ],
+                        "pinned": ""
+                      }
+                    ],
+                    "scrollFocus": {},
+                    "selection": [],
+                    "grouping": {
+                      "grouping": [],
+                      "aggregations": [],
+                      "rowExpandedStates": {}
+                    },
+                    "treeView": {},
+                    "pagination": {
+                      "paginationCurrentPage": 1.0,
+                      "paginationPageSize": 250.0
+                    }
+                  },
+                  "tableColumnTypeState": {
+                    "names": {
+                      "reviewTS": "string",
+                      "reviewTokens": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "reviewTS\treviewTokens\nWoks very good This came in on time and I am veru happy with it, I haved used it already and it makes taking out the pins in my glock 32 very easy\tWrappedArray(woks, good, came, time, veru, happy, haved, used, already, makes, taking, pins, glock, 32, easy)\nresistance was good but quality wasn\u0027t So it worked well for a couple weeks, but during a lunge workout, it snapped on me.  I liked it and thought it was a great product until this happened.  I noticed small rips on the band.  This could have been the issue.\tWrappedArray(resistance, good, quality, worked, well, couple, weeks, lunge, workout, snapped, liked, thought, great, product, happened, noticed, small, rips, band, issue)\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "temp: org.apache.spark.sql.DataFrame \u003d [asin: string, overall: double ... 6 more fields]\ntemp2: org.apache.spark.sql.DataFrame \u003d [asin: string, overall: double ... 7 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065393_-1408044264",
+      "id": "20190402-014634_535523739",
+      "dateCreated": "2020-04-24 11:01:05.393",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nWe use the CountVectorizer() to convert the array of words from the review text into vectors of token counts.\n\nThe CountVectorizer will return (VocabSize, Array(Indexed Tokens), Array(Token Frequency)).\n\nSee: http://spark.apache.org/docs/latest/ml-features.html#countvectorizer\n\nTerm frequency-inverse document frequency (TF-IDF) counts how many times a word occurs in the whole corpus and then calculates a proportion of the word\u0027s count in a sentence to its count in the whole corpus. This measure helps to evaluate how important a word is to a document in the whole collection of documents. In Spark  the .IDF(...) method does this for us.",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.393",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eWe use the CountVectorizer() to convert the array of words from the review text into vectors of token counts.\u003c/p\u003e\n\u003cp\u003eThe CountVectorizer will return (VocabSize, Array(Indexed Tokens), Array(Token Frequency)).\u003c/p\u003e\n\u003cp\u003eSee: \u003ca href\u003d\"http://spark.apache.org/docs/latest/ml-features.html#countvectorizer\"\u003ehttp://spark.apache.org/docs/latest/ml-features.html#countvectorizer\u003c/a\u003e\u003c/p\u003e\n\u003cp\u003eTerm frequency-inverse document frequency (TF-IDF) counts how many times a word occurs in the whole corpus and then calculates a proportion of the word\u0026rsquo;s count in a sentence to its count in the whole corpus. This measure helps to evaluate how important a word is to a document in the whole collection of documents. In Spark the .IDF(\u0026hellip;) method does this for us.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065393_1333034672",
+      "id": "20190327-150809_1732587720",
+      "dateCreated": "2020-04-24 11:01:05.393",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Use CountVectorizer to do TF word count, then IDF to weight importance",
+      "text": "val cv \u003d new CountVectorizer().setInputCol(\"reviewTokens\").setOutputCol(\"cv\").setVocabSize(200000) // .setMinDF(4)\n\nval idf \u003d new IDF().setInputCol(\"cv\").setOutputCol(\"features\")\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.393",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "cv: org.apache.spark.ml.feature.CountVectorizer \u003d cntVec_2101835463a8\nidf: org.apache.spark.ml.feature.IDF \u003d idf_5327b6132b12\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065393_-1131620139",
+      "id": "20170524-223310_2121058884",
+      "dateCreated": "2020-04-24 11:01:05.393",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Just to show what TF will do in pipeline",
+      "text": "val temp3\u003d  cv.fit(temp2).transform(temp2)\nz.show(temp3.select(  \"reviewTokens\", \"cv\")limit(2))\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.394",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "reviewTokens": "string",
+                      "cv": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          },
+          "1": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "reviewTokens": "string",
+                      "cv": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "reviewTokens\tcv\nWrappedArray(woks, good, came, time, veru, happy, haved, used, already, makes, taking, pins, glock, 32, easy)\t(72358,[2,10,20,31,96,122,204,358,489,637,1417,2430,13006,16677,58499],[1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0])\nWrappedArray(resistance, good, quality, worked, well, couple, weeks, lunge, workout, snapped, liked, thought, great, product, happened, noticed, small, rips, band, issue)\t(72358,[1,2,6,8,17,33,159,167,191,257,457,481,533,581,605,932,1138,1431,4343,23126],[1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0])\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "temp3: org.apache.spark.sql.DataFrame \u003d [asin: string, overall: double ... 8 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065394_320675589",
+      "id": "20190402-015251_1329755130",
+      "dateCreated": "2020-04-24 11:01:05.394",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Just to show what IDF will do in pipeline",
+      "text": "val temp4\u003d  idf.fit(temp3).transform(temp3)\nz.show(temp4.select(  \"cv\", \"features\").limit(2))",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.394",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "cv": "string",
+                      "features": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          },
+          "1": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "cv": "string",
+                      "features": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "cv\tfeatures\n(72358,[2,10,20,31,96,122,204,358,489,637,1417,2430,13006,16677,58499],[1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0])\t(72358,[2,10,20,31,96,122,204,358,489,637,1417,2430,13006,16677,58499],[1.3224648831197399,1.9611845309855793,2.0493574326067048,2.2422379168297693,2.823019575866673,2.9476160395459754,3.3363676666803994,3.7678186463244683,4.387205076956403,4.280265672958848,5.524947789400278,6.038123590511222,8.534864697946224,8.871336934567438,9.787627666441592])\n(72358,[1,2,6,8,17,33,159,167,191,257,457,481,533,581,605,932,1138,1431,4343,23126],[1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0,1.0])\t(72358,[1,2,6,8,17,33,159,167,191,257,457,481,533,581,605,932,1138,1431,4343,23126],[1.2885984456530268,1.3224648831197399,1.4978370832599488,1.9272497263379105,2.042192056167212,2.323691061972668,3.1315440223882036,3.1898000688585566,3.324598209520923,3.579037640344964,4.499360635747058,4.085513248886089,4.154625373846439,4.634336071943814,4.25819857893017,5.012714705866407,4.908620814823774,5.255028173288337,6.791895392887602,9.382162558333428])\n"
+          },
+          {
+            "type": "TEXT",
+            "data": "temp4: org.apache.spark.sql.DataFrame \u003d [asin: string, overall: double ... 9 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065394_1210601447",
+      "id": "20190402-222108_1576098527",
+      "dateCreated": "2020-04-24 11:01:05.394",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md \nLogistic regression is a popular method to predict a binary response. It is a special case of Generalized Linear models that predicts the probability of the outcome. Logistic regression measures the relationship between the Y “Label” and the X “Features” by estimating probabilities using a logistic function. The model predicts a probability which is used to predict the label class.",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.394",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eLogistic regression is a popular method to predict a binary response. It is a special case of Generalized Linear models that predicts the probability of the outcome. Logistic regression measures the relationship between the Y “Label” and the X “Features” by estimating probabilities using a logistic function. The model predicts a probability which is used to predict the label class.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065394_333168215",
+      "id": "20190327-164524_47621896",
+      "dateCreated": "2020-04-24 11:01:05.394",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Create Logistic Regression Estimator",
+      "text": "//  regularizer parameters to encourage simple models and avoid overfitting.\nval lpar \u003d 0.02  \nval apar \u003d 0.3    \n\n// The final element in our ml pipeline is an Logistic Regression estimator  \nval lr \u003d new LogisticRegression().setMaxIter(100).setRegParam(lpar).setElasticNetParam(apar)  \n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.394",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "lpar: Double \u003d 0.02\napar: Double \u003d 0.3\nlr: org.apache.spark.ml.classification.LogisticRegression \u003d logreg_ec68b057648c\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065394_1769515584",
+      "id": "20170603-185445_276463997",
+      "dateCreated": "2020-04-24 11:01:05.394",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n## Setup Spark ML pipeline stages\nSet up a pipeline to pass the data through transformers to extract the features and label, and pass this to a random forest estimator to fit the model \n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.394",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch2\u003eSetup Spark ML pipeline stages\u003c/h2\u003e\n\u003cp\u003eSet up a pipeline to pass the data through transformers to extract the features and label, and pass this to a random forest estimator to fit the model\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065394_1355627529",
+      "id": "20170601-154525_1033166149",
+      "dateCreated": "2020-04-24 11:01:05.394",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Set up pipeline with  feature transformers and model estimator",
+      "text": "// Below we chain the stringindexers, vector assembler and logistic regressor in a Pipeline.\n val steps \u003d  Array( tokenizer, remover, cv, idf,lr)\n val pipeline \u003d new Pipeline().setStages(steps)\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.395",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "steps: Array[org.apache.spark.ml.PipelineStage with org.apache.spark.ml.util.DefaultParamsWritable{def copy(extra: org.apache.spark.ml.param.ParamMap): org.apache.spark.ml.PipelineStage with org.apache.spark.ml.util.DefaultParamsWritable{def copy(extra: org.apache.spark.ml.param.ParamMap): org.apache.spark.ml.PipelineStage with org.apache.spark.ml.util.DefaultParamsWritable{def copy(extra: org.apache.spark.ml.param.ParamMap): org.apache.spark.ml.PipelineStage with org.apache.spark.ml.util.DefaultParamsWritable}}}] \u003d Array(regexTok_6d2f18fda0ce, stopWords_b12fb8a41f57, cntVec_2101835463a8, idf_5327b6132b12, logreg_ec68b057648c)\npipeline: org.apache.spark.ml.Pipeline \u003d pipeline_664a9273ada3\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065395_-403270609",
+      "id": "20170508-151557_1422077156",
+      "dateCreated": "2020-04-24 11:01:05.395",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n### Train the Model\nNext, we train the logistic regression model with elastic net regularization\nThe model is trained by making associations between the input features and the labeled output associated with those features. The pipeline.fit method returns a fitted pipeline Model.\n\n\u003cimg src\u003d\"https://mapr.com/blog/fast-data-processing-pipeline-predicting-flight-delays-using-apache-apis-pt-1/assets/ml-cross-validation-process.png\" width\u003d\"600\" height\u003d\"600\"\u003e\n\nIn this lab we will only perform one iteration to train on the training data set and test on the test data set.\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.395",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch3\u003eTrain the Model\u003c/h3\u003e\n\u003cp\u003eNext, we train the logistic regression model with elastic net regularization\u003cbr/\u003eThe model is trained by making associations between the input features and the labeled output associated with those features. The pipeline.fit method returns a fitted pipeline Model.\u003c/p\u003e\n\u003cimg src\u003d\"https://mapr.com/blog/fast-data-processing-pipeline-predicting-flight-delays-using-apache-apis-pt-1/assets/ml-cross-validation-process.png\" width\u003d\"600\" height\u003d\"600\"\u003e\n\u003cp\u003eIn this lab we will only perform one iteration to train on the training data set and test on the test data set.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065395_-1660025044",
+      "id": "20190308-212752_1210705711",
+      "dateCreated": "2020-04-24 11:01:05.395",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Train the Model",
+      "text": "// will train on the vector of label and features.\nval model \u003d pipeline.fit(trainingData)\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.395",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "model: org.apache.spark.ml.PipelineModel \u003d pipeline_664a9273ada3\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065395_-541942340",
+      "id": "20171129-113112_994877662",
+      "dateCreated": "2020-04-24 11:01:05.395",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nlogistic regression generates the coefficients of a formula to predict probability of occurrence of the dependent variable. Based on the probability, the parameters that maximize the probability of occurrence or nonoccurrence of a dependent event are selected. ",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.395",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003elogistic regression generates the coefficients of a formula to predict probability of occurrence of the dependent variable. Based on the probability, the parameters that maximize the probability of occurrence or nonoccurrence of a dependent event are selected.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065395_-2116895551",
+      "id": "20190327-163136_1732342820",
+      "dateCreated": "2020-04-24 11:01:05.395",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Print out the feature importances for the logistic regression model",
+      "text": "// get vocabulary from the Count Vectorizer\nval vocabulary \u003dmodel.stages(2).asInstanceOf[CountVectorizerModel].vocabulary \n// get the logistic regression model \nval lrModel \u003d model.stages.last.asInstanceOf[LogisticRegressionModel]\n// Get array of coefficients\nval weights \u003d lrModel.coefficients.toArray\n// get array of word, and corresponding coefficient Array[(String, Double)]\nval word_weight \u003d vocabulary.zip(weights)\n\nword_weight.sortBy(-_._2).take(5).foreach {\n        case (word, weight) \u003d\u003e\n          println(s\"feature: $word, importance: $weight\")\n      }\nword_weight.sortBy(_._2).take(5).foreach {\n        case (word, weight) \u003d\u003e\n          println(s\"feature: $word, importance: $weight\")\n      }      \n      \n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.395",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "feature: great, importance: 0.5795698757925545\nfeature: perfect, importance: 0.3157586199946821\nfeature: easy, importance: 0.24857261472163242\nfeature: love, importance: 0.23643945187711943\nfeature: excellent, importance: 0.23419404794841292\nfeature: returned, importance: -0.35991069476061577\nfeature: waste, importance: -0.33644202728765943\nfeature: poor, importance: -0.3301254550370302\nfeature: return, importance: -0.27988850217051237\nfeature: design\u0027s, importance: -0.2750799767313023\nvocabulary: Array[String] \u003d Array(one, great, good, like, use, get, well, knife, product, fit, time, really, work, much, also, made, little, quality, even, better, used, back, price, nice, bought, light, works, buy, -, first, bike, easy, got, small, two, way, bag, need, put, thing, make, enough, still, around, gun, go, 2, size, using, recommend, money, see, want, long, cheap, water, blade, right, plastic, keep, scope, think, set, bit, something, another, going, without, love, sure, big, 5, best, pretty, hold, case, perfect, take, handle, know, lot, hard, never, look, new, looking, amazon, day, 3, side, say, looks, mount, easily, fits, find, makes, seems, sight, far, fine, bad, item, problem, feel, since, however, bottle, weight, worth, last, though, tried, tool, carry, top, may, many, b..."
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065395_1424978337",
+      "id": "20171122-232203_359528816",
+      "dateCreated": "2020-04-24 11:01:05.395",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Print out most important positive and negative words",
+      "text": "\n\n// create a dataframe with vocabulary and weights columns\nval cdf \u003d sc.parallelize(word_weight).toDF(\"word\",\"weights\")\n// show the most positive weighted words\ncdf.orderBy(desc(\"weights\")).show(10)\n// show the most negative words\ncdf.orderBy(\"weights\").show(10)",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.396",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+---------+-------------------+\n|     word|            weights|\n+---------+-------------------+\n|    great| 0.5795698757925545|\n|  perfect| 0.3157586199946821|\n|     easy|0.24857261472163242|\n|     love|0.23643945187711943|\n|excellent|0.23419404794841292|\n|     good|0.21718827132485868|\n|  awesome|0.21309559530228447|\n|     nice| 0.2051929687046601|\n|    works|0.20017741443806175|\n|   highly| 0.1959253913847787|\n+---------+-------------------+\nonly showing top 10 rows\n\n+------------+--------------------+\n|        word|             weights|\n+------------+--------------------+\n|    returned|-0.35991069476061577|\n|       waste|-0.33644202728765943|\n|        poor| -0.3301254550370302|\n|      return|-0.27988850217051237|\n|    design\u0027s| -0.2750799767313023|\n|       broke| -0.2640987285269813|\n|     useless| -0.2587738106082545|\n|   returning|-0.25166160047245845|\n|        junk| -0.2453894477730687|\n|disappointed| -0.2391126544588216|\n+------------+--------------------+\nonly showing top 10 rows\n\ncdf: org.apache.spark.sql.DataFrame \u003d [word: string, weights: double]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065396_-1578132754",
+      "id": "20190402-231353_701122643",
+      "dateCreated": "2020-04-24 11:01:05.396",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "show most positive words in histogram",
+      "text": "z.show(cdf.orderBy(desc(\"weights\")).limit(5))",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.396",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "word": "string",
+                      "weights": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "stackedAreaChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  }
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "word",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": []
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "word\tweights\ngreat\t0.5795698757925545\nperfect\t0.3157586199946821\neasy\t0.24857261472163242\nlove\t0.23643945187711943\nexcellent\t0.23419404794841292\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065396_-445542488",
+      "id": "20190402-232423_351118787",
+      "dateCreated": "2020-04-24 11:01:05.396",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Show most negative words",
+      "text": "z.show(cdf.orderBy(\"weights\").limit(5))",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.396",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "word": "string",
+                      "weights": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "word\tweights\nreturned\t-0.35991069476061577\nwaste\t-0.33644202728765943\npoor\t-0.3301254550370302\nreturn\t-0.27988850217051237\ndesign\u0027s\t-0.2750799767313023\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065396_905775339",
+      "id": "20190402-233033_1191499234",
+      "dateCreated": "2020-04-24 11:01:05.396",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "show 20 negative and positive words",
+      "text": "cdf.orderBy(desc(\"weights\")).show(20)\ncdf.orderBy(\"weights\").show(20)",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.398",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+----------+-------------------+\n|      word|            weights|\n+----------+-------------------+\n|     great| 0.5795698757925545|\n|   perfect| 0.3157586199946821|\n|      easy|0.24857261472163242|\n|      love|0.23643945187711943|\n| excellent|0.23419404794841292|\n|      good|0.21718827132485868|\n|   awesome|0.21309559530228447|\n|      nice| 0.2051929687046601|\n|     works|0.20017741443806175|\n|    highly| 0.1959253913847787|\n|      well|0.17938403190933902|\n| perfectly|0.16966143081084398|\n|      best| 0.1630809242768251|\n|  awesome!|0.15395090719608062|\n|     loves|0.15055691504965846|\n|    great!|0.14833362888335128|\n|      beat|0.13951070406074983|\n|       job|0.12432818365182188|\n|    sturdy|0.12198437220606856|\n|complaints|0.11334197876038414|\n+----------+-------------------+\nonly showing top 20 rows\n\n+-------------+--------------------+\n|         word|             weights|\n+-------------+--------------------+\n|     returned|-0.35991069476061577|\n|        waste|-0.33644202728765943|\n|         poor| -0.3301254550370302|\n|       return|-0.27988850217051237|\n|     design\u0027s| -0.2750799767313023|\n|        broke| -0.2640987285269813|\n|      useless| -0.2587738106082545|\n|    returning|-0.25166160047245845|\n|         junk| -0.2453894477730687|\n| disappointed| -0.2391126544588216|\n|disappointing|-0.21369266078272167|\n|unfortunately|-0.20819957131082364|\n|      cheaply| -0.2066249484374221|\n|     terrible|-0.19763525645856514|\n|       poorly|-0.19262733639509436|\n|     horrible|-0.17939256356209457|\n|    worthless|-0.16827836764227982|\n|        cheap|-0.16807315399715222|\n|         idea|-0.16179598487145608|\n|          meh|-0.15980961069072935|\n+-------------+--------------------+\nonly showing top 20 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065398_-1356691772",
+      "id": "20190326-200529_1203115431",
+      "dateCreated": "2020-04-24 11:01:05.398",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\r\n## Evaluate the model on a test set\r\nThe actual performance of the model can be determined using the test data set which has not been used for any training. We\u0027ll transform the test set with the model pipeline, which will transform  the label and features, and then use the random forest model to get the predictions, according to the pipeline steps. \r\n\r\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.398",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch2\u003eEvaluate the model on a test set\u003c/h2\u003e\n\u003cp\u003eThe actual performance of the model can be determined using the test data set which has not been used for any training. We\u0026rsquo;ll transform the test set with the model pipeline, which will transform the label and features, and then use the random forest model to get the predictions, according to the pipeline steps.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065398_-1012709491",
+      "id": "20170602-155317_1487132664",
+      "dateCreated": "2020-04-24 11:01:05.398",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Get Predictions from Test data",
+      "text": "//transform the test set with the model pipeline,\n//which will map the features according to the same recipe\nval predictions \u003d model.transform(testData) \n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.399",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "predictions: org.apache.spark.sql.DataFrame \u003d [asin: string, overall: double ... 12 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065398_-1136601852",
+      "id": "20170508-155848_1997894070",
+      "dateCreated": "2020-04-24 11:01:05.398",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nBelow we evaluate the predictions, we use a BinaryClassificationEvaluator which returns a precision metric by comparing the test label column with the test prediction column. In this case, the evaluation returns 93% precision. Accuracy is measured by the area under the ROC curve. The area measures the ability of the test to correctly classify true positives from false positives. \nA random predictor would have .5 accuracy. The closer the value is to 1 the better its predictions are. \n\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.399",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eBelow we evaluate the predictions, we use a BinaryClassificationEvaluator which returns a precision metric by comparing the test label column with the test prediction column. In this case, the evaluation returns 93% precision. Accuracy is measured by the area under the ROC curve. The area measures the ability of the test to correctly classify true positives from false positives.\u003cbr/\u003eA random predictor would have .5 accuracy. The closer the value is to 1 the better its predictions are.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065399_-1050404847",
+      "id": "20170602-161538_1648758337",
+      "dateCreated": "2020-04-24 11:01:05.399",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Evaluate the predictions accuracy",
+      "text": "val evaluator \u003d new BinaryClassificationEvaluator()  \nval areaUnderROC \u003d evaluator.evaluate(predictions) \nprintln(\"areaUnderROC \"  + areaUnderROC)\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.399",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "areaUnderROC 0.9359466110901639\nevaluator: org.apache.spark.ml.evaluation.BinaryClassificationEvaluator \u003d binEval_66510b8cc654\nareaUnderROC: Double \u003d 0.9359466110901639\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065399_178483553",
+      "id": "20170602-155622_1453197792",
+      "dateCreated": "2020-04-24 11:01:05.399",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "show review text for most negative ",
+      "text": "predictions.filter($\"prediction\" \u003d\u003d\u003d 0.0).select(\"summary\",\"reviewTokens\",\"probability\",\"label\",\"prediction\", \"rawPrediction\").orderBy(desc(\"rawPrediction\")).show(10)",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.399",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+--------------------+--------------------+-----+----------+--------------------+\n|             summary|        reviewTokens|         probability|label|prediction|       rawPrediction|\n+--------------------+--------------------+--------------------+-----+----------+--------------------+\n|BOUGHT 2, LASER Q...|[bought, 2, laser...|[0.99999999999996...|  0.0|       0.0|[31.0252816438070...|\n|you will need a b...|[need, bit, luck,...|[0.99999980545951...|  0.0|       0.0|[15.4526253359129...|\n|Awful Phone and T...|[awful, phone, te...|[0.99999966856402...|  0.0|       0.0|[14.9198308635927...|\n|  Worthless Garbage!|[worthless, garba...|[0.99999914380718...|  0.0|       0.0|[13.9707693814121...|\n|Completely Revise...|[completely, revi...|[0.99999908778235...|  0.0|       0.0|[13.9073863202531...|\n|You Buy Crap - Yo...|[buy, crap, -, ge...|[0.99999795395842...|  0.0|       0.0|[13.0996015235865...|\n|Terrible Quality ...|[terrible, qualit...|[0.99998218975207...|  0.0|       0.0|[10.9357187298068...|\n|Great product but...|[great, product, ...|[0.99997893706082...|  0.0|       0.0|[10.7679744359987...|\n|Cheap Chineese JUNK!|[cheap, chineese,...|[0.99996442587089...|  0.0|       0.0|[10.2438563200778...|\n|GRG Mfg. copy ver...|[grg, mfg, copy, ...|[0.99995498373315...|  0.0|       0.0|[10.0084416308740...|\n+--------------------+--------------------+--------------------+-----+----------+--------------------+\nonly showing top 10 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065399_-1802994507",
+      "id": "20190325-212127_425739556",
+      "dateCreated": "2020-04-24 11:01:05.399",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "predictions.filter($\"prediction\" \u003d\u003d\u003d 0.0).select(\"summary\",\"reviewTokens\",\"overall\",\"prediction\").orderBy(desc(\"rawPrediction\")).show(5)",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.399",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+--------------------+-------+----------+\n|             summary|        reviewTokens|overall|prediction|\n+--------------------+--------------------+-------+----------+\n|BOUGHT 2, LASER Q...|[bought, 2, laser...|    1.0|       0.0|\n|you will need a b...|[need, bit, luck,...|    1.0|       0.0|\n|Awful Phone and T...|[awful, phone, te...|    1.0|       0.0|\n|  Worthless Garbage!|[worthless, garba...|    1.0|       0.0|\n|Completely Revise...|[completely, revi...|    1.0|       0.0|\n+--------------------+--------------------+-------+----------+\nonly showing top 5 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065399_-523629535",
+      "id": "20190402-234015_636311690",
+      "dateCreated": "2020-04-24 11:01:05.399",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "show review text for most positive",
+      "text": "predictions.filter($\"prediction\" \u003d\u003d\u003d 1.0).select(\"summary\",\"reviewTokens\",\"overall\",\"prediction\").orderBy(\"rawPrediction\").show(5)",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.400",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+--------------------+-------+----------+\n|             summary|        reviewTokens|overall|prediction|\n+--------------------+--------------------+-------+----------+\n|               great|[great, excellent...|    5.0|       1.0|\n|A fantasitic stov...|[fantasitic, stov...|    5.0|       1.0|\n|Holy grail of aff...|[holy, grail, aff...|    5.0|       1.0|\n|Excellent surviva...|[excellent, survi...|    5.0|       1.0|\n|Kabar made a good...|[kabar, made, goo...|    5.0|       1.0|\n+--------------------+--------------------+-------+----------+\nonly showing top 5 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065399_-1479976568",
+      "id": "20190402-234631_916018652",
+      "dateCreated": "2020-04-24 11:01:05.400",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "z.show( predictions.filter($\"prediction\" \u003d\u003d\u003d 0.0).select(\"summary\",\"probability\",\"label\",\"prediction\", \"rawPrediction\").orderBy(desc(\"rawPrediction\")).limit(10))",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.400",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "summary": "string",
+                      "probability": "string",
+                      "label": "string",
+                      "prediction": "string",
+                      "rawPrediction": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "summary\tprobability\tlabel\tprediction\trawPrediction\nBOUGHT 2, LASER QUIT ON BOTH ON SAME DAY I BOUGHT THEM\t[0.9999999999999665,3.3565365649465224E-14]\t0.0\t0.0\t[31.025281643807034,-31.025281643807034]\nyou will need a bit of luck !\t[0.999999805459512,1.9454048811151876E-7]\t0.0\t0.0\t[15.452625335912968,-15.452625335912968]\nAwful Phone and Terrible Tmobile Customer Service\t[0.9999996685640288,3.314359710890501E-7]\t0.0\t0.0\t[14.919830863592788,-14.919830863592788]\nWorthless Garbage!\t[0.9999991438071872,8.561928127708148E-7]\t0.0\t0.0\t[13.970769381412103,-13.970769381412103]\nCompletely Revised Review\t[0.9999990877823576,9.122176422988789E-7]\t0.0\t0.0\t[13.907386320253124,-13.907386320253124]\nYou Buy Crap - You Get Crap!\t[0.9999979539584233,2.046041576788738E-6]\t0.0\t0.0\t[13.099601523586525,-13.099601523586525]\nTerrible Quality - Stay Away\t[0.999982189752075,1.7810247924927838E-5]\t0.0\t0.0\t[10.935718729806863,-10.935718729806863]\nGreat product but Terrible Customer Service!!\t[0.9999789370608277,2.106293917227795E-5]\t0.0\t0.0\t[10.767974435998733,-10.767974435998733]\nCheap Chineese JUNK!\t[0.9999644258708955,3.5574129104371164E-5]\t0.0\t0.0\t[10.243856320077892,-10.243856320077892]\nGRG Mfg. copy version is a cheap knock-off\t[0.9999549837331588,4.5016266841194225E-5]\t0.0\t0.0\t[10.00844163087407,-10.00844163087407]\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065400_1064058824",
+      "id": "20190325-214111_892833676",
+      "dateCreated": "2020-04-24 11:01:05.400",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "predictions.filter($\"prediction\" \u003d\u003d\u003d 1.0).select(\"reviewText\",\"summary\",\"probability\",\"label\",\"prediction\", \"rawPrediction\").orderBy(\"rawPrediction\").show(10)",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.400",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+--------------------+--------------------+-----+----------+--------------------+\n|          reviewText|             summary|         probability|label|prediction|       rawPrediction|\n+--------------------+--------------------+--------------------+-----+----------+--------------------+\n|is an excellent p...|               great|[2.63141157909731...|  1.0|       1.0|[-15.150574963521...|\n|I love this thing...|A fantasitic stov...|[1.08697592318733...|  1.0|       1.0|[-9.1268322103637...|\n|Of course this re...|Holy grail of aff...|[1.41030785086230...|  1.0|       1.0|[-8.8663913167417...|\n|I labored over a ...|Excellent surviva...|[2.88564376560521...|  1.0|       1.0|[-8.1503037485652...|\n|This is a great l...|Kabar made a good...|[3.39600534712833...|  1.0|       1.0|[-7.9874008707790...|\n|I originally orde...|Great travel comp...|[5.06280196969382...|  1.0|       1.0|[-7.5879138845877...|\n|I wish I could gi...|Great bi-pod, onl...|[5.72528823807158...|  1.0|       1.0|[-7.4648747837608...|\n|I use this to hau...|Great for day tri...|[5.98603080127987...|  1.0|       1.0|[-7.4203130346914...|\n|Bought this last ...|Had to decide bet...|[6.52435016161573...|  1.0|       1.0|[-7.3341463678720...|\n|Check out my full...|One Huge, Surviva...|[6.90598747746906...|  1.0|       1.0|[-7.2772607489719...|\n+--------------------+--------------------+--------------------+-----+----------+--------------------+\nonly showing top 10 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065400_313635507",
+      "id": "20190326-215034_1172466439",
+      "dateCreated": "2020-04-24 11:01:05.400",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "z.show( predictions.filter($\"prediction\" \u003d\u003d\u003d 1.0).select(\"summary\",\"probability\",\"label\",\"prediction\", \"rawPrediction\").orderBy(\"rawPrediction\").limit(10))",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.400",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "summary": "string",
+                      "probability": "string",
+                      "label": "string",
+                      "prediction": "string",
+                      "rawPrediction": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "summary\tprobability\tlabel\tprediction\trawPrediction\ngreat\t[2.6314115790973104E-7,0.999999736858842]\t1.0\t1.0\t[-15.150574963521006,15.150574963521006]\nA fantasitic stove for a very cheap price!!!\t[1.0869759231873341E-4,0.9998913024076813]\t1.0\t1.0\t[-9.126832210363752,9.126832210363752]\nHoly grail of affordable knives\t[1.4103078508623072E-4,0.9998589692149137]\t1.0\t1.0\t[-8.866391316741732,8.866391316741732]\nExcellent survival / combat knife for the money\t[2.8856437656052164E-4,0.9997114356234394]\t1.0\t1.0\t[-8.150303748565229,8.150303748565229]\nKabar made a good folder,\t[3.396005347128336E-4,0.9996603994652871]\t1.0\t1.0\t[-7.987400870779087,7.987400870779087]\nGreat travel companion\t[5.062801969693825E-4,0.9994937198030306]\t1.0\t1.0\t[-7.587913884587772,7.587913884587772]\nGreat bi-pod, only a few issues\t[5.725288238071585E-4,0.9994274711761928]\t1.0\t1.0\t[-7.4648747837608305,7.4648747837608305]\nGreat for day trips or every day carry\t[5.986030801279873E-4,0.9994013969198721]\t1.0\t1.0\t[-7.420313034691496,7.420313034691496]\nHad to decide between Camp Everest and Stansport. Works great, couple tips...\t[6.524350161615733E-4,0.9993475649838385]\t1.0\t1.0\t[-7.3341463678720835,7.3341463678720835]\nOne Huge, Survival Machete Bolo w/ Firesteel and Sharpener\t[6.905987477469067E-4,0.9993094012522532]\t1.0\t1.0\t[-7.277260748971907,7.277260748971907]\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065400_152552601",
+      "id": "20190325-212851_79604233",
+      "dateCreated": "2020-04-24 11:01:05.400",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\nBelow, we calculate some more metrics. The number of false/true positive and negative predictions is also useful:\n\nTrue positives are how often the model correctly predicted positive\nFalse positives are how often the model incorrectly predicted positive\nTrue negatives indicate how often the model correctly predicted not positive\nFalse negatives indicate how often the model incorrectly predicted not positive",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.400",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065400_-1236214496",
+      "id": "20190305-233843_231265861",
+      "dateCreated": "2020-04-24 11:01:05.400",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Calculate some more metrics",
+      "text": "val lp \u003d predictions.select(  \"prediction\",\"label\")\nval counttotal \u003d predictions.count().toDouble\nval correct \u003d lp.filter($\"label\" \u003d\u003d\u003d $\"prediction\").count().toDouble\nval wrong \u003d lp.filter(\"label !\u003d prediction\").count().toDouble\nval ratioWrong\u003dwrong/counttotal\nval ratioCorrect\u003dcorrect/counttotal\nval truen \u003d( lp.filter($\"prediction\" \u003d\u003d\u003d 0.0).filter($\"label\" \u003d\u003d\u003d $\"prediction\").count()) /counttotal\nval truep \u003d (lp.filter($\"prediction\" \u003d\u003d\u003d 1.0).filter($\"label\" \u003d\u003d\u003d $\"prediction\").count())/counttotal\nval falsen \u003d (lp.filter($\"prediction\" \u003d\u003d\u003d 0.0).filter(not($\"label\" \u003d\u003d\u003d $\"prediction\")).count())/counttotal\nval falsep \u003d (lp.filter($\"prediction\" \u003d\u003d\u003d 1.0).filter(not($\"label\" \u003d\u003d\u003d $\"prediction\")).count())/counttotal\n\n\nval precision \u003d truep / (truep + falsep)\nval recall \u003d truep / (truep + falsen)\nval fmeasure \u003d 2 * precision * recall / (precision + recall)\nval accuracy \u003d (truep + truen) / (truep + truen + falsep + falsen)",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.401",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "lp: org.apache.spark.sql.DataFrame \u003d [prediction: double, label: double]\ncounttotal: Double \u003d 8913.0\ncorrect: Double \u003d 7669.0\nwrong: Double \u003d 1244.0\nratioWrong: Double \u003d 0.13957141254347583\nratioCorrect: Double \u003d 0.8604285874565242\ntruen: Double \u003d 0.34219679120385954\ntruep: Double \u003d 0.5182317962526647\nfalsen: Double \u003d 0.04173678895994615\nfalsep: Double \u003d 0.09783462358352968\nprecision: Double \u003d 0.8411946822072482\nrecall: Double \u003d 0.9254658385093167\nfmeasure: Double \u003d 0.8813203587101699\naccuracy: Double \u003d 0.8604285874565243\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065401_312315918",
+      "id": "20181015-224231_2027590368",
+      "dateCreated": "2020-04-24 11:01:05.401",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": " var test \u003d\"reviews_Sports_and_Outdoors_Train.json.gz\"\n// With the SparkSession read method, read data from a file into a Dataset\n val testds  \u003d spark.read.format(\"json\").option(\"inferSchema\", \"true\").load(test) \n val testdf \u003d testds.withColumn(\"reviewTS\", concat($\"summary\",lit(\" \"),$\"reviewText\" ))\n// display the first 20 rows of the DataFrame\n testdf.show",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.401",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+----------+-------+-------+--------------------+-----------+--------------+--------------------+--------------------+--------------+--------------------+\n|      asin|helpful|overall|          reviewText| reviewTime|    reviewerID|        reviewerName|             summary|unixReviewTime|            reviewTS|\n+----------+-------+-------+--------------------+-----------+--------------+--------------------+--------------------+--------------+--------------------+\n|1881509818| [0, 0]|    5.0|This came in on t...|01 26, 2014|  AIXZKN4ACSKI|        David Briner|      Woks very good|    1390694400|Woks very good Th...|\n|1881509818| [1, 1]|    5.0|I had a factory G...| 02 2, 2012|A1L5P841VIO02V|     Jason A. Kramer|Works as well as ...|    1328140800|Works as well as ...|\n|1881509818| [2, 2]|    4.0|If you don\u0027t have...|02 28, 2012| AB2W04NI4OEAD|          J. Fernald|It\u0027s a punch, tha...|    1330387200|It\u0027s a punch, tha...|\n|1881509818| [0, 0]|    4.0|This works no bet...| 02 5, 2012|A148SVSWKTJKU6|Jusitn A. Watts \"...|It\u0027s a punch with...|    1328400000|It\u0027s a punch with...|\n|1881509818| [0, 0]|    4.0|I purchased this ...|04 23, 2013| AAAWJ6LW9WMOO|        Material Man|Ok,tool does what...|    1366675200|Ok,tool does what...|\n|1881509818| [0, 0]|    5.0|Needed this tool ...| 11 2, 2012|A2XX2A4OJCDNLZ| RatherLiveInKeyWest|Glock punch tool ...|    1351814400|Glock punch tool ...|\n|1881509818| [0, 0]|    5.0|If u don\u0027t have i...|06 10, 2014|A283UOBQRUNM4Q|       Thomas Dragon|          Great tool|    1402358400|Great tool If u d...|\n|2094869245| [0, 0]|    4.0|This light will n...|08 31, 2013| AWG3H90WVZ0Z1|         Alec Nelson|             Bright!|    1377907200|Bright! This ligh...|\n|2094869245| [0, 1]|    5.0|Light and laser t...|05 27, 2013|A3V52OTJHKIJZX|A. Saenz Jr. \"Bet...|             Be seen|    1369612800|Be seen Light and...|\n|2094869245| [0, 0]|    5.0|Does everything i...| 11 2, 2013|A3SZBE5F3UQ9EC|   ChasRat \"ChasRat\"|Bicycle rear tail...|    1383350400|Bicycle rear tail...|\n|2094869245| [0, 0]|    4.0|Very bright.  I w...| 05 7, 2014|A2HVMUMOKOGCQ9|            G. Inman|          Great lite|    1399420800|Great lite Very b...|\n|2094869245| [0, 0]|    3.0|It\u0027s cheaply made...| 01 7, 2014|A21AJ9GNCM89MK|                Greg|It\u0027s worth the pr...|    1389052800|It\u0027s worth the pr...|\n|2094869245| [0, 0]|    5.0|Mine arrived with...|01 14, 2014|A10X9ME6R66JDX|   Hugo M. M. Rabson|For $11, it\u0027s a b...|    1389657600|For $11, it\u0027s a b...|\n|2094869245| [0, 0]|    4.0|It works great it...|12 20, 2013|A2I7K5OIEXUI6R|Lswieckitay \"Lswi...|               Bulky|    1387497600|Bulky It works gr...|\n|2094869245| [0, 0]|    5.0|I love this light...|09 18, 2013|A2RCMHV3MHEBDP|          Micah Chan|            Love it!|    1379462400|Love it! I love t...|\n|2094869245| [0, 0]|    5.0|Bit bulky. One bu...|01 16, 2014|A2A26KED39175E|        Pudknocker71|       Bulky but....|    1389830400|Bulky but.... Bit...|\n|2094869245| [0, 0]|    5.0|it is bright and ...| 12 7, 2013| ANKZUDSZFUMNZ|              ronald|     rear bike light|    1386374400|rear bike light i...|\n|2094869245| [0, 0]|    4.0|A mice bright lig...| 11 4, 2013|A2M93OC5AOMMM3|             Vette71|Needed a little m...|    1383523200|Needed a little m...|\n|2094869245| [0, 0]|    4.0|Had one ride on t...|11 12, 2013| AO3M0AXLL0AGW|        Vic D \"Cope\"|Good light for th...|    1384214400|Good light for th...|\n|7245456259| [0, 0]|    2.0|So it worked well...|03 28, 2014|A2NFEGCOY2TO1Q|                Adam|resistance was go...|    1395964800|resistance was go...|\n+----------+-------+-------+--------------------+-----------+--------------+--------------------+--------------------+--------------+--------------------+\nonly showing top 20 rows\n\ntest: String \u003d reviews_Sports_and_Outdoors_Train.json.gz\ntestds: org.apache.spark.sql.DataFrame \u003d [asin: string, helpful: array\u003cbigint\u003e ... 7 more fields]\ntestdf: org.apache.spark.sql.DataFrame \u003d [asin: string, helpful: array\u003cbigint\u003e ... 8 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065401_-232821598",
+      "id": "20190322-214213_2113177403",
+      "dateCreated": "2020-04-24 11:01:05.401",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val tdf1 \u003d testdf.filter(\"overall !\u003d3\")\nval bucketizer \u003d new Bucketizer().setInputCol(\"overall\").setOutputCol(\"label\").setSplits(Array(Double.NegativeInfinity,4.0,Double.PositiveInfinity))\n\nval tdf2\u003d bucketizer.transform(tdf1)\n\nval p2 \u003d model.transform(tdf2)",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.401",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "tdf1: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] \u003d [asin: string, helpful: array\u003cbigint\u003e ... 8 more fields]\nbucketizer: org.apache.spark.ml.feature.Bucketizer \u003d bucketizer_db199f1dc926\ntdf2: org.apache.spark.sql.DataFrame \u003d [asin: string, helpful: array\u003cbigint\u003e ... 9 more fields]\np2: org.apache.spark.sql.DataFrame \u003d [asin: string, helpful: array\u003cbigint\u003e ... 16 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065401_-1860248826",
+      "id": "20190322-214550_1046555819",
+      "dateCreated": "2020-04-24 11:01:05.401",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val evaluator \u003d new BinaryClassificationEvaluator() \nval e \u003d evaluator.evaluate(p2)",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.401",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "evaluator: org.apache.spark.ml.evaluation.BinaryClassificationEvaluator \u003d binEval_e25f0c2dd6df\ne: Double \u003d 0.939849051010809\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065401_439616385",
+      "id": "20190322-214422_192159375",
+      "dateCreated": "2020-04-24 11:01:05.401",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val lp \u003d p2.select(  \"prediction\",\"label\")\nval counttotal \u003d lp.count().toDouble\nval correct \u003d lp.filter($\"label\" \u003d\u003d\u003d $\"prediction\").count().toDouble\nval wrong \u003d lp.filter(\"label !\u003d prediction\").count().toDouble\nval ratioWrong\u003dwrong/counttotal\nval ratioCorrect\u003dcorrect/counttotal\nval truen \u003d( lp.filter($\"prediction\" \u003d\u003d\u003d 0.0).filter($\"label\" \u003d\u003d\u003d $\"prediction\").count()) /counttotal\nval truep \u003d (lp.filter($\"prediction\" \u003d\u003d\u003d 1.0).filter($\"label\" \u003d\u003d\u003d $\"prediction\").count())/counttotal\nval falsen \u003d (lp.filter($\"prediction\" \u003d\u003d\u003d 0.0).filter(not($\"label\" \u003d\u003d\u003d $\"prediction\")).count())/counttotal\nval falsep \u003d (lp.filter($\"prediction\" \u003d\u003d\u003d 1.0).filter(not($\"label\" \u003d\u003d\u003d $\"prediction\")).count())/counttotal\n\nval precision \u003d truep / (truep + falsep)\nval recall \u003d truep / (truep + falsen)\nval fmeasure \u003d 2 * precision * recall / (precision + recall)\nval accuracy \u003d (truep + truen) / (truep + truen + falsep + falsen)",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.401",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "lp: org.apache.spark.sql.DataFrame \u003d [prediction: double, label: double]\ncounttotal: Double \u003d 272266.0\ncorrect: Double \u003d 249837.0\nwrong: Double \u003d 22429.0\nratioWrong: Double \u003d 0.08237899701027672\nratioCorrect: Double \u003d 0.9176210029897233\ntruen: Double \u003d 0.056136278492356737\ntruep: Double \u003d 0.8614847244973666\nfalsen: Double \u003d 0.06781603285022735\nfalsep: Double \u003d 0.014562964160049364\nprecision: Double \u003d 0.9833765166570239\nrecall: Double \u003d 0.9270246663267686\nfmeasure: Double \u003d 0.9543694752153967\naccuracy: Double \u003d 0.9176210029897234\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065401_1482417559",
+      "id": "20190322-214743_2133026750",
+      "dateCreated": "2020-04-24 11:01:05.401",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "p2.filter($\"prediction\" \u003d\u003d\u003d 0.0).select(\"summary\",\"reviewTokens\",\"overall\",\"prediction\").orderBy(desc(\"probability\")).show(5)\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.402",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+--------------------+-------+----------+\n|             summary|        reviewTokens|overall|prediction|\n+--------------------+--------------------+-------+----------+\n|BOUGHT 2, LASER Q...|[bought, 2, laser...|    1.0|       0.0|\n|Good looking knif...|[good, looking, k...|    1.0|       0.0|\n|Severely Disappoi...|[severely, disapp...|    1.0|       0.0|\n|Pretty piece of o...|[pretty, piece, p...|    1.0|       0.0|\n|you will need a b...|[need, bit, luck,...|    1.0|       0.0|\n+--------------------+--------------------+-------+----------+\nonly showing top 5 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065402_751149453",
+      "id": "20190409-201302_305927581",
+      "dateCreated": "2020-04-24 11:01:05.402",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "p2.filter($\"prediction\" \u003d\u003d\u003d 0.0).select(\"summary\",\"reviewTokens\",\"overall\",\"prediction\").orderBy(desc(\"rawPrediction\")).show(5)",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.402",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+--------------------+-------+----------+\n|             summary|        reviewTokens|overall|prediction|\n+--------------------+--------------------+-------+----------+\n|BOUGHT 2, LASER Q...|[bought, 2, laser...|    1.0|       0.0|\n|Good looking knif...|[good, looking, k...|    1.0|       0.0|\n|Severely Disappoi...|[severely, disapp...|    1.0|       0.0|\n|Pretty piece of o...|[pretty, piece, p...|    1.0|       0.0|\n|you will need a b...|[need, bit, luck,...|    1.0|       0.0|\n+--------------------+--------------------+-------+----------+\nonly showing top 5 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065402_-575262118",
+      "id": "20190409-202354_1559133339",
+      "dateCreated": "2020-04-24 11:01:05.402",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "p2.filter($\"prediction\" \u003d\u003d\u003d 1.0).select(\"summary\",\"reviewTokens\",\"overall\",\"prediction\",\"probability\").orderBy(\"probability\").show(5)",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.402",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+--------------------+-------+----------+--------------------+\n|             summary|        reviewTokens|overall|prediction|         probability|\n+--------------------+--------------------+-------+----------+--------------------+\n|Great bike and gr...|[great, bike, gre...|    5.0|       1.0|[2.66983490828926...|\n|A great way to do...|[great, way, push...|    5.0|       1.0|[4.24137664819849...|\n|For the price an ...|[price, excellent...|    5.0|       1.0|[2.04739869388898...|\n|My DROID Story an...|[droid, story, co...|    5.0|       1.0|[6.45203540130964...|\n|               great|[great, excellent...|    5.0|       1.0|[7.59233707275503...|\n+--------------------+--------------------+-------+----------+--------------------+\nonly showing top 5 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065402_-481057577",
+      "id": "20190409-201706_946113887",
+      "dateCreated": "2020-04-24 11:01:05.402",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "z.show(p2.filter($\"prediction\" \u003d\u003d\u003d 1.0).select(\"summary\",\"overall\",\"prediction\",\"probability\").orderBy(\"probability\").limit(5))",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.402",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "summary": "string",
+                      "overall": "string",
+                      "prediction": "string",
+                      "probability": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "summary\toverall\tprediction\tprobability\nGreat bike and great price!\t5.0\t1.0\t[2.6698349082892677E-16,0.9999999999999998]\nA great way to do push ups!\t5.0\t1.0\t[4.241376648198493E-12,0.9999999999957587]\nFor the price an excellent phone\t5.0\t1.0\t[2.0473986938889828E-11,0.9999999999795259]\nMy DROID Story and complete review\t5.0\t1.0\t[6.452035401309645E-9,0.9999999935479646]\ngreat\t5.0\t1.0\t[7.592337072755037E-9,0.9999999924076629]\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065402_-912218174",
+      "id": "20190409-201936_1030436738",
+      "dateCreated": "2020-04-24 11:01:05.402",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "z.show( p2.filter($\"prediction\" \u003d\u003d\u003d 0.0).select(\"summary\",\"probability\",\"label\",\"prediction\", \"rawPrediction\").orderBy(desc(\"rawPrediction\")).limit(10))",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.403",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "summary": "string",
+                      "probability": "string",
+                      "label": "string",
+                      "prediction": "string",
+                      "rawPrediction": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "summary\tprobability\tlabel\tprediction\trawPrediction\nBOUGHT 2, LASER QUIT ON BOTH ON SAME DAY I BOUGHT THEM\t[0.9999999999999665,3.3565365649465224E-14]\t0.0\t0.0\t[31.025281643807034,-31.025281643807034]\nGood looking knife but thumb stud is useless\t[0.9999999989815305,1.0184696328320115E-9]\t0.0\t0.0\t[20.704964695267474,-20.704964695267474]\nSeverely Disappointing, Downgraded Quality, RELIANCE No Longer Reliable\t[0.9999998880874114,1.1191258870996883E-7]\t0.0\t0.0\t[16.005547616401287,-16.005547616401287]\nPretty piece of over priced junk\t[0.999999839186212,1.608137878798496E-7]\t0.0\t0.0\t[15.643018577542229,-15.643018577542229]\nyou will need a bit of luck !\t[0.999999805459512,1.9454048811151876E-7]\t0.0\t0.0\t[15.452625335912968,-15.452625335912968]\nROTHCO brand Means \u0027BUYER BEWARE!\"\t[0.9999997625894426,2.374105574772637E-7]\t0.0\t0.0\t[15.253474647088487,-15.253474647088487]\nAwful Phone and Terrible Tmobile Customer Service\t[0.9999996685640288,3.314359710890501E-7]\t0.0\t0.0\t[14.919830863592788,-14.919830863592788]\nBuyer Beware - You Might Want to Read This\t[0.9999996629706486,3.370293513483115E-7]\t0.0\t0.0\t[14.903095477368222,-14.903095477368222]\nDO NOT BUY HERE IF YOU NEED CUSTOMER SERVICE\t[0.9999995549264109,4.450735890658984E-7]\t0.0\t0.0\t[14.625025754690965,-14.625025754690965]\nWorthless Garbage!\t[0.9999991438071872,8.561928127708148E-7]\t0.0\t0.0\t[13.970769381412103,-13.970769381412103]\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065403_1418820880",
+      "id": "20190326-202443_203116319",
+      "dateCreated": "2020-04-24 11:01:05.403",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "//  show worst rated product ids\np2.filter($\"overall\" \u003d\u003d\u003d 1.0).groupBy(\"overall\",\"asin\").count.orderBy(desc(\"count\")).show(5)\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.403",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------+----------+-----+\n|overall|      asin|count|\n+-------+----------+-----+\n|    1.0|B002OKWHVO|   73|\n|    1.0|B0010O748Q|   26|\n|    1.0|B003NFI092|   23|\n|    1.0|B002OKSGAK|   23|\n|    1.0|B0012DJBNG|   18|\n+-------+----------+-----+\nonly showing top 5 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065403_1861870024",
+      "id": "20190409-204214_1516819617",
+      "dateCreated": "2020-04-24 11:01:05.403",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "p2.select(\"summary\",\"reviewText\",\"overall\",\"label\",\"prediction\").filter(\"asin\u003d\u0027B00A17I99Q\u0027\").orderBy(\"overall\").show(10)\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.413",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------------+--------------------+-------+-----+----------+\n|             summary|          reviewText|overall|label|prediction|\n+--------------------+--------------------+-------+-----+----------+\n|For the data hung...|I saw the Jawbone...|    1.0|  0.0|       1.0|\n|I wish I could gi...|I had purchased t...|    1.0|  0.0|       0.0|\n|         DO NOT BUY!|Do your research ...|    1.0|  0.0|       0.0|\n|         Returned it|I could not get t...|    1.0|  0.0|       0.0|\n| didn\u0027t do it for me|didn\u0027t like it.  ...|    1.0|  0.0|       0.0|\n|Fragile, just lik...|//UpdateMy second...|    1.0|  0.0|       0.0|\n|Almost perfect de...|I waited a while ...|    1.0|  0.0|       0.0|\n|Not all its crack...|I started with th...|    1.0|  0.0|       0.0|\n|         Returned...|I gave it as a gi...|    1.0|  0.0|       0.0|\n|Defective product...|1st jawbone up 2n...|    1.0|  0.0|       0.0|\n+--------------------+--------------------+-------+-----+----------+\nonly showing top 10 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065413_793760753",
+      "id": "20190409-205432_21848564",
+      "dateCreated": "2020-04-24 11:01:05.413",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "z.show( predictions.filter($\"prediction\" \u003d\u003d\u003d 1.0).select(\"summary\",\"probability\",\"label\",\"prediction\", \"rawPrediction\").orderBy(\"rawPrediction\").limit(10))",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.414",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "summary": "string",
+                      "probability": "string",
+                      "label": "string",
+                      "prediction": "string",
+                      "rawPrediction": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "summary\tprobability\tlabel\tprediction\trawPrediction\ngreat\t[2.6314115790973104E-7,0.999999736858842]\t1.0\t1.0\t[-15.150574963521006,15.150574963521006]\nA fantasitic stove for a very cheap price!!!\t[1.0869759231873341E-4,0.9998913024076813]\t1.0\t1.0\t[-9.126832210363752,9.126832210363752]\nHoly grail of affordable knives\t[1.4103078508623072E-4,0.9998589692149137]\t1.0\t1.0\t[-8.866391316741732,8.866391316741732]\nExcellent survival / combat knife for the money\t[2.8856437656052164E-4,0.9997114356234394]\t1.0\t1.0\t[-8.150303748565229,8.150303748565229]\nKabar made a good folder,\t[3.396005347128336E-4,0.9996603994652871]\t1.0\t1.0\t[-7.987400870779087,7.987400870779087]\nGreat travel companion\t[5.062801969693825E-4,0.9994937198030306]\t1.0\t1.0\t[-7.587913884587772,7.587913884587772]\nGreat bi-pod, only a few issues\t[5.725288238071585E-4,0.9994274711761928]\t1.0\t1.0\t[-7.4648747837608305,7.4648747837608305]\nGreat for day trips or every day carry\t[5.986030801279873E-4,0.9994013969198721]\t1.0\t1.0\t[-7.420313034691496,7.420313034691496]\nHad to decide between Camp Everest and Stansport. Works great, couple tips...\t[6.524350161615733E-4,0.9993475649838385]\t1.0\t1.0\t[-7.3341463678720835,7.3341463678720835]\nOne Huge, Survival Machete Bolo w/ Firesteel and Sharpener\t[6.905987477469067E-4,0.9993094012522532]\t1.0\t1.0\t[-7.277260748971907,7.277260748971907]\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065413_315434811",
+      "id": "20190326-202536_1399552700",
+      "dateCreated": "2020-04-24 11:01:05.413",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md \nHow do you think the accuracy could be improved?\nAdd more historical data? \n\nTune the model with K-fold cross validation ?\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.414",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eHow do you think the accuracy could be improved?\u003cbr/\u003eAdd more historical data? \u003c/p\u003e\n\u003cp\u003eTune the model with K-fold cross validation ?\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065414_-1701455570",
+      "id": "20181004-211413_1357524146",
+      "dateCreated": "2020-04-24 11:01:05.414",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Save the model to use with streaming data",
+      "text": "var dir \u003d\"sentmodel/\"\nmodel.write.overwrite().save(dir)\n//df.unpersist\n//df1.unpersist\n//df2.unpersist\n//df3.unpersist\n//trainingData.unpersist",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.414",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "dir: String \u003d sentmodel/\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065414_1725723162",
+      "id": "20181015-213933_2083506099",
+      "dateCreated": "2020-04-24 11:01:05.414",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "// to read model \nimport spark.implicits._\nvar dir \u003d\"sentmodel/\"\nval model \u003d org.apache.spark.ml.PipelineModel.load(dir)\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.414",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import spark.implicits._\ndir: String \u003d sentmodel/\nmodel: org.apache.spark.ml.PipelineModel \u003d pipeline_664a9273ada3\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065414_-1362394999",
+      "id": "20190409-194127_1283071174",
+      "dateCreated": "2020-04-24 11:01:05.414",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n## End of Part 1\nThis is the end of this notebook. \n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.414",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch2\u003eEnd of Part 1\u003c/h2\u003e\n\u003cp\u003eThis is the end of this notebook.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065414_-555526972",
+      "id": "20190308-214104_123247947",
+      "dateCreated": "2020-04-24 11:01:05.414",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.415",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065415_820673072",
+      "id": "20190308-214100_1285199507",
+      "dateCreated": "2020-04-24 11:01:05.415",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:05.415",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726065415_-1059888503",
+      "id": "20171122-091021_1615582434",
+      "dateCreated": "2020-04-24 11:01:05.415",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "Spark/Structured Streaming Examples/Sentiment Analyzer",
+  "id": "2F6MCD9PX",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "md:shared_process": [],
+    "python:shared_process": [],
+    "sh:shared_process": [],
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

@@ -1,0 +1,286 @@
+{
+  "paragraphs": [
+    {
+      "title": "Note",
+      "text": "%md\nRun These Pragraphs Seperately since downloading data requires time.",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:00:56.609",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eRun These Pragraphs Seperately since downloading data requires time.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726056597_-1323529490",
+      "id": "20200424-093842_210501815",
+      "dateCreated": "2020-04-24 11:00:56.597",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Download Amazon Product reviews Data for Model Training",
+      "text": "%sh\nwget -bqcO /ovs_data/user/root/reviews_Sports_and_Outdoors_Train.json.gz http://snap.stanford.edu/data/amazon/productGraph/categoryFiles/reviews_Sports_and_Outdoors_5.json.gz",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:00:56.609",
+      "config": {
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sh",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Continuing in background, pid 12078.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726056609_954231227",
+      "id": "20200424-093544_615442670",
+      "dateCreated": "2020-04-24 11:00:56.609",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Download Data from Structured Streaming Pipeline",
+      "text": "%sh\nwget -bqcO /ovs_data/user/root/Sports_and_Outdoors.json.gz http://deepyeti.ucsd.edu/jianmo/amazon/categoryFiles/Sports_and_Outdoors.json.gz",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:00:56.610",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "Continuing in background, pid 11756.\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726056609_1155885070",
+      "id": "20200424-094055_197824747",
+      "dateCreated": "2020-04-24 11:00:56.609",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Check For Input Download Data",
+      "text": "%md\nCheck the Size for \"reviews_Sports_and_Outdoors_Train.json.gz\" should be around 66M and for \"Sports_and_Outdoors.json.gz\" size should be around 1.6G",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:00:56.610",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003cp\u003eCheck the Size for \u0026ldquo;reviews_Sports_and_Outdoors_Train.json.gz\u0026rdquo; should be around 66M and for \u0026ldquo;Sports_and_Outdoors.json.gz\u0026rdquo; size should be around 1.6G\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726056610_1923697500",
+      "id": "20200424-094646_2034452663",
+      "dateCreated": "2020-04-24 11:00:56.610",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Check if download processes are still running",
+      "text": "%sh\nps -ef | grep wget",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:00:56.610",
+      "config": {
+        "editorSetting": {
+          "language": "sh",
+          "editOnDblClick": false,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sh",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "root     13173  6277  0 10:05 ?        00:00:00 bash -c ps -ef | grep wget\nroot     13178 13173  0 10:05 ?        00:00:00 grep wget\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726056610_1646578665",
+      "id": "20200424-095226_1141557703",
+      "dateCreated": "2020-04-24 11:00:56.610",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Shell Command to check Downloaded Data for Integrity ",
+      "text": "%sh\ndu -sh /ovs_data/user/root/*",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:00:56.610",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "33K\t/ovs_data/user/root/checkpoint\n66M\t/ovs_data/user/root/reviews_Sports_and_Outdoors_5.json.gz\n66M\t/ovs_data/user/root/reviews_Sports_and_Outdoors_Train.json.gz\n23K\t/ovs_data/user/root/sent2\n735K\t/ovs_data/user/root/sentmodel\n155K\t/ovs_data/user/root/sink\n122K\t/ovs_data/user/root/sinw123\n63K\t/ovs_data/user/root/sinw12345\n1.6G\t/ovs_data/user/root/Sports_and_Outdoors.json.gz\n1.2M\t/ovs_data/user/root/testdata\n117K\t/ovs_data/user/root/testdata2\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726056610_1480816191",
+      "id": "20200424-094318_1027335496",
+      "dateCreated": "2020-04-24 11:00:56.610",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Ingest Data into Kafka Topic for Streaming Pipeline",
+      "text": "%python\nimport requests\nimport json\nimport time\nimport gzip\n\n\nfilepath \u003d \"/ovs_data/user/root/Sports_and_Outdoors.json.gz\"\nheaders \u003d {\u0027Content-Type\u0027: \"application/vnd.kafka.json.v1+json\"}\nrest_host \u003d \u0027http://kafka-rest:8082/topics/\u0027\nmax_records \u003d 0\ncount \u003d 0\nurl \u003d rest_host.__add__(\"reviews\")\nwith gzip.open(filepath, \u0027r\u0027) as gzip_file:\n    for lines in gzip_file:\n        if max_records !\u003d 0 and count \u003e\u003d max_records:\n            break\n        review_record \u003d json.loads(lines)\n        data \u003d json.dumps({\"records\": [{\"value\": review_record}]})\n        resp \u003d requests.post(url, data\u003ddata, headers\u003dheaders)\n        count \u003d count + 1\n        time.sleep(3)",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:00:56.611",
+      "config": {
+        "editorSetting": {
+          "language": "python",
+          "editOnDblClick": false,
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/python",
+        "fontSize": 9.0,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726056610_1999614922",
+      "id": "20200424-093536_1661079376",
+      "dateCreated": "2020-04-24 11:00:56.610",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "Spark/Structured Streaming Examples/Data Ingestion For Structured Streaming Sentiment Analysis",
+  "id": "2F8N19EPS",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "md:shared_process": [],
+    "python:shared_process": [],
+    "sh:shared_process": [],
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}

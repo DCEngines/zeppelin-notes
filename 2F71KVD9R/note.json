@@ -1,0 +1,1961 @@
+{
+  "paragraphs": [
+    {
+      "text": "%md \n## Using Spark Structured Streaming in a data processing pipeline\nIn this notebook, we will use Spark Structured Streaming in a data processing pipeline for predicting sentiment.\nWe will use the machine learning model to enrich product reviews with sentiment predictions and we will store the results in parquet. (Similar to the use case image below, but we are using product review data.) \n\n\u003cimg src\u003d\"https://mapr.com/blog/real-time-analysis-popular-uber-locations-spark-structured-streaming-machine-learning-kafka-and-mapr-db/assets/image46.png\" width\u003d\"500\" height\u003d\"500\"\u003e\n\n\n## Streaming Data\nKafka is a distributed publish-subscribe event streaming system that enables producers and consumers to exchange events in real time in a parallel and fault-tolerant manner via the Apache Kafka API.\nA stream represents a continuous sequence of events that goes from producers to consumers, where an event is defined as a key-value pair.\n\u003cimg src\u003d\"https://mapr.com/blog/real-time-analysis-popular-uber-locations-spark-structured-streaming-machine-learning-kafka-and-mapr-db/assets/image29.png\"\u003e\n\nTopics are a logical stream of events. Topics organize events into categories and decouple producers from consumers. Topics are partitioned for throughput and scalability. Kafka can scale to very high throughput levels, easily delivering millions of messages per second using very modest hardware.\n\u003cimg src\u003d\"https://mapr.com/blog/real-time-analysis-popular-uber-locations-spark-structured-streaming-machine-learning-kafka-and-mapr-db/assets/image16.png\" width\u003d\"500\" height\u003d\"500\"\u003e\nYou can think of a partition like an event log: new events are appended to the end and are assigned a sequential ID number called the offset.\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.275",
+      "config": {
+        "tableHide": true,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": false,
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch2\u003eUsing Spark Structured Streaming in a data processing pipeline\u003c/h2\u003e\n\u003cp\u003eIn this notebook, we will use Spark Structured Streaming in a data processing pipeline for predicting sentiment.\u003cbr/\u003eWe will use the machine learning model to enrich product reviews with sentiment predictions and we will store the results in parquet. (Similar to the use case image below, but we are using product review data.) \u003c/p\u003e\n\u003cimg src\u003d\"https://mapr.com/blog/real-time-analysis-popular-uber-locations-spark-structured-streaming-machine-learning-kafka-and-mapr-db/assets/image46.png\" width\u003d\"500\" height\u003d\"500\"\u003e\n\u003ch2\u003eStreaming Data\u003c/h2\u003e\n\u003cp\u003eKafka is a distributed publish-subscribe event streaming system that enables producers and consumers to exchange events in real time in a parallel and fault-tolerant manner via the Apache Kafka API.\u003cbr/\u003eA stream represents a continuous sequence of events that goes from producers to consumers, where an event is defined as a key-value pair.\u003cbr/\u003e\u003cimg src\u003d\"https://mapr.com/blog/real-time-analysis-popular-uber-locations-spark-structured-streaming-machine-learning-kafka-and-mapr-db/assets/image29.png\"\u003e\u003c/p\u003e\n\u003cp\u003eTopics are a logical stream of events. Topics organize events into categories and decouple producers from consumers. Topics are partitioned for throughput and scalability. Kafka can scale to very high throughput levels, easily delivering millions of messages per second using very modest hardware.\u003cbr/\u003e\u003cimg src\u003d\"https://mapr.com/blog/real-time-analysis-popular-uber-locations-spark-structured-streaming-machine-learning-kafka-and-mapr-db/assets/image16.png\" width\u003d\"500\" height\u003d\"500\"\u003e\u003cbr/\u003eYou can think of a partition like an event log: new events are appended to the end and are assigned a sequential ID number called the offset.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074274_1618148135",
+      "id": "20170530-122945_1594214131",
+      "dateCreated": "2020-04-24 11:01:14.274",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n## Spark Structured Streaming\n\nStructured Streaming is a scalable and fault-tolerant stream processing engine built on the Spark SQL engine. Structured Streaming enables you to view data published to Kafka as an unbounded DataFrame and process this data with the same DataFrame, Dataset, and SQL APIs used for batch processing.\n\u003cimg src\u003d\"https://mapr.com/blog/real-time-analysis-popular-uber-locations-spark-structured-streaming-machine-learning-kafka-and-mapr-db/assets/image25.png\"\u003e",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.275",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch2\u003eSpark Structured Streaming\u003c/h2\u003e\n\u003cp\u003eStructured Streaming is a scalable and fault-tolerant stream processing engine built on the Spark SQL engine. Structured Streaming enables you to view data published to Kafka as an unbounded DataFrame and process this data with the same DataFrame, Dataset, and SQL APIs used for batch processing.\u003cbr/\u003e\u003cimg src\u003d\"https://mapr.com/blog/real-time-analysis-popular-uber-locations-spark-structured-streaming-machine-learning-kafka-and-mapr-db/assets/image25.png\"\u003e\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074275_464723300",
+      "id": "20190220-173254_1728425170",
+      "dateCreated": "2020-04-24 11:01:14.275",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n## Spark Structured Streaming Use Case \n\nProduct review event data is published to a Kafka Event Store topic using the Kafka REST API.\nA Spark streaming application subscribed to the topic:\n* Ingests a stream of review data\n* Uses a deployed machine learning model to enrich the data with sentiment predictions\n* Stores the transformed and enriched data in HDFS in JSON format",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.276",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch2\u003eSpark Structured Streaming Use Case\u003c/h2\u003e\n\u003cp\u003eProduct review event data is published to a Kafka Event Store topic using the Kafka REST API.\u003cbr/\u003eA Spark streaming application subscribed to the topic:\u003cbr/\u003e* Ingests a stream of review data\u003cbr/\u003e* Uses a deployed machine learning model to enrich the data with sentiment predictions\u003cbr/\u003e* Stores the transformed and enriched data in HDFS in JSON format\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074275_-863231275",
+      "id": "20190311-203939_1465736486",
+      "dateCreated": "2020-04-24 11:01:14.276",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Import needed packages",
+      "text": "%spark\nimport org.apache.spark.sql.SparkSession\nimport org.apache.spark.sql.types._\nimport org.apache.spark.sql.functions._\nimport org.apache.spark.sql._\nimport org.apache.spark.streaming._\n\nimport org.apache.spark.ml._\nimport org.apache.spark.ml.feature._\nimport org.apache.spark.ml.classification._\nimport org.apache.spark.ml.evaluation._\nimport org.apache.spark.ml.tuning._\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.276",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import org.apache.spark.sql.SparkSession\nimport org.apache.spark.sql.types._\nimport org.apache.spark.sql.functions._\nimport org.apache.spark.sql._\nimport org.apache.spark.streaming._\nimport org.apache.spark.ml._\nimport org.apache.spark.ml.feature._\nimport org.apache.spark.ml.classification._\nimport org.apache.spark.ml.evaluation._\nimport org.apache.spark.ml.tuning._\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074276_144636764",
+      "id": "20170508-144514_403247535",
+      "dateCreated": "2020-04-24 11:01:14.276",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n### The Streaming event values have the following format:\n\n{\"reviewerID\": \"A3V52OTJHKIJZX\", \"asin\": \"2094869245\",\"reviewText\": \"Light just installed on bike, seems to be well built.\", \"overall\": 5.0, \"summary\": \"Be seen\", \"unixReviewTime\": 1369612800}\n\nwe enrich this data with the sentiment then transform it into the following JSON object:\n\n{\"reviewerID\": \"A3V52OTJHKIJZX\", \"_id\":\"2094869245_1369612800\", \"reviewText\": \"Light just installed on bike, seems to be well built.\", \"overall\": 5.0, \"summary\": \"Be seen\", \"label\":\"1\", \"prediction\":\"1\"}\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.276",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch3\u003eThe Streaming event values have the following format:\u003c/h3\u003e\n\u003cp\u003e{\u0026ldquo;reviewerID\u0026rdquo;: \u0026ldquo;A3V52OTJHKIJZX\u0026rdquo;, \u0026ldquo;asin\u0026rdquo;: \u0026ldquo;2094869245\u0026rdquo;,\u0026ldquo;reviewText\u0026rdquo;: \u0026ldquo;Light just installed on bike, seems to be well built.\u0026rdquo;, \u0026ldquo;overall\u0026rdquo;: 5.0, \u0026ldquo;summary\u0026rdquo;: \u0026ldquo;Be seen\u0026rdquo;, \u0026ldquo;unixReviewTime\u0026rdquo;: 1369612800}\u003c/p\u003e\n\u003cp\u003ewe enrich this data with the sentiment then transform it into the following JSON object:\u003c/p\u003e\n\u003cp\u003e{\u0026ldquo;reviewerID\u0026rdquo;: \u0026ldquo;A3V52OTJHKIJZX\u0026rdquo;, \u0026quot;_id\u0026ldquo;:\u0026rdquo;2094869245_1369612800\u0026ldquo;, \u0026rdquo;reviewText\u0026ldquo;: \u0026rdquo;Light just installed on bike, seems to be well built.\u0026ldquo;, \u0026rdquo;overall\u0026ldquo;: 5.0, \u0026rdquo;summary\u0026ldquo;: \u0026rdquo;Be seen\u0026ldquo;, \u0026rdquo;label\u0026ldquo;:\u0026rdquo;1\u0026ldquo;, \u0026rdquo;prediction\u0026ldquo;:\u0026rdquo;1\u0026quot;}\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074276_-533936268",
+      "id": "20190311-203402_1826680675",
+      "dateCreated": "2020-04-24 11:01:14.276",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Define Topic , Table , and Model Directory",
+      "text": "// MapR Event Store for Kafka Topic to read from \nvar topic: String \u003d \"reviews\"\n// MapR Database table to write to \nvar tableName: String \u003d \"reviewtable\"\n// Directory to read the saved ML model from \nvar modeldirectory \u003d\"sentmodel/\"\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.276",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "topic: String \u003d reviews\ntableName: String \u003d reviewtable\nmodeldirectory: String \u003d sentmodel/\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074276_-446385312",
+      "id": "20170508-150131_378637203",
+      "dateCreated": "2020-04-24 11:01:14.276",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n### Loading the Pipeline Model\nThe Spark PipelineModel class is used to load a the pipeline model, which was fitted on the historical flight data and then saved to HDFS. ",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.281",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch3\u003eLoading the Pipeline Model\u003c/h3\u003e\n\u003cp\u003eThe Spark PipelineModel class is used to load a the pipeline model, which was fitted on the historical flight data and then saved to HDFS.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074276_1734594254",
+      "id": "20190311-210406_1328123679",
+      "dateCreated": "2020-04-24 11:01:14.281",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Load the saved Machine Learning Model",
+      "text": "import spark.implicits._\nval model \u003d org.apache.spark.ml.PipelineModel.load(modeldirectory)",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.281",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import spark.implicits._\nmodel: org.apache.spark.ml.PipelineModel \u003d pipeline_664a9273ada3\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074281_2049412073",
+      "id": "20171129-221736_959969733",
+      "dateCreated": "2020-04-24 11:01:14.281",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n## Reading Data from Kafka Topics\nIn order to read from Kafka, we must specify the stream format, topic, and offset options",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.281",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch2\u003eReading Data from Kafka Topics\u003c/h2\u003e\n\u003cp\u003eIn order to read from Kafka, we must specify the stream format, topic, and offset options\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074281_-1881846798",
+      "id": "20190306-165333_491584061",
+      "dateCreated": "2020-04-24 11:01:14.281",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Read Stream from Kafka topic ",
+      "text": "// read stream from Kafka\nval df1 \u003d spark.readStream.format(\"kafka\").option(\"kafka.bootstrap.servers\", \"kafkabroker:9092\").option(\"subscribe\", topic).option(\"group.id\", \"testgroup\").option(\"startingOffsets\", \"earliest\").option(\"failOnDataLoss\", false).option(\"maxOffsetsPerTrigger\", 1000).load()",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.282",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "df1: org.apache.spark.sql.DataFrame \u003d [key: binary, value: binary ... 5 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074281_-540324812",
+      "id": "20190306-002931_1225657206",
+      "dateCreated": "2020-04-24 11:01:14.281",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Print Kafka DataFrame Schema",
+      "text": "// readStream.format \"kafka\" returns a DataFrame with the following schema:\n// we are interested in the message value column\ndf1.printSchema",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.282",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "root\n |-- key: binary (nullable \u003d true)\n |-- value: binary (nullable \u003d true)\n |-- topic: string (nullable \u003d true)\n |-- partition: integer (nullable \u003d true)\n |-- offset: long (nullable \u003d true)\n |-- timestamp: timestamp (nullable \u003d true)\n |-- timestampType: integer (nullable \u003d true)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074282_2071915430",
+      "id": "20171129-223643_463511351",
+      "dateCreated": "2020-04-24 11:01:14.282",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n### Parsing the Message Values into a DataFrame of the Message Value Schema\nThe next step is to parse and transform the Kafka DataFrame column \"value\" from binary to a JSON String, and then to the a specified schema.\nIn the code below: \n* first we use a select expression with a String Cast of the df1 column value to convert the value from binary to string\n* then we use the from_json Spark SQL function in a select expression to retrieve the JSON string as the specified schema StructTyp\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.282",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch3\u003eParsing the Message Values into a DataFrame of the Message Value Schema\u003c/h3\u003e\n\u003cp\u003eThe next step is to parse and transform the Kafka DataFrame column \u0026ldquo;value\u0026rdquo; from binary to a JSON String, and then to the a specified schema.\u003cbr/\u003eIn the code below:\u003cbr/\u003e* first we use a select expression with a String Cast of the df1 column value to convert the value from binary to string\u003cbr/\u003e* then we use the from_json Spark SQL function in a select expression to retrieve the JSON string as the specified schema StructTyp\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074282_-1067230797",
+      "id": "20190306-165945_2131987408",
+      "dateCreated": "2020-04-24 11:01:14.282",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Define Schema for JSON streaming data",
+      "text": "\n// define the schema matching incoming data\n\n  val schema \u003d StructType(Array(\n    StructField(\"asin\", StringType, true),\n    StructField(\"helpful\", ArrayType(StringType), true),\n    StructField(\"overall\", DoubleType, true),\n    StructField(\"reviewText\", StringType, true),\n    StructField(\"reviewTime\", StringType, true),\n    StructField(\"reviewerID\", StringType, true),\n    StructField(\"reviewerName\", StringType, true),\n    StructField(\"summary\", StringType, true),\n    StructField(\"unixReviewTime\", LongType, true)\n  ))\n   \n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.282",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "schema: org.apache.spark.sql.types.StructType \u003d StructType(StructField(asin,StringType,true), StructField(helpful,ArrayType(StringType,true),true), StructField(overall,DoubleType,true), StructField(reviewText,StringType,true), StructField(reviewTime,StringType,true), StructField(reviewerID,StringType,true), StructField(reviewerName,StringType,true), StructField(summary,StringType,true), StructField(unixReviewTime,LongType,true))\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074282_1362753613",
+      "id": "20170508-150032_326029627",
+      "dateCreated": "2020-04-24 11:01:14.282",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Parse the Message Values into a Dataframe of specified schema",
+      "text": "// cast the df1 column value to string\n// use the from_json function to convert value JSON string to review schema\nval df2 \u003d df1.select($\"value\" cast \"string\" as \"json\").select(from_json($\"json\", schema) as \"data\").select(\"data.*\")",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.283",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "df2: org.apache.spark.sql.DataFrame \u003d [asin: string, helpful: array\u003cstring\u003e ... 7 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074283_279654529",
+      "id": "20190306-003118_1790885997",
+      "dateCreated": "2020-04-24 11:01:14.283",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Add the column label for testing",
+      "text": "// combine summary and reviewText into one column for analyzing\nval df3 \u003d df2.withColumn(\"reviewTS\", concat($\"summary\",lit(\" \"),$\"reviewText\" )) \n//  remove neutral ratings\nval df4 \u003d df3.filter(\"overall !\u003d3\") \n// add label column\nval bucketizer \u003d new Bucketizer().setInputCol(\"overall\").setOutputCol(\"label\").setSplits(Array(Double.NegativeInfinity,3.0,Double.PositiveInfinity))\nval df5\u003d bucketizer.transform(df4)",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.283",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "df3: org.apache.spark.sql.DataFrame \u003d [asin: string, helpful: array\u003cstring\u003e ... 8 more fields]\ndf4: org.apache.spark.sql.Dataset[org.apache.spark.sql.Row] \u003d [asin: string, helpful: array\u003cstring\u003e ... 8 more fields]\nbucketizer: org.apache.spark.ml.feature.Bucketizer \u003d bucketizer_8e394200c0d1\ndf5: org.apache.spark.sql.DataFrame \u003d [asin: string, helpful: array\u003cstring\u003e ... 9 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074283_725957363",
+      "id": "20190306-010238_1100520892",
+      "dateCreated": "2020-04-24 11:01:14.283",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n## Enriching the Review Dataframe with label and predictions\nNext we transform the DataFrame with the model pipeline, which will tranform the features according to the pipeline, estimate and then return the predictions in a column of a new DateFrame.\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.283",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch2\u003eEnriching the Review Dataframe with label and predictions\u003c/h2\u003e\n\u003cp\u003eNext we transform the DataFrame with the model pipeline, which will tranform the features according to the pipeline, estimate and then return the predictions in a column of a new DateFrame.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074283_348248336",
+      "id": "20190306-171339_1154203095",
+      "dateCreated": "2020-04-24 11:01:14.283",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Use the model to add Sentiment Predictions to a DataFrame",
+      "text": "// transform the DataFrame with the model pipeline, which will tranform the features according to the pipeline, \n// estimate and then return the predictions in a column of a new DateFrame\nval predictions \u003d model.transform(df5)",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.283",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "predictions: org.apache.spark.sql.DataFrame \u003d [asin: string, helpful: array\u003cstring\u003e ... 16 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074283_55644483",
+      "id": "20190306-010315_921932660",
+      "dateCreated": "2020-04-24 11:01:14.283",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "predictions.printSchema",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.284",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "root\n |-- asin: string (nullable \u003d true)\n |-- helpful: array (nullable \u003d true)\n |    |-- element: string (containsNull \u003d true)\n |-- overall: double (nullable \u003d true)\n |-- reviewText: string (nullable \u003d true)\n |-- reviewTime: string (nullable \u003d true)\n |-- reviewerID: string (nullable \u003d true)\n |-- reviewerName: string (nullable \u003d true)\n |-- summary: string (nullable \u003d true)\n |-- unixReviewTime: long (nullable \u003d true)\n |-- reviewTS: string (nullable \u003d true)\n |-- label: double (nullable \u003d true)\n |-- reviewTokensUf: array (nullable \u003d true)\n |    |-- element: string (containsNull \u003d true)\n |-- reviewTokens: array (nullable \u003d true)\n |    |-- element: string (containsNull \u003d true)\n |-- cv: vector (nullable \u003d true)\n |-- features: vector (nullable \u003d true)\n |-- rawPrediction: vector (nullable \u003d true)\n |-- probability: vector (nullable \u003d true)\n |-- prediction: double (nullable \u003d false)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074284_-411800812",
+      "id": "20190322-192736_125008129",
+      "dateCreated": "2020-04-24 11:01:14.284",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "From the Predictions DataFrame, select the columns that we want to store on HDFS as Table",
+      "text": "\n// drop the columns that we do not want to store \nval df6 \u003d predictions.drop(\"cv\",\"probability\", \"features\",  \"helpful\", \"reviewTokensUf\", \"reviewTS\", \"rawPrediction\")",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.289",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "df6: org.apache.spark.sql.DataFrame \u003d [asin: string, overall: double ... 9 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074289_-702327481",
+      "id": "20190306-010344_1169277532",
+      "dateCreated": "2020-04-24 11:01:14.289",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val df7 \u003d df6.withColumn(\"_id\", concat($\"asin\",lit(\"_\"), $\"unixReviewTime\"))",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.289",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "df7: org.apache.spark.sql.DataFrame \u003d [asin: string, overall: double ... 10 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074289_-1580043646",
+      "id": "20190322-193047_125026935",
+      "dateCreated": "2020-04-24 11:01:14.289",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "df7.printSchema\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.290",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "root\n |-- asin: string (nullable \u003d true)\n |-- overall: double (nullable \u003d true)\n |-- reviewText: string (nullable \u003d true)\n |-- reviewTime: string (nullable \u003d true)\n |-- reviewerID: string (nullable \u003d true)\n |-- reviewerName: string (nullable \u003d true)\n |-- summary: string (nullable \u003d true)\n |-- unixReviewTime: long (nullable \u003d true)\n |-- label: double (nullable \u003d true)\n |-- reviewTokens: array (nullable \u003d true)\n |    |-- element: string (containsNull \u003d true)\n |-- prediction: double (nullable \u003d false)\n |-- _id: string (nullable \u003d true)\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074290_-1481091562",
+      "id": "20190322-193228_892768642",
+      "dateCreated": "2020-04-24 11:01:14.290",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "val streamingquery \u003d df7.writeStream.queryName(\"amazonreviews\").format(\"memory\").outputMode(\"append\").start",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.290",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "streamingquery: org.apache.spark.sql.streaming.StreamingQuery \u003d org.apache.spark.sql.execution.streaming.StreamingQueryWrapper@18be282d\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074290_553444207",
+      "id": "20190322-195021_1630212037",
+      "dateCreated": "2020-04-24 11:01:14.290",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "streamingquery.stop",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.290",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074290_-1161617422",
+      "id": "20190322-195753_1457978981",
+      "dateCreated": "2020-04-24 11:01:14.290",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%sql  select * from amazonreviews limit 10",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.290",
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "asin": "string",
+                      "overall": "string",
+                      "reviewText": "string",
+                      "reviewTime": "string",
+                      "reviewerID": "string",
+                      "reviewerName": "string",
+                      "summary": "string",
+                      "unixReviewTime": "string",
+                      "label": "string",
+                      "reviewTokens": "string",
+                      "prediction": "string",
+                      "_id": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {}
+            }
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "asin\toverall\treviewText\treviewTime\treviewerID\treviewerName\tsummary\tunixReviewTime\tlabel\treviewTokens\tprediction\t_id\n0000031895\t5.0\tIt was as described and fit my 6 year old grand daughter perfectly. She loves to play dress-up and this is a good addition to her wardrobe. I received the item quickly and the packaging was great.\t02 1, 2014\tA23K73OVXJ04EG\tLamb612000\tNeon Blue Tutu\t1391212800\t1.0\tWrappedArray(neon, blue, tutu, described, fit, 6, year, old, grand, daughter, perfectly, loves, play, dress-up, good, addition, wardrobe, received, item, quickly, packaging, great)\t1.0\t0000031895_1391212800\n0000031895\t4.0\tvery cute and went great with my Halloween costume! for the price, couldn\u0027t have asked for better. Warning: if you are not a child this tutu is a very tight fit, i wear a size 0 and it was a little hard to get it over my hips\t11 20, 2013\tA2681T699HV6H1\tCourtney R\tloved it!\t1384905600\t1.0\tWrappedArray(loved, it!, cute, went, great, halloween, costume!, price, asked, better, warning:, child, tutu, tight, fit, wear, size, 0, little, hard, get, hips)\t1.0\t0000031895_1384905600\n0000031895\t1.0\tThis item is very cheaply made and not full like the picture.  It resembles something from a $1. store.\t10 21, 2016\tA374PA18DCGS5Y\tJulie Ortiz\tOne Star\t1477008000\t0.0\tWrappedArray(one, star, item, cheaply, made, full, like, picture, resembles, something, $1, store)\t0.0\t0000031895_1477008000\n0000031895\t5.0\tcute\t10 18, 2016\tA14PVW2N5YBWSA\tDenise M.\tFive Stars\t1476748800\t1.0\tWrappedArray(five, stars, cute)\t1.0\t0000031895_1476748800\n0000031895\t1.0\tNot as full as the picture suggests and it smells like rotten fish! Returning ASAP.\t10 17, 2016\tA2KWBC44QI2567\tDanielle Zollar\tSmelly !\t1476662400\t0.0\tWrappedArray(smelly, !, full, picture, suggests, smells, like, rotten, fish!, returning, asap)\t0.0\t0000031895_1476662400\n0000031895\t5.0\tMy daughter loved it.\t09 18, 2016\tA2WGRWA7BDPF7F\tMel L\tFive Stars\t1474156800\t1.0\tWrappedArray(five, stars, daughter, loved)\t1.0\t0000031895_1474156800\n0000031895\t1.0\tI would say this is not for a 2 year old, it falls right off her. Also it\u0027s not as nice of quality as the picture or description leads you to believe. I\u0027m going to have to make major alterations.\t09 15, 2016\tA1JDMJTWOJIOE0\tJessica W.\tLarge and low quality\t1473897600\t0.0\tWrappedArray(large, low, quality, say, 2, year, old, falls, right, also, nice, quality, picture, description, leads, believe, going, make, major, alterations)\t0.0\t0000031895_1473897600\n0000031895\t2.0\tSee through.\t07 22, 2016\tA20KT0TU3OR1W\tAmazon Customer\tTwo Stars\t1469145600\t0.0\tWrappedArray(two, stars, see)\t1.0\t0000031895_1469145600\n0000031895\t2.0\tSmall did not hold up well...great for a one time use\t03 26, 2016\tA2AC2TOJ84FPXS\tValerie\tgreat for a one time\t1458950400\t0.0\tWrappedArray(great, one, time, small, hold, well, great, one, time, use)\t1.0\t0000031895_1458950400\n0000031895\t5.0\tIt was as described and fit my 6 year old grand daughter perfectly. She loves to play dress-up and this is a good addition to her wardrobe. I received the item quickly and the packaging was great.\t02 1, 2014\tA23K73OVXJ04EG\tLamb612000\tNeon Blue Tutu\t1391212800\t1.0\tWrappedArray(neon, blue, tutu, described, fit, 6, year, old, grand, daughter, perfectly, loves, play, dress-up, good, addition, wardrobe, received, item, quickly, packaging, great)\t1.0\t0000031895_1391212800\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074290_1608749968",
+      "id": "20190322-195059_722965348",
+      "dateCreated": "2020-04-24 11:01:14.290",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Write the Stream to HDFS",
+      "text": "\nval tableName\u003d\"sink/reviewtable\"\n// write out the df7 DataFrame to MapR Database and start the stream.\n//val writedb \u003d df7.writeStream.format(MapRDBSourceConfig.Format).option(MapRDBSourceConfig.TablePathOption, tableName).option(MapRDBSourceConfig.IdFieldPathOption, \"_id\").option(MapRDBSourceConfig.CreateTableOption, false).option(\"checkpointLocation\", \"/user/mapr/sent2\").option(MapRDBSourceConfig.BulkModeOption, true).option(MapRDBSourceConfig.SampleSizeOption, 1000).start()\n\nval writedb \u003d df7.writeStream.format(\"parquet\").option(\"checkpointLocation\", \"sent2\").option(\"path\", tableName).start()\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.291",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "tableName: String \u003d sink/reviewtable\nwritedb: org.apache.spark.sql.streaming.StreamingQuery \u003d org.apache.spark.sql.execution.streaming.StreamingQueryWrapper@535f9dc4\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074291_-880743197",
+      "id": "20190306-003127_1670791655",
+      "dateCreated": "2020-04-24 11:01:14.291",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "New Schema with label and prediction",
+      "text": "// define new schema with label and prediction for reading from MapR Database\n\n  val schema2 \u003d StructType(Array(\n    StructField(\"_id\", StringType, true),\n    StructField(\"asin\", StringType, true),\n    StructField(\"overall\", DoubleType, true),\n    StructField(\"reviewText\", StringType, true),\n    StructField(\"reviewTokens\", ArrayType(StringType)),\n    StructField(\"reviewTime\", StringType, true),\n    StructField(\"reviewerID\", StringType, true),\n    StructField(\"reviewerName\", StringType, true),\n    StructField(\"summary\", StringType, true),\n    StructField(\"label\", DoubleType, true),\n    StructField(\"prediction\", DoubleType, true),\n    StructField(\"unixReviewTime\", LongType, true)\n  ))\n  \n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.291",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "schema2: org.apache.spark.sql.types.StructType \u003d StructType(StructField(_id,StringType,true), StructField(asin,StringType,true), StructField(overall,DoubleType,true), StructField(reviewText,StringType,true), StructField(reviewTokens,ArrayType(StringType,true),true), StructField(reviewTime,StringType,true), StructField(reviewerID,StringType,true), StructField(reviewerName,StringType,true), StructField(summary,StringType,true), StructField(label,DoubleType,true), StructField(prediction,DoubleType,true), StructField(unixReviewTime,LongType,true))\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074291_-2110864205",
+      "id": "20190306-211342_1150192494",
+      "dateCreated": "2020-04-24 11:01:14.291",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Imports for  Reading from HDFS",
+      "text": "import org.apache.spark._\n\n// get spark session to read from MapR Database\nval spark \u003d org.apache.spark.sql.SparkSession.builder().appName(\"reviews\").getOrCreate()",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.291",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "import org.apache.spark._\nspark: org.apache.spark.sql.SparkSession \u003d org.apache.spark.sql.SparkSession@181ae975\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074291_1774789782",
+      "id": "20190306-011141_1523714467",
+      "dateCreated": "2020-04-24 11:01:14.291",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Load Flight DataFrame from HDFS",
+      "text": " // load flight dataframe from MapR Database \nval rdf \u003d spark.read.schema(schema2).parquet(tableName) \n\n// create a temp view in order to use Spark SQL\nrdf.createOrReplaceTempView(\"reviews\")",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.291",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "rdf: org.apache.spark.sql.DataFrame \u003d [_id: string, asin: string ... 10 more fields]\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074291_1550040004",
+      "id": "20190306-011320_1619042382",
+      "dateCreated": "2020-04-24 11:01:14.291",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md \n## Explore and Query the enriched Flight Data with Spark SQL\nNow we can query the data that is continuously streaming from the Kafka Event Store into HDFS to ask questions with the Spark DataFrames domain-specific language or with Spark SQL. Note how the streaming result values change as more data streams in and you execute a query again. \n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.292",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "editorHide": true,
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch2\u003eExplore and Query the enriched Flight Data with Spark SQL\u003c/h2\u003e\n\u003cp\u003eNow we can query the data that is continuously streaming from the Kafka Event Store into HDFS to ask questions with the Spark DataFrames domain-specific language or with Spark SQL. Note how the streaming result values change as more data streams in and you execute a query again.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074292_-152289867",
+      "id": "20170603-182655_1680505289",
+      "dateCreated": "2020-04-24 11:01:14.292",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "// show the first 5 rows\n//rdf.schema  \n//    StructField(\"overall\", DoubleType, true),\nrdf.select(\"summary\",\"overall\",\"label\",\"prediction\").show(5)\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.292",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+--------------+-------+-----+----------+\n|       summary|overall|label|prediction|\n+--------------+-------+-----+----------+\n|Neon Blue Tutu|    5.0|  1.0|       1.0|\n|     loved it!|    4.0|  1.0|       1.0|\n|      One Star|    1.0|  0.0|       0.0|\n|    Five Stars|    5.0|  1.0|       1.0|\n|      Smelly !|    1.0|  0.0|       0.0|\n+--------------+-------+-----+----------+\nonly showing top 5 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074292_268578659",
+      "id": "20190408-231718_535325850",
+      "dateCreated": "2020-04-24 11:01:14.292",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Count the rows in the DataFrame",
+      "text": "// note how this value changes as you run it again\nrdf.count",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.292",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "res165: Long \u003d 355\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074292_-1300868419",
+      "id": "20190306-003457_1891238408",
+      "dateCreated": "2020-04-24 11:01:14.292",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "What are the products with the best ratings?",
+      "text": "rdf.groupBy(\"overall\",\"asin\").count.orderBy(desc(\"count\")).show(5)",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.292",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------+----------+-----+\n|overall|      asin|count|\n+-------+----------+-----+\n|    5.0|0899332757|   98|\n|    5.0|0899333257|   90|\n|    1.0|0000031895|   28|\n|    5.0|0000031895|   27|\n|    4.0|0899333257|   19|\n+-------+----------+-----+\nonly showing top 5 rows\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074292_22168305",
+      "id": "20190311-232848_1613662724",
+      "dateCreated": "2020-04-24 11:01:14.292",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Count of Best",
+      "text": "%sql\nSELECT asin,overall, count(overall)  \nFROM  reviews \nGROUP BY asin, overall\norder by count(overall) desc limit 5\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.293",
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "asin": "string",
+                      "overall": "string",
+                      "count(overall)": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {},
+              "keys": [],
+              "groups": [
+                {
+                  "name": "label",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ],
+              "values": [
+                {
+                  "name": "count(label)",
+                  "index": 2.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "asin\toverall\tcount(overall)\n0899332757\t5.0\t98\n0899333257\t5.0\t90\n0000031895\t1.0\t28\n0000031895\t5.0\t27\n0899333257\t4.0\t19\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074293_1096387607",
+      "id": "20171122-204956_303346727",
+      "dateCreated": "2020-04-24 11:01:14.293",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "// show the best \nrdf.select(\"summary\",\"reviewText\",\"overall\",\"label\",\"prediction\").filter(\"asin\u003d\u0027B004TNWD40\u0027\").show(5)\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.293",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "+-------+----------+-------+-----+----------+\n|summary|reviewText|overall|label|prediction|\n+-------+----------+-------+-----+----------+\n+-------+----------+-------+-----+----------+\n\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074293_-1014779663",
+      "id": "20190409-174706_1689859801",
+      "dateCreated": "2020-04-24 11:01:14.293",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Display the summary for the best rated product",
+      "text": "%sql \nselect summary,reviewTokens, label, prediction, overall\nfrom reviews\nwhere asin\u003d\u0027B004TNWD40\u0027\norder by overall desc\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.293",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "editorHide": false,
+        "fontSize": 9.0,
+        "title": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "summary": "string",
+                      "reviewTokens": "string",
+                      "label": "string",
+                      "prediction": "string",
+                      "overall": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "carrier",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "src",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "summary\treviewTokens\tlabel\tprediction\toverall\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074293_-611273166",
+      "id": "20171110-195321_1924356975",
+      "dateCreated": "2020-04-24 11:01:14.293",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Count of Worst",
+      "text": "%sql\nSELECT asin,overall, count(overall)  \nFROM  reviews where overall \u003c 4\nGROUP BY asin, overall\norder by count(overall)  limit 5\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.293",
+      "config": {
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                },
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "asin": "string",
+                      "overall": "string",
+                      "count(overall)": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                }
+              },
+              "commonSetting": {},
+              "keys": [],
+              "groups": [
+                {
+                  "name": "label",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ],
+              "values": [
+                {
+                  "name": "count(label)",
+                  "index": 2.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "asin\toverall\tcount(overall)\n0000032034\t2.0\t2\n0899333257\t1.0\t3\n0899333257\t2.0\t3\n0000032034\t1.0\t4\n0899332757\t1.0\t4\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074293_81491892",
+      "id": "20190408-233640_1796526772",
+      "dateCreated": "2020-04-24 11:01:14.293",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Display the summary for the best rated product",
+      "text": "%sql \nselect summary, label, prediction, overall\nfrom reviews\nwhere asin\u003d\u0027B004TNWD40\u0027\norder by overall desc\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.294",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "sql",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/sql",
+        "editorHide": false,
+        "fontSize": 9.0,
+        "title": true,
+        "results": {
+          "0": {
+            "graph": {
+              "mode": "table",
+              "height": 300.0,
+              "optionOpen": false,
+              "setting": {
+                "table": {
+                  "tableGridState": {},
+                  "tableColumnTypeState": {
+                    "names": {
+                      "summary": "string",
+                      "label": "string",
+                      "prediction": "string",
+                      "overall": "string"
+                    },
+                    "updated": false
+                  },
+                  "tableOptionSpecHash": "[{\"name\":\"useFilter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable filter for columns\"},{\"name\":\"showPagination\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable pagination for better navigation\"},{\"name\":\"showAggregationFooter\",\"valueType\":\"boolean\",\"defaultValue\":false,\"widget\":\"checkbox\",\"description\":\"Enable a footer for displaying aggregated values\"}]",
+                  "tableOptionValue": {
+                    "useFilter": false,
+                    "showPagination": false,
+                    "showAggregationFooter": false
+                  },
+                  "updated": false,
+                  "initialized": false
+                },
+                "multiBarChart": {
+                  "rotate": {
+                    "degree": "-45"
+                  },
+                  "xLabelStatus": "default"
+                }
+              },
+              "commonSetting": {},
+              "keys": [
+                {
+                  "name": "carrier",
+                  "index": 0.0,
+                  "aggr": "sum"
+                }
+              ],
+              "groups": [],
+              "values": [
+                {
+                  "name": "src",
+                  "index": 1.0,
+                  "aggr": "sum"
+                }
+              ]
+            },
+            "helium": {}
+          }
+        },
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TABLE",
+            "data": "summary\tlabel\tprediction\toverall\n"
+          },
+          {
+            "type": "TEXT",
+            "data": ""
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074293_-919242020",
+      "id": "20190409-173208_269122749",
+      "dateCreated": "2020-04-24 11:01:14.294",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "text": "%md\n## Projection and Filter Pushdown into Parquet On HDFS\nBelow, we see the physical plan for a DataFrame query, with projection and filter pushdown. This means that the scanning of the src, dst, and depdelay columns and the filter on the depdelay column are pushed down into Parquet, meaning that the scanning and filtering will take place in Parquet before returning the data to Spark. Projection pushdown minimizes data transfer between Parquet on HDFS and the Spark engine by omitting unnecessary fields from table scans. It is especially beneficial when a table contains many columns. Filter pushdown improves performance by reducing the amount of data passed between HDFS and the Spark engine when filtering data.",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.294",
+      "config": {
+        "tableHide": false,
+        "editorSetting": {
+          "language": "markdown",
+          "editOnDblClick": true,
+          "completionKey": "TAB",
+          "completionSupport": false
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/markdown",
+        "fontSize": 9.0,
+        "editorHide": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "HTML",
+            "data": "\u003cdiv class\u003d\"markdown-body\"\u003e\n\u003ch2\u003eProjection and Filter Pushdown into Parquet On HDFS\u003c/h2\u003e\n\u003cp\u003eBelow, we see the physical plan for a DataFrame query, with projection and filter pushdown. This means that the scanning of the src, dst, and depdelay columns and the filter on the depdelay column are pushed down into Parquet, meaning that the scanning and filtering will take place in Parquet before returning the data to Spark. Projection pushdown minimizes data transfer between Parquet on HDFS and the Spark engine by omitting unnecessary fields from table scans. It is especially beneficial when a table contains many columns. Filter pushdown improves performance by reducing the amount of data passed between HDFS and the Spark engine when filtering data.\u003c/p\u003e\n\u003c/div\u003e"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074294_-1987580670",
+      "id": "20190311-233318_669843904",
+      "dateCreated": "2020-04-24 11:01:14.294",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Use Explain to show physical query plan",
+      "text": "// notice projection of selected fields [summary]\n// notice PushedFilters: overall\nrdf.filter(\"overall \u003e 3\").select(\"summary\").explain",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.294",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "\u003d\u003d Physical Plan \u003d\u003d\n*(1) Project [summary#17566]\n+- *(1) Filter (isnotnull(overall#17560) \u0026\u0026 (overall#17560 \u003e 3.0))\n   +- *(1) FileScan parquet [overall#17560,summary#17566] Batched: true, Format: Parquet, Location: MetadataLogFileIndex[sink/reviewtable], PartitionFilters: [], PushedFilters: [IsNotNull(overall), GreaterThan(overall,3.0)], ReadSchema: struct\u003coverall:double,summary:string\u003e\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074294_757118383",
+      "id": "20190311-233223_189893269",
+      "dateCreated": "2020-04-24 11:01:14.294",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "Calculate some  metrics",
+      "text": "val lp \u003d rdf.select( \"label\", \"prediction\")\nval counttotal \u003d lp.count().toDouble\nval correct \u003d lp.filter($\"label\" \u003d\u003d\u003d $\"prediction\").count().toDouble\nval wrong \u003d lp.filter(not($\"label\" \u003d\u003d\u003d $\"prediction\")).count().toDouble\nval truep \u003d( lp.filter($\"prediction\" \u003d\u003d\u003d 1.0).filter($\"label\" \u003d\u003d\u003d $\"prediction\").count()) /counttotal\nval truen \u003d (lp.filter($\"prediction\" \u003d\u003d\u003d 0.0).filter($\"label\" \u003d\u003d\u003d $\"prediction\").count())/counttotal\nval falsep \u003d (lp.filter($\"prediction\" \u003d\u003d\u003d 1.0).filter(not($\"label\" \u003d\u003d\u003d $\"prediction\")).count())/counttotal\nval falsen \u003d (lp.filter($\"prediction\" \u003d\u003d\u003d 0.0).filter(not($\"label\" \u003d\u003d\u003d $\"prediction\")).count())/counttotal\nval ratioWrong\u003dwrong/counttotal\nval ratioCorrect\u003dcorrect/counttotal\n\n",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.294",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": [
+          {
+            "type": "TEXT",
+            "data": "lp: org.apache.spark.sql.DataFrame \u003d [label: double, prediction: double]\ncounttotal: Double \u003d 355.0\ncorrect: Double \u003d 327.0\nwrong: Double \u003d 28.0\ntruep: Double \u003d 0.8028169014084507\ntruen: Double \u003d 0.11830985915492957\nfalsep: Double \u003d 0.05070422535211268\nfalsen: Double \u003d 0.028169014084507043\nratioWrong: Double \u003d 0.07887323943661972\nratioCorrect: Double \u003d 0.9211267605633803\n"
+          }
+        ]
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074294_-1598050456",
+      "id": "20181015-224231_2027590368",
+      "dateCreated": "2020-04-24 11:01:14.294",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "title": "stop the streaming from Kafka to HDFS",
+      "text": "// stop the streaming from Kafka to MapR Database\nwritedb.stop()",
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.295",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "editorHide": false,
+        "title": true,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "results": {
+        "code": "SUCCESS",
+        "msg": []
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074294_2112251808",
+      "id": "20171122-091021_1615582434",
+      "dateCreated": "2020-04-24 11:01:14.294",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    },
+    {
+      "user": "anonymous",
+      "dateUpdated": "2020-04-24 11:01:14.295",
+      "config": {
+        "editorSetting": {
+          "language": "scala",
+          "editOnDblClick": false,
+          "completionKey": "TAB",
+          "completionSupport": true
+        },
+        "colWidth": 12.0,
+        "editorMode": "ace/mode/scala",
+        "fontSize": 9.0,
+        "results": {},
+        "enabled": true
+      },
+      "settings": {
+        "params": {},
+        "forms": {}
+      },
+      "apps": [],
+      "jobName": "paragraph_1587726074295_-940752188",
+      "id": "20200424-102656_1069020686",
+      "dateCreated": "2020-04-24 11:01:14.295",
+      "status": "READY",
+      "errorMessage": "",
+      "progressUpdateIntervalMs": 500
+    }
+  ],
+  "name": "Spark/Structured Streaming Examples/Structured Streaming Sentiment Analysis Pipeline",
+  "id": "2F71KVD9R",
+  "noteParams": {},
+  "noteForms": {},
+  "angularObjects": {
+    "md:shared_process": [],
+    "python:shared_process": [],
+    "sh:shared_process": [],
+    "spark:shared_process": []
+  },
+  "config": {
+    "isZeppelinNotebookCronEnable": false
+  },
+  "info": {}
+}
